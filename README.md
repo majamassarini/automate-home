@@ -1,6 +1,6 @@
-# Automate your home
+# Automate home
 
-[![Build Status](https://app.travis-ci.com/majamassarini/automate-home.svg?token=0b562994-3607-435e-80a8-416c33869baa&branch=main)](https://app.travis-ci.com/majamassarini/automate-home)
+[![Build Status](https://app.travis-ci.com/majamassarini/automate-home.svg?branch=main)](https://app.travis-ci.com/majamassarini/automate-home)
 [![Codecov](https://codecov.io/gh/majamassarini/automate-home/branch/master/graph/badge.svg?token=0b562994-3607-435e-80a8-416c33869baa)](https://codecov.io/gh/majamassarini/automate-home)
 [![Documentation Status](https://readthedocs.org/projects/automate-home/badge/?version=latest)](https://automate-home.readthedocs.io/en/latest/?badge=latest)
 
@@ -56,4 +56,4 @@ Documentation
 
 For a deep dive into this project see the [documentation](https://maja-massarini-automate-home.readthedocs-hosted.com/en/latest/?badge=latest).
 
-For a minute guide to this project see the [landing page](https://majamassarini.github.io/automate-home)
+For a minute guide to this project see the [landing page](https://majamassarini.github.io/automate-home).
