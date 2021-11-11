@@ -1,0 +1,30 @@
+% Performer sequence diagram
+\begin{figure}[hbp]
+    \begin{center}
+        \resizebox{\columnwidth}{!}{%
+        \begin{tikzpicture}
+            \begin{umlseqdiag}
+                \umlobject{Brain}
+                \umlobject{Gateway}
+                \umlobject{Process}
+                \umlobject{Performer}
+                \umlobject{Appliance}
+                \umlobject{Protocol Trigger}
+
+                \begin{umlcall}[op=run(), dt=10, type=synchron]{Brain}{Process}
+                    \begin{umlcall}[op=on\_protocol\_event(), type=asynchron, dt=20]{Gateway}{Process}
+                        \begin{umlcall}[op=update\_by(description), type=synchron, dt=10, padding=5, return={(old\_state, new\_state)}]{Process}{Performer}
+                            \begin{umlcall}[op={update\_by(protocol\_trigger, description)}, type=synchron, return={(old\_state, new\_state)}, dt=10, padding=5]{Performer}{Appliance}
+                                \begin{umlcall}[op={make\_new\_state\_from(description, old\_state)}, type=synchron, return=new\_state, dt=10, padding=5]{Appliance}{Protocol Trigger}
+                                \end{umlcall}
+                            \end{umlcall}
+                        \end{umlcall}
+                    \end{umlcall}
+                \end{umlcall}
+            \end{umlseqdiag}
+        \end{tikzpicture}%
+        }
+        \caption{A Performer updating its Appliance from a bus message}
+        \label{fig:performer_updating_appliance}
+    \end{center}
+\end{figure}

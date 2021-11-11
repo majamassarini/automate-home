@@ -1,0 +1,10 @@
+*.pyc
+*.bak
+.settings
+.project
+.pydevproject
+.idea
+.workspace.xml
+build/
+dist/
+*egg-info

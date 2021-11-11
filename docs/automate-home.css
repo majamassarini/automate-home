@@ -1,0 +1,9 @@
+family-sans-serif {
+ font-family: 'Montserrat';
+}
+
+.card-equal-height {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}

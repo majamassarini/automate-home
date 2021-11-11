@@ -1,0 +1,6 @@
+[run]
+command_line = -m unittest discover
+omit = *tests*,*features*,*venv*
+
+[report]
+omit = *tests*,*features*,*venv*

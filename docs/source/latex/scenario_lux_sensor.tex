@@ -1,0 +1,28 @@
+\begin{figure}[hbp]
+    \begin{center}
+        \resizebox{0.9\textwidth}{!}{%
+        \begin{tikzpicture}
+            \begin{umlsystem}[x=0, y=0]{Sun goes away scenario}
+                \umlactor[x=0, y=4, draw=teal, text=teal]{Sun}
+                \umlusecase[x=4, y=4, fill=gray!30, name={sensor}]{Lux Sensor}
+                \umlinherit[arg2={goes away}, pos2=0.6]{Sun}{sensor}
+
+                \umlusecase[x=4, y=2, draw=white, fill=white, name={lux_message}]{5K lux message}
+                \umlusecase[x=0, y=2, width=1cm, fill=gray!30, name={bus}]{Protocol Bus}
+                \umlassoc{bus}{lux_message}
+                \umlinherit[arg1={send}]{sensor}{lux_message}
+
+                \umlusecase[x=9, y=4, width=2cm, fill=blue!30, name={performer}]{Performer \\ \tiny{\textit{for Lux Sensor} \\ \textbf{protocol triggers:} \\ \textit{- (always) lux trigger}}}
+                \umlinherit[geometry=-|, arg2={is triggered}]{lux_message}{performer}
+
+                \umlusecase[x=15, y=4, width=2cm, fill=blue!30, name={appliance}]{Appliance is \textbf{5K lux} \\ \tiny{\textit{for Lux Sensor} \\ \textbf{internal state:} \\ \textit{- 5K lux}}}
+                \umlinherit[arg2={update 5K lux}, pos2=0.6]{performer}{appliance}
+            \end{umlsystem}
+        \end{tikzpicture}%
+        }
+        \caption{Sun goes away scenario}
+        \label{fig:lux_trigger}
+
+    \end{center}
+\end{figure}
+

@@ -1,0 +1,39 @@
+\begin{figure}[hbp]
+    \begin{center}
+        \resizebox{0.9\textwidth}{!}{%
+        \begin{tikzpicture}
+            \begin{umlsystem}[x=0, y=0]{User John turns on a Lifx Bulb through a KNX switch and the system adjusts the bulb color}
+                \umlactor[x=0, y=4, draw=magenta, text=magenta]{User John}
+                \umlusecase[x=3.5, y=4, width=1cm, fill=gray!30, name={button}]{Button}
+                \umlinherit[arg2={press}, pos2=0.6]{User John}{button}
+
+                \umlusecase[x=3.5, y=2, draw=white, fill=white, name={on_message}]{on message}
+                \umlusecase[x=0, y=2, width=1cm, fill=gray!30, name={knx}]{KNX Bus}
+                \umlusecase[x=0, y=0, width=1cm, fill=gray!30, name={lifx}]{Lifx Bus}
+                \umlassoc{knx}{on_message}
+                \umlinherit[arg1={send}]{button}{on_message}
+
+                \umlusecase[x=6, y=4, width=1.5cm, fill=orange!40, name={light_on}]{Colored \\ Light}
+                \umlinherit[geometry=-|, arg2={is turned on}, pos2=0.5]{on_message}{light_on}
+
+                \umlusecase[x=9, y=4, width=2cm, fill=blue!30, name={performer}]{Performer \\ \tiny{\textit{for Colored Light} \\ \textbf{protocol triggers:} \\ \textit{- light on} \\ \textbf{protocol commands:} \\ \textit{- turn on through knx \\ - set color through lifx}}}
+                \umlinherit[geometry=-|, arg2={is triggered}]{on_message}{performer}
+
+                \umlusecase[x=14.5, y=4, width=2cm, fill=blue!30, name={appliance}]{Appliance is \textbf{forced on} \\ \tiny{\textit{for Colored Light} \\ \textbf{internal state:} \\ \textit{- color should be violet \\  - forced on}}}
+                \umlinherit[arg2={update forced on}, pos2=0.5]{performer}{appliance}
+
+                \umlusecase[x=9.5, y=0, draw=white, fill=white, name={violet_message}]{set violet message}
+                \umlassoc{lifx}{violet_message}
+                \umlinherit[geometry=-|, arg2={send}, pos2=0.4]{performer}{violet_message}
+
+                \umlusecase[x=19, y=4, width=1.5cm, fill=violet!40, name={light_violet}]{Colored \\ Light}
+                \umlinherit[geometry=-|, arg2={is set violet}, pos2=0.5]{violet_message}{light_violet}
+
+            \end{umlsystem}
+        \end{tikzpicture}%
+        }
+        \caption{User John turns on a Lifx Bulb through a KNX switch and the system adjusts the bulb color}
+        \label{fig:bulb_light}
+
+    \end{center}
+\end{figure}

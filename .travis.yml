@@ -1,0 +1,20 @@
+env:
+  - CODECOV_TOKEN='1d4964eb-b04b-4931-af9f-29cfac603007'
+language: python
+python:
+  - "3.8"
+before_install:
+  - python --version
+  - pip install -U pip
+  - pip install -U pytest
+  - pip install codecov
+  - pip install -r requirements.txt
+  - pip install -r requirements-dev.txt
+install:
+  - python setup.py install
+# command to run tests
+script:
+  - python -m coverage run
+  - python -m coverage run --rcfile=.bdd_coveragerc --append > /dev/null 2>&1
+after_success:
+  - codecov

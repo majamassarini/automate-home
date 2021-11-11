@@ -1,0 +1,2 @@
+[run]
+command_line = -m behave home/features

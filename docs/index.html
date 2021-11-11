@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="icon" type="image/png" href="../icon_128x128.png"/>
+    <link rel="stylesheet" href="./automate-home.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans&family=Poppins:wght@500&display=swap" rel="stylesheet">
+
+    <title>Automate Home</title>
+</head>
+
+<body style="font-family: 'Poppins', sans-serif;">
+<section class="hero is-medium">
+    <div class="hero-body">
+        <div class="container has-text-centered">
+            <p class="title">Automate Home</p>
+            <figure class="image is-128x128 is-inline-block mt-6">
+                <img alt="automate home icon" src="../icon_128x128.png"/>
+            </figure>
+            <p class="subtitle mt-6">a smart light could be more than just on or off</p>
+
+        </div>
+        <!--div class="tile is-vertical">
+            I will thank:
+            <ul>
+                <li>My husband for be patient every time the home behaves strange because I'm rewriting
+                    something
+                </li>
+                <li>My daughter for be patient every time her mom is programming.</li>
+                <li>The Jetbrains team for have built the PyCharm IDE.</li>
+                <li>Many many open source projects teams for their help in crating all this, I will list just
+                    some of them:
+                    Python, APScheduler, aiohttp, Bulma, Font Awesome
+                </li>
+                <li>The Home Assistant team because your project has inspired me many improvements</li>
+            </ul>
+        </div-->
+    </div>
+</section>
+
+<section class="hero is-medium is-info">
+    <div class="hero-body">
+        <div class="container">
+            <p class="title has-text-centered">Choose an Appliance</p>
+
+        <div>
+            <div class="columns mt-6">
+                <div class="column is-half">
+                    <div class="card card-equal-height">
+                        <header class="card-header">
+                            <p class="card-header-title is-centered">A presence Light</p>
+                        </header>
+                        <div class="card-content">
+                            <div class="content">
+                                <p>A light automatically turned <strong>off</strong> when no one is supposed to be using it.
+                                Because, as an example, the alarm system is armed.</p>
+                            </div>
+                            <div class="content">
+                                <p>Default state is <strong>off</strong></p>
+                            </div>
+                            <div class="content">
+                                <p>Possible final states are:</p>
+                                <ul>
+                                    <li>Forced on</li>
+                                    <li>Off</li>
+                                </ul>
+                            </div>
+
+                            <div class="content is-small" style="font-family: 'PT Sans', sans-serif;">
+                                <span class="title is-6">A light which reacts to the following events</span>
+                                <ul>
+                                    <li><strong>Forced event</strong>: tells the system a user turned <em>on/off</em>
+                                        the light.
+                                        <ul>
+                                            <li><em>On:</em> the system will un-force a forced on light if no one
+                                                is considered being using the light.</li>
+                                            <li><em>Off:</em> the system will never un-force a forced off light,
+                                                which is in a <em>off</em> state since <em>off</em>
+                                                is the <em>default state</em>.
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Presence event</strong>: tells the system someone <em>could/could not</em>
+                                        being using the light.
+                                        <ul>
+                                            <li><em>On:</em> the system will do nothing.</li>
+                                            <li><em>Off:</em> the system will un-force a <em>forced on</em> light.
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column is-half">
+                    <div class="card card-equal-height">
+
+                        <header class="card-header">
+                            <p class="card-header-title is-centered">A zone Light</p>
+                        </header>
+
+                        <div class="card-content">
+                            <div class="content">
+                                <p>A light automatically turned <strong>on</strong> when someone is arriving in the light
+                                    zone or is already there.
+                                    Automatically turned <strong>off</strong> when no one is in the light zone or near it
+                                    unless it was <strong>forced on</strong> by the user.
+                                    If the alarm system is armed and someone is coming the light becomes
+                                    <strong>alarmed</strong> and starts blinking.
+                                </p>
+                            </div>
+                            <div class="content">
+                                <p>Default state is <strong>off</strong></p>
+                            </div>
+                            <div class="content">
+                                <p>Possible final states are:</p>
+                                <ul>
+                                    <li>Forced on</li>
+                                    <li>Forced off</li>
+                                    <li>On</li>
+                                    <li>Off</li>
+                                    <li>Alarmed (blinking)</li>
+                                </ul>
+                            </div>
+                            <div class="content is-small" style="font-family: 'PT Sans', sans-serif;">
+                                <span class="title is-6">A light which reacts to the following events</span>
+                                <ul>
+                                    <li><strong>Forced event</strong>: tells the system a user turned <em>on/off</em> the light.
+                                        <ul>
+                                            <li><em>On:</em> the system will un-force a <em>forced on</em> light only if
+                                                in the light zone the brightness is high or no one is in there.
+                                            </li>
+                                            <li><em>Off:</em> the system will un-force a forced off light
+                                                when any of the following events arrive: <em>courtesy, presence,
+                                                    alarm armed, sun brightness</em>.
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Courtesy event</strong>: tells the system someone <em>is/is not</em> near the light zone.
+                                        <ul>
+                                            <li><em>On:</em> the system will turn the light <em>on</em>, as a courtesy, if the sun
+                                                brightness in the light zone is very low.
+                                                The system will put the light in an <em>alarmed</em> state if the alarm in
+                                                the light zone was armed.
+                                            </li>
+                                            <li><em>Off:</em> the system will turn the light <em>off</em> only if there is nobody
+                                                both near the zone light and in the zone light and
+                                                the light was not <em>forced on</em>.
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Presence event</strong>: tells the system someone <em>is/is not</em> in the light zone.
+                                        <ul>
+                                            <li><em>On:</em> the system will turn the light <em>on</em> if the brightness in the
+                                                light zone is very low.
+                                                The system will put the light in an <em>alarmed</em> state if the alarm in
+                                                the light zone was armed.
+                                            </li>
+                                            <li><em>Off:</em> the system will turn the light <em>off</em> if the light is not
+                                                <em>alarmed</em> or <em>forced on</em>.
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Alarm armed event</strong>: tells the system the alarm <em>is/is not armed</em> in the light zone.
+                                        <ul>
+                                            <li><em>On:</em> the system will turn the light <em>off</em> even if it was
+                                                <em>forced on</em> since no one should be in that zone.
+                                            </li>
+                                            <li><em>Off:</em> the system will turn the light <em>off</em> if it were
+                                                turned on by a the triggered alarm.
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Sun brightness event</strong>: tells the system the sun brightness in the light zone
+                                        is <em>very low/low/high</em>.
+                                        <ul>
+                                            <li><em>High:</em> the system will turn the light <em>off</em>
+                                                even if it was <em>forced on</em>.
+                                            </li>
+                                            <li><em>Very low:</em> the system will turn <em>on</em> the light in the above cases.
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container mt-6 has-text-centered">
+            <p class="subtitle">Yaml definition</p>
+        </div>
+
+        <div>
+            <div class="columns mt-6">
+                <div class="column is-half">
+                    <div class="card card-equal-height">
+                        <header class="card-header">
+                            <p class="card-header-title is-centered">light.presence.Appliance</p>
+                        </header>
+                        <div class="card-content">
+                            <div class="content">
+                <pre class="is-family-code">
+!Appliances
+  My lights:
+    - !light.presence.Appliance {name: "a presence light"}
+                </pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column is-half">
+                    <div class="card card-equal-height">
+                        <header class="card-header">
+                            <p class="card-header-title is-centered">light.zone.Appliance</p>
+                        </header>
+                        <div class="card-content">
+                            <div class="content">
+                <pre class="is-family-code">
+!Appliances
+  My lights:
+    - !light.zone.Appliance {name: "a zone light"}
+                </pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</section>
+
+<section class="hero is-medium">
+    <div class="hero-body">
+        <div class="container">
+            <p class="title has-text-centered">Connect the Appliance</p>
+            <p class="subtitle has-text-centered">to physical devices</p>
+
+            <div class="container mt-6 has-text-centered">
+                <p class="subtitle">Yaml definition</p>
+            </div>
+
+            <div>
+                <div class="columns mt-6">
+                    <div class="column is-half">
+                        <div class="card card-equal-height">
+                            <header class="card-header">
+                                <p class="card-header-title is-centered">A KNX switch</p>
+                            </header>
+                            <div class="card-content">
+                                <pre class="is-family-code">
+# In performer definitions
+
+-!Performer
+ name: "commands (a presence light)"
+ for appliance: "a presence light"
+ triggers: []
+ commands:
+ - !knx_plugin.command.dpt_switch.OnOff {addresses: [0xABCD]}
+
+-!Performer
+ name: "triggers (a presence light)"
+ for appliance: "a presence light"
+ triggers:
+ - !knx_plugin.trigger.dpt_switch.On
+      addresses: [0xABCE, 0xABCF]
+      events: !home.appliance.light.event.forced.Event.On
+ - !knx_plugin.trigger.dpt_switch.Off
+      addresses: [0xABCE, 0xABCF]
+      events: !home.appliance.light.event.forced.Event.Off
+ commands: []
+                </pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column is-half">
+                        <div class="card card-equal-height">
+                            <header class="card-header">
+                                <p class="card-header-title is-centered">A Lifx Bulb (behind a KNX switch)</p>
+                            </header>
+                            <div class="card-content">
+                                <pre class="is-family-code">
+# In performer definitions
+
+- !Performer
+  name: "set on/off (a zone light)"
+  for appliance: "a zone light"
+  commands:
+    - !knx_plugin.command.dpt_switch.OnOff {addresses: [0xABCE]}
+  triggers: []
+
+- !Performer
+  name: "set color (a zone light)"
+  for appliance: "a zone light"
+  commands:
+    - !lifx_plugin.command.SetColor {addresses: [["172.31.10.245", 56700]]}
+  triggers: []
+
+- !Performer
+  name: "triggers (a zone light)"
+  for appliance: "a zone light"
+  commands: []
+  triggers:
+    - !knx_plugin.trigger.dpt_switch.On
+      addresses: [ 0xABCE, ]
+      events:
+        - !home.appliance.light.indoor.dimmerable.event.forced.Event.On
+    - !knx_plugin.trigger.dpt_switch.Off
+      addresses: [ 0xABCE, ]
+      events:
+        - !home.appliance.light.indoor.dimmerable.event.forced.Event.Off
+                </pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="hero is-medium is-info">
+    <div class="hero-body">
+        <div class="container">
+            <p class="title has-text-centered">Automate the Appliance</p>
+            <p class="subtitle has-text-centered">customize how to got events</p>
+
+            <div class="container mt-6 has-text-centered">
+                <p class="subtitle">Yaml definition</p>
+            </div>
+
+            <div>
+                <div class="columns mt-6">
+                    <div class="column is-half">
+                        <div class="card card-equal-height">
+                            <header class="card-header">
+                                <p class="card-header-title is-centered">Presence Off Event</p>
+                            </header>
+                            <div class="card-content">
+                                <p class="is-centered mb-4 mt-4">Got a <em>Presence Off Event</em> from a <em>KNX motion sensor</em> 30 seconds later</p>
+                                <pre class="is-family-code">
+# In performer definitions
+
+!Performer
+ name: "trigger no motion from motion sensor X"
+ for appliance: "motion sensor X"
+ commands: []
+ triggers:
+ - !knx_plugin.trigger.dpt_switch.Off
+   addresses: [ 0xAABB ]
+   events:
+
+
+# In scheduler triggers definitions
+
+!protocol.delay.Trigger
+  name: "send no more presence event from motion sensor X"
+  notify more events:
+    - !home.event.presence.Event.Off
+  when triggered performers: "trigger no motion from motion sensor X"
+  and timeout expires: 30
+
+
+# In scheduler definition
+
+!schedule
+ trigger: "send no more presence event from motion sensor X"
+ for performers: "commands for presence light"
+                                </pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column is-half">
+                        <div class="card card-equal-height">
+                            <header class="card-header">
+                                <p class="card-header-title is-centered">Synchronize Lifx Bulb with model state</p>
+                            </header>
+                            <div class="card-content">
+                                <p class="is-centered mb-4 mt-4">Synchronize <em>a zone light</em> model with the
+                                    Lifx Bulb device a few seconds later it is powered on again</p>
+                                <pre class="is-family-code">
+# In scheduler triggers definitions
+
+- !protocol.delay.Trigger
+  name: "synchronize lifx bulb settings with model"
+  notify more events: []
+  when triggered performers: "triggers (a zone light)"
+  and timeout expires: 8
+
+# In scheduler definition
+
+!schedule
+ trigger: "synchronize lifx bulb settings with model"
+ for performers: "set color (a zone light)"
+                </pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+ <section class="hero is-medium">
+    <div class="hero-body">
+        <div class="container">
+            <p class="title has-text-centered">View/Interact with automations</p>
+            <p class="subtitle has-text-centered">because a smart light could be more than just on or off</p>
+        </div>
+        <div>
+            <div class="columns mt-6">
+                <div class="column is-half">
+                    <div class="card card-equal-height">
+                        <div class="card-content">
+                            <figure class="image is-600x600">
+                                <img src="./images/presence_light.png"/>
+                            </figure>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="column is-half">
+                    <div class="card card-equal-height">
+                        <div class="card-content">
+                            <figure class="image is-600x600">
+                                <img src="./images/zone_light.png"/>
+                            </figure>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

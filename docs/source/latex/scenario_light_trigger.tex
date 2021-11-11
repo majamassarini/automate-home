@@ -1,0 +1,31 @@
+\begin{figure}[hbp]
+    \begin{center}
+        \resizebox{0.9\textwidth}{!}{%
+        \begin{tikzpicture}
+            \begin{umlsystem}[x=0, y=0]{User John turns on garage light}
+                \umlactor[x=0, y=4, draw=teal, text=teal]{User John}
+                \umlusecase[x=3.5, y=4, fill=gray!30, name={button}]{Button}
+                \umlinherit[arg2={press}, pos2=0.6]{User John}{button}
+
+                \umlusecase[x=3.5, y=2, draw=white, fill=white, name={on_message}]{on message}
+                \umlusecase[x=0, y=2, width=1cm, fill=gray!30, name={bus}]{Protocol Bus}
+                \umlassoc{bus}{on_message}
+                \umlinherit[arg1={send}]{button}{on_message}
+
+                \umlusecase[x=6, y=4, width=1.5cm, fill=orange!50, name={light}]{Garage \\ Light}
+                \umlinherit[geometry=-|, arg2={is turned on}]{on_message}{light}
+
+                \umlusecase[x=9, y=4, width=2cm, fill=blue!30, name={performer}]{Performer \\ \tiny{\textit{for Garage Light} \\ \textbf{protocol triggers:} \\ \textit{- garage light on trigger}}}
+                \umlinherit[geometry=-|, arg2={is triggered}]{on_message}{performer}
+
+                \umlusecase[x=15, y=4, width=2cm, fill=blue!30, name={appliance}]{Appliance is \textbf{forced on} \\ \tiny{\textit{for Garage Light} \\ \textbf{internal state:} \\ \textit{- forced on}}}
+                \umlinherit[arg2={update forced on}, pos2=0.6]{performer}{appliance}
+            \end{umlsystem}
+        \end{tikzpicture}%
+        }
+        \caption{User John turns on garage light}
+        \label{fig:light_trigger}
+
+    \end{center}
+\end{figure}
+

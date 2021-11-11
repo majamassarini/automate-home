@@ -1,0 +1,31 @@
+% Performer, its Appliance and Protocol Commands
+\begin{figure}[hbp]
+    \vfill
+    \begin{center}
+        \resizebox{\columnwidth}{!}{%
+        \begin{tikzpicture}
+            \begin{umlcomponent}[x=16]{Appliance}
+            \end{umlcomponent}
+            \begin{umlcomponent}[x=8]{Performer}
+            \end{umlcomponent}
+            \begin{umlcomponent}[]{Process}
+            \end{umlcomponent}
+
+            \umlbasiccomponent[y=-5, x=16]{Protocol Command A}
+            \umlbasiccomponent[y=-5.3,x=16.3]{Protocol Command B}
+            \umlbasiccomponent[y=-5.6,x=16.6]{Protocol Command C}
+            \umlbasiccomponent[y=-5.9,x=16.9]{Protocol Commands}
+
+            \umlassemblyconnector[interface=notify{(events)}]{Process}{Performer}
+            \umlVHVassemblyconnector[interface=make\_msgs\_from{(state\_old, state\_new)}]{Protocol Command A}{Performer}
+
+            \umlassemblyconnector[interface=notify{(event)}]{Performer}{Appliance}
+        \end{tikzpicture}%
+        }
+        \caption{Appliance and Protocol Commands in a Performer}
+        \label{fig:performer_protocol_commands}
+    \end{center}
+\end{figure}
+\newpage
+
+

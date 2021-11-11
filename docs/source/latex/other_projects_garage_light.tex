@@ -1,0 +1,39 @@
+\begin{figure}[hbp]
+    \begin{center}
+        \resizebox{0.8\textwidth}{!}{%
+        \begin{tikzpicture}
+            \begin{umlsystem}{A light automated thanks to a movement sensor like it would be in other projects}
+                \umlusecase[x=-4, y=8, text=red, draw=white, fill=white, name={protocol_bus}]{Protocol Bus}
+                \umlusecase[x=-0, y=8, text=red, draw=white, fill=white, width=3cm, name={light_model}]{Light Model (a deterministic state machine)}
+                \umlusecase[x=4, y=8, text=red, draw=white, fill=white, name={system_scheduler}]{Automation System}
+
+                \umlactor[x=-8, y=6, draw=teal, text=teal]{John}
+                \umlusecase[x=-4, y=6, fill=white, width=1.3cm, name={on_message}]{on message}
+                \umlusecase[x=0, y=6, fill=gray!30, name={light}]{ON}
+                \umlinherit[arg2={turns on light}, pos2=0.6]{John}{on_message}
+                \umlinherit[arg1={notify on}, pos1=0.4]{on_message}{light}
+
+                \umlactor[x=8, y=4, draw=blue, text=blue]{Bob}
+                \umlusecase[x=4, y=4, fill=white, width=1.3cm, name={movement}]{movement sensor triggered}
+                \umlinherit[arg2={comes home}, pos2=0.6]{Bob}{movement}
+                \umlusecase[x=0, y=4, fill=gray!30, name={light2}]{ON}
+                \umlinherit[arg2={notify on}, pos2=0.6]{movement}{light2}
+
+                \umlactor[x=8, y=2, draw=blue, text=blue]{Bob}
+                \umlusecase[x=4, y=2, fill=white, width=1.6cm, name={nomotion}]{no motion on sensor}
+                \umlinherit[arg2={goes inside}, pos2=0.6]{Bob}{nomotion}
+                \umlusecase[x=0, y=2, fill=gray!30, name={light3}]{OFF}
+                \umlinherit[arg2={notify off}, pos2=0.6]{nomotion}{light3}
+                \umlusecase[x=-4, y=2, fill=white, width=1.3cm, name={off_message}]{off message}
+                \umlinherit[arg1={write off}, pos1=0.6]{light3}{off_message}
+
+                \umlactor[x=-8, y=0, draw=teal, text=teal]{John is angry!!!}
+            \end{umlsystem}
+        \end{tikzpicture}%
+        }
+        \caption{A light automated thanks to a movement sensor, like it would be in \textbf{other projects}}
+        \label{fig:other_projects}
+
+    \end{center}
+\end{figure}
+

@@ -1,0 +1,197 @@
+\begin{figure}
+    \begin{center}
+        \resizebox{0.9\textwidth}{!}{%
+        \begin{tikzpicture}
+            \begin{umlsystem}[x=0, y=0]{User John turns on light}
+                \umlactor[x=0, y=4, draw=teal, text=teal]{User John}
+                \umlusecase[x=3.5, y=4, fill=gray!30, name={button}]{Button}
+                \umlinherit[arg2={press}, pos2=0.6]{User John}{button}
+
+                \umlusecase[x=3.5, y=2, draw=white, fill=white, name={on_message}]{on message}
+                \umlusecase[x=0, y=2, width=1cm, fill=gray!30, name={bus}]{Protocol Bus}
+                \umlassoc{bus}{on_message}
+                \umlinherit[arg1={send}]{button}{on_message}
+
+                \umlusecase[x=6, y=4, width=1.5cm, fill=orange!50, name={light}]{Light}
+                \umlinherit[geometry=-|, arg2={is turned on}]{on_message}{light}
+
+                \umlusecase[x=9, y=4, width=2cm, fill=blue!30, name={performer}]{Performer \\ \tiny{\textit{for Light} \\ \textbf{protocol triggers:} \\ \textit{- light on trigger}}}
+                \umlinherit[geometry=-|, arg2={is triggered}]{on_message}{performer}
+
+                \umlusecase[x=15, y=4, width=2cm, fill=blue!30, name={appliance}]{Appliance is \textbf{forced on} \\ \tiny{\textit{for Light} \\ \textbf{internal state:} \\ \textit{- forced on}}}
+                \umlinherit[arg2={update forced on}, pos2=0.6]{performer}{appliance}
+            \end{umlsystem}
+        \end{tikzpicture}%
+        }
+        \caption{User John turns on light}
+        \label{fig:turns_on}
+
+    \end{center}
+\end{figure}
+
+\begin{figure}
+    \begin{center}
+        \resizebox{0.9\textwidth}{!}{%
+        \begin{tikzpicture}
+            \begin{umlsystem}[x=0, y=0]{User Bob id detected by the motion sensor}
+                \umlactor[x=0, y=4, draw=brown, text=brown]{User Bob}
+                \umlusecase[x=3.5, y=4, width=1cm, fill=gray!30, name={sensor}]{Motion \\ Sensor}
+                \umlinherit[arg2={detected by}, pos2=0.6]{User Bob}{sensor}
+
+                \umlusecase[x=3.5, y=2, draw=white, fill=white, name={motion_message}]{motion message}
+                \umlusecase[x=0, y=2, width=1cm, fill=gray!30, name={bus}]{Protocol Bus}
+                \umlassoc{bus}{motion_message}
+                \umlinherit[arg1={send}]{sensor}{motion_message}
+
+                \umlusecase[x=6, y=4, width=1.5cm, fill=orange!50, name={light}]{Light}
+
+                \umlusecase[x=9, y=4, width=2cm, fill=blue!30, name={performer}]{Performer \\ \tiny{\textit{for Motion Sensor} \\ \textbf{protocol triggers:} \\ \textit{- motion trigger}}}
+                \umlinherit[geometry=-|, arg2={is triggered}]{on_message}{performer}
+
+                \umlusecase[x=15, y=4, width=2cm, fill=blue!30, name={appliance}]{Appliance is \textbf{forced on} \\ \tiny{\textit{for Light} \\ \textbf{internal state:} \\ \textit{- forced on} \\ \textit{- motion detected}}}
+                \umlinherit[arg2={notify motion}, pos2=0.6]{performer}{appliance}
+            \end{umlsystem}
+        \end{tikzpicture}%
+        }
+        \caption{User Bob is detected by the motion sensor}
+        \label{fig:comes_home}
+
+    \end{center}
+\end{figure}
+
+\begin{figure}
+    \begin{center}
+        \resizebox{0.9\textwidth}{!}{%
+        \begin{tikzpicture}
+            \begin{umlsystem}[x=0, y=0]{User Bob is no more detected by the motion sensor}
+                \umlactor[x=0, y=4, draw=brown, text=brown]{User Bob}
+                \umlusecase[x=3.5, y=4, width=1cm, fill=gray!30, name={sensor}]{Motion \\ Sensor}
+                \umlinherit[arg2={goes away}, pos2=0.6]{User Bob}{sensor}
+
+                \umlusecase[x=3.5, y=2, draw=white, fill=white, name={no_motion_message}]{no more motion message}
+                \umlusecase[x=0, y=2, width=1cm, fill=gray!30, name={bus}]{Protocol Bus}
+                \umlassoc{bus}{no_motion_message}
+                \umlinherit[arg1={send}]{sensor}{no_motion_message}
+
+                \umlusecase[x=6, y=4, width=1.5cm, fill=orange!50, name={light}]{Light}
+
+                \umlusecase[x=9, y=4, width=2cm, fill=blue!30, name={performer}]{Performer \\ \tiny{\textit{for Motion Sensor} \\ \textbf{protocol triggers:} \\ \textit{- no motion trigger}}}
+                \umlinherit[geometry=-|, arg2={is triggered}]{on_message}{performer}
+
+                \umlusecase[x=15, y=4, width=2cm, fill=blue!30, name={appliance}]{Appliance is \textbf{forced on} \\ \tiny{\textit{for Light} \\ \textbf{internal state:} \\ \textit{- forced on}}}
+                \umlinherit[arg2={notify no motion}, pos2=0.6]{performer}{appliance}
+            \end{umlsystem}
+        \end{tikzpicture}%
+        }
+        \caption{User Bob is no more detected by the motion sensor}
+        \label{fig:goes_away}
+
+    \end{center}
+\end{figure}
+
+\begin{figure}
+    \begin{center}
+        \resizebox{0.9\textwidth}{!}{%
+        \begin{tikzpicture}
+            \begin{umlsystem}[x=0, y=0]{User John turns off light}
+                \umlactor[x=0, y=4, draw=teal, text=teal]{User John}
+                \umlusecase[x=3.5, y=4, fill=gray!30, name={button}]{Button}
+                \umlinherit[arg2={press}, pos2=0.6]{User John}{button}
+
+                \umlusecase[x=3.5, y=2, draw=white, fill=white, name={off_message}]{off message}
+                \umlusecase[x=0, y=2, width=1cm, fill=gray!30, name={bus}]{Protocol Bus}
+                \umlassoc{bus}{off_message}
+                \umlinherit[arg1={send}]{button}{off_message}
+
+                \umlusecase[x=6, y=4, width=1.5cm, fill=white, name={light}]{Light}
+                \umlinherit[geometry=-|, arg2={is turned off}]{off_message}{light}
+
+                \umlusecase[x=9, y=4, width=2cm, fill=blue!30, name={performer}]{Performer \\ \tiny{\textit{for Light} \\ \textbf{protocol triggers:} \\ \textit{- light off trigger}}}
+                \umlinherit[geometry=-|, arg2={is triggered}]{on_message}{performer}
+
+                \umlusecase[x=15, y=4, width=2cm, fill=blue!30, name={appliance}]{Appliance is \textbf{off} \\ \tiny{\textit{for Light} \\ \textbf{internal state:} \\}}
+                \umlinherit[arg2={update forced off}, pos2=0.6]{performer}{appliance}
+            \end{umlsystem}
+        \end{tikzpicture}%
+        }
+        \caption{User John turns off light}
+        \label{fig:turns_off}
+
+    \end{center}
+\end{figure}
+
+\begin{figure}
+    \begin{center}
+        \resizebox{0.9\textwidth}{!}{%
+        \begin{tikzpicture}
+            \begin{umlsystem}[x=0, y=0]{User Alice is detected by the motion sensor}
+                \umlactor[x=0, y=4, draw=magenta, text=magenta]{User Alice}
+                \umlusecase[x=3.5, y=4, width=1cm, fill=gray!30, name={sensor}]{Motion \\ Sensor}
+                \umlinherit[arg2={detected by}, pos2=0.6]{User Alice}{sensor}
+
+                \umlusecase[x=3.5, y=2, draw=white, fill=white, name={motion_message}]{motion message}
+                \umlusecase[x=0, y=2, width=1cm, fill=gray!30, name={bus}]{Protocol Bus}
+                \umlassoc{bus}{motion_message}
+                \umlinherit[arg1={send}]{sensor}{motion_message}
+
+                \umlusecase[x=6, y=4, width=1.5cm, fill=white, name={light_off}]{Light}
+
+                \umlusecase[x=9, y=4, width=2cm, fill=blue!30, name={performer_trigger}]{Performer \\ \tiny{\textit{for Motion Sensor} \\ \textbf{protocol triggers:} \\ \textit{- motion trigger}}}
+                \umlinherit[geometry=-|, arg2={is triggered}]{motion_message}{performer_trigger}
+
+                \umlusecase[x=14.5, y=4, width=2cm, fill=blue!30, name={appliance}]{Appliance is \textbf{on} \\ \tiny{\textit{for Light} \\ \textbf{internal state:} \\ \textit{- motion detected}}}
+                \umlinherit[arg2={notify motion}, pos2=0.5]{performer_trigger}{appliance}
+
+                \umlusecase[x=19, y=4, width=2cm, fill=blue!30, name={performer_command}]{Performer \\ \tiny{\textit{for Light} \\ \textbf{protocol commands:} \\ \textit{- set light on}}}
+                \umlinherit[arg2={returns on}, pos2=0.5]{appliance}{performer_command}
+                \umlusecase[x=19, y=2, draw=white, fill=white, name={on_message}]{on message}
+                \umlinherit[arg1={send}]{performer_command}{on_message}
+
+                \umlusecase[x=22, y=4, width=1.5cm, fill=orange!50, name={light_on}]{Light}
+                \umlinherit[geometry=-|, arg2={is turned on}, pos2=0.5]{on_message}{light_on}
+            \end{umlsystem}
+        \end{tikzpicture}%
+        }
+        \caption{User Alice is detected by the motion sensor}
+        \label{fig:walks_outside}
+
+    \end{center}
+\end{figure}
+
+\begin{figure}
+    \begin{center}
+        \resizebox{0.9\textwidth}{!}{%
+        \begin{tikzpicture}
+            \begin{umlsystem}[x=0, y=0]{User Alice is no more detected by the motion sensor}
+                \umlactor[x=0, y=4, draw=magenta, text=magenta]{User Alice}
+                \umlusecase[x=3.5, y=4, width=1cm, fill=gray!30, name={sensor}]{Motion \\ Sensor}
+                \umlinherit[arg2={goes away}, pos2=0.6]{User Alice}{sensor}
+
+                \umlusecase[x=3.5, y=2, draw=white, fill=white, name={motion_message}]{no motion message}
+                \umlusecase[x=0, y=2, width=1cm, fill=gray!30, name={bus}]{Protocol Bus}
+                \umlassoc{bus}{motion_message}
+                \umlinherit[arg1={send}]{sensor}{motion_message}
+
+                \umlusecase[x=6, y=4, width=1.5cm, fill=orange!30, name={light_on}]{Light}
+
+                \umlusecase[x=9, y=4, width=2cm, fill=blue!30, name={performer_trigger}]{Performer \\ \tiny{\textit{for Motion Sensor} \\ \textbf{protocol triggers:} \\ \textit{- no motion trigger}}}
+                \umlinherit[geometry=-|, arg2={is triggered}]{motion_message}{performer_trigger}
+
+                \umlusecase[x=14.5, y=4, width=2cm, fill=blue!30, name={appliance}]{Appliance is \textbf{off} \\ \tiny{\textit{for Light} \\ \textbf{internal state:} \\}}
+                \umlinherit[arg2={notify no motion}, pos2=0.5]{performer_trigger}{appliance}
+
+                \umlusecase[x=19, y=4, width=2cm, fill=blue!30, name={performer_command}]{Performer \\ \tiny{\textit{for Light} \\ \textbf{protocol commands:} \\ \textit{- set light off}}}
+                \umlinherit[arg2={returns off}, pos2=0.5]{appliance}{performer_command}
+                \umlusecase[x=19, y=2, draw=white, fill=white, name={off_message}]{off message}
+                \umlinherit[arg1={send}]{performer_command}{off_message}
+
+                \umlusecase[x=22, y=4, width=1.5cm, fill=white, name={light_off}]{Light}
+                \umlinherit[geometry=-|, arg2={is turned off}, pos2=0.5]{off_message}{light_off}
+            \end{umlsystem}
+        \end{tikzpicture}%
+        }
+        \caption{User Alice is no more detected by the motion sensor}
+        \label{fig:goes_aways}
+
+    \end{center}
+\end{figure}

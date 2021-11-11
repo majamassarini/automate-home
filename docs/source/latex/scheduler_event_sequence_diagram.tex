@@ -1,0 +1,27 @@
+\begin{figure}[hbp]
+    \begin{center}
+        \resizebox{\columnwidth}{!}{%
+        \begin{tikzpicture}
+            \begin{umlseqdiag}
+                \umlobject{Scheduler}
+                \umlobject{Process}
+                \umlobject{Performer}
+                \umlobject{Appliance}
+                \umlobject{Protocol Command}
+
+                \begin{umlcall}[op=schedule(), dt=10, type=synchron]{Scheduler}{Process}
+                    \begin{umlcall}[op=notify(scheduler\_trigger.events), type=synchron, dt=10, padding=5, return={msgs, (old\_state, new\_state)}]{Process}{Performer}
+                        \begin{umlcall}[op={notify(event)}, type=synchron, return={(old\_state, new\_state)}, dt=10, padding=5]{Performer}{Appliance}
+                        \end{umlcall}
+                        \begin{umlcall}[op={make\_msgs\_from(old\_state, new\_state)}, type=synchron, return={list(msgs)}, dt=10, padding=5]{Performer}{Protocol Command}
+                        \end{umlcall}
+                    \end{umlcall}
+                \end{umlcall}
+            \end{umlseqdiag}
+        \end{tikzpicture}%
+        }
+        \caption{The main Process updating an Appliance through its Performer when a Scheduler Trigger is triggered}
+        \label{fig:performer_updating_appliance}
+    \end{center}
+\end{figure}
+

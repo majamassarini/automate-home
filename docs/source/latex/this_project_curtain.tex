@@ -1,0 +1,44 @@
+\begin{figure}[hbp]
+    \begin{center}
+        \resizebox{0.8\textwidth}{!}{%
+        \begin{tikzpicture}
+            \begin{umlsystem}{An automated curtain which is closed when sun shines like it would be in this project}
+                \umlusecase[x=-5, y=8, text=red, draw=white, fill=white, name={protocol_bus}]{Protocol Bus}
+                \umlusecase[x=-0, y=8, text=red, draw=white, fill=white, width=3cm, name={curtain_model}]{Curtain Model (a non deterministic state machine)}
+                \umlusecase[x=4, y=8, text=red, draw=white, fill=white, name={system_scheduler}]{Automation System}
+
+                \umlactor[x=8, y=6, draw=orange, text=orange]{Sun}
+                \umlusecase[x=4, y=6, fill=white, width=1.6cm, name={bright}]{mean bright lux value triggered}
+                \umlinherit[arg2={shine}, pos2=0.6]{Sun}{bright}
+                \umlusecase[x=0, y=6, fill=gray!30, width=1.1cm, name={curtain}]{CLOSED}
+                \umlinherit[arg2={notify bright}, pos2=0.5]{bright}{curtain}
+                \umlusecase[x=-5, y=6, fill=white, width=1.1cm, name={closed_message0}]{closed message}
+                \umlinherit[arg2={write closed}, pos2=0.5]{curtain}{closed_message0}
+
+                \umlactor[x=-9, y=4, draw=teal, text=teal]{You}
+                \umlusecase[x=-5, y=4, fill=white, width=1.1cm, name={opened_message}]{opened message}
+                \umlusecase[x=0, y=4, fill=gray!30, width=1.1cm, name={curtain2}]{FORCED OPENED}
+                \umlinherit[arg2={open the curtain}, pos2=0.6]{You}{opened_message}
+                \umlinherit[arg1={notify forced opened}, pos1=0.5]{opened_message}{curtain2}
+
+                \umlactor[x=8, y=2, draw=teal, text=teal]{Some clouds}
+                \umlusecase[x=4, y=2, fill=white, width=1.6cm, name={dark}]{mean dark lux value triggered}
+                \umlinherit[arg2={bring dark}, pos2=0.6]{Some clouds}{dark}
+                \umlusecase[x=0, y=2, fill=gray!30, width=1.1cm, name={curtain3}]{FORCED OPENED}
+                \umlinherit[arg2={notify dark}, pos2=0.6]{dark}{curtain3}
+
+                \umlactor[x=8, y=0, draw=orange, text=orange]{Sun}
+                \umlusecase[x=4, y=0, fill=white, width=1.6cm, name={bright2}]{mean bright lux value triggered}
+                \umlinherit[arg2={shine again}, pos2=0.6]{Sun}{bright2}
+                \umlusecase[x=0, y=0, fill=gray!30, width=1.1cm, name={curtain4}]{FORCED OPENED}
+                \umlinherit[arg2={notify bright}, pos2=0.5]{bright2}{curtain4}
+
+            \end{umlsystem}
+        \end{tikzpicture}%
+        }
+        \caption{An automated curtain which is closed when sun shines, like it would be in \textbf{this project}}
+        \label{fig:this_project_curtain}
+
+    \end{center}
+\end{figure}
+

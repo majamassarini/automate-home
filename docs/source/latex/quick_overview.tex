@@ -1,0 +1,278 @@
+%\documentclass[a4paper,9pt]{article}
+%\usepackage[landscape]{geometry}
+%\usepackage[T1]{fontenc}
+%\usepackage[utf8x]{inputenc}
+%\usepackage[english]{babel}
+%\usepackage{fullpage}
+%
+%\usepackage{tikz-uml}
+%
+%\sloppy
+%\hyphenpenalty 10000000
+%
+%\title{The Architecture quick Overview}
+%\author{Maja Massarini}
+%
+%\begin{document}
+%
+%\maketitle
+%\begin{appendix}
+%  \listoffigures
+%\end{appendix}
+%\vfill
+
+\begin{figure}
+    \begin{center}
+        \resizebox{\columnwidth}{!}{%
+            \begin{tikzpicture}
+
+                \begin{umlpackage}{home}
+                    \umlclass[y=2]{Performer}{}{execute(old$\_$state, new$\_$state): msgs \\
+                        update$\_$by(Description): (old$\_$state, new$\_$state) \\
+                        notify(Event): (old$\_$state, new$\_$state)}
+
+
+                    \begin{umlpackage}{protocol}
+                        \umlinterface[y=-1, x=0]{Description}{}{}
+                        \umlclass[y=-4, x=-2, type=abstract]{Protocol Trigger}{events}{
+                            is$\_$triggered(Description): bool \\
+                            make$\_$new$\_$state$\_$from(Description, old$\_$state): new$\_$state
+                        }
+                        \umlclass[y=-4, x=8, type=abstract]{Protocol Command}{}{
+                            \umlvirt{execute(): msgs} \\
+                            \umlvirt{make$\_$msgs$\_$from(old$\_$state, new$\_$state): msgs}
+                        }
+                        \umlimpl{Protocol Trigger}{Description}
+                        \umlimpl{Protocol Command}{Description}
+                    \end{umlpackage}
+
+
+                    \begin{umlpackage}{appliance}
+                        \umlclass[y=2, x=11, type=abstract]{Appliance}{}{
+                            update(Appliance): (old$\_$state, new$\_$state) \\
+                            update$\_$by(Description): (old$\_$state, new$\_$state) \\
+                            notify(Event): (old$\_$state, new$\_$state)
+                        }
+                        \begin{umlpackage}{light}
+                            \umlemptyclass[y=-1, x=7]{Light}
+                            \umlemptyclass[y=-1, x=10]{wall Light}{}{}
+                            \umlemptyclass[y=-1, x=13]{alarm Light}{}{}
+                            \umlemptyclass[y=-1, x=17]{hue Light}{}{}
+
+                            \umlimpl{Light}{Appliance}
+                            \umlimpl{wall Light}{Appliance}
+                            \umlimpl{alarm Light}{Appliance}
+                            \umlimpl{hue Light}{Appliance}
+                        \end{umlpackage}
+                    \end{umlpackage}
+                \end{umlpackage}
+
+
+                \begin{umlpackage}{\detokenize{knx_plugin}}
+                    \begin{umlpackage}{device}
+                        \begin{umlpackage}{switch}
+                            \begin{umlpackage}{trigger}
+                                \umlclass[y=-11, x=-6]{On}{}{}
+                                \umlclass[y=-11, x=-3]{Off}{}{}
+
+                            \end{umlpackage}
+                            \begin{umlpackage}{command}
+                                \umlclass[y=-11, x=0]{OnOff}{}{}
+
+                                \umlimpl{On}{Protocol Trigger}
+                                \umlimpl{Off}{Protocol Trigger}
+                                \umlimpl{OnOff}{Protocol Command}
+                            \end{umlpackage}
+                        \end{umlpackage}
+                    \end{umlpackage}
+                \end{umlpackage}
+
+
+                \begin{umlpackage}{\detokenize{lifx_plugin}}
+                    \begin{umlpackage}{device}
+                        \begin{umlpackage}{switch}
+                            \begin{umlpackage}{trigger}
+                                \umlclass[y=-11, x=6]{State}{}{}
+
+                            \end{umlpackage}
+                            \begin{umlpackage}{command}
+                                \umlclass[y=-11, x=9]{SetColor}{}{}
+                                \umlclass[y=-11, x=12]{SetWaveform}{}{}
+
+                                \umlimpl{State}{Protocol Trigger}
+                                \umlimpl{SetColor}{Protocol Command}
+                                \umlimpl{SetWaveform}{Protocol Command}
+                            \end{umlpackage}
+                        \end{umlpackage}
+                    \end{umlpackage}
+                \end{umlpackage}
+
+                \umlunicompo[mult=1]{Performer}{Appliance}
+                \umlunicompo[mult=*]{Performer}{Protocol Trigger}
+                \umlunicompo[mult=*]{Performer}{Protocol Command}
+
+            \end{tikzpicture}%
+        }
+        \caption{Appliance, Protocol Triggers, Protocol Commands in a Performer}
+        \label{fig:complete_performer}
+    \end{center}
+\end{figure}
+
+
+
+% Performer, its Appliance and Protocol Triggers
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}
+\begin{umlcomponent}[x=7]{Performer}
+\end{umlcomponent}
+\begin{umlcomponent}[y=-4,x=7]{Appliance}
+\end{umlcomponent}
+
+\umlbasiccomponent[y=-3, x=0]{Protocol Trigger A}
+\umlbasiccomponent[y=-3.3,x=0.3]{Protocol Trigger B}
+\umlbasiccomponent[y=-3.6,x=0.6]{Protocol Trigger C}
+\umlbasiccomponent[y=-3.9,x=0.9]{Protocol Triggers}
+
+\umlVHVassemblyconnector[interface=update\_by{(description)}]{Performer}{Appliance}
+\umlVHassemblyconnector[interface=is\_triggered{(description)}]{Protocol Trigger A}{Performer}
+
+\end{tikzpicture}
+\end{center}
+\caption{Appliance and Protocol Triggers in a Performer}
+\label{fig:performer_triggers}
+\end{figure}
+
+
+% Performer, its Appliance and Protocol Commands
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}
+\begin{umlcomponent}[x=8]{Performer}
+\end{umlcomponent}
+\begin{umlcomponent}[]{Process}
+\end{umlcomponent}
+
+\umlbasiccomponent[y=-3, x=5]{Protocol Command A}
+\umlbasiccomponent[y=-3.3,x=5.3]{Protocol Command B}
+\umlbasiccomponent[y=-3.6,x=5.6]{Protocol Command C}
+\umlbasiccomponent[y=-3.9,x=5.9]{Protocol Commands}
+
+\umlassemblyconnector[interface=execute{(old\_state, new\_state)}]{Process}{Performer}
+\umlVHVassemblyconnector[interface=make\_msgs\_from{(state\_old, state\_new)}]{Protocol Command A}{Performer}
+\end{tikzpicture}
+\caption{Appliance and Protocol Commands in a Performer}
+\label{fig:performer_commands}
+\end{center}
+\end{figure}
+
+
+% Performer sequence diagram
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}[scale=1]
+\begin{umlseqdiag}
+\umlobject{Brain}
+\umlobject{Gateway}
+\umlobject{Process}
+\umlobject{Performer}
+\umlobject{Appliance}
+\umlobject{Protocol Trigger}
+
+\begin{umlcall}[op=run(), dt=10, type=synchron]{Brain}{Process}
+\begin{umlcall}[op=on\_protocol\_event(), type=asynchron, dt=20]{Gateway}{Process}
+\begin{umlcall}[op=update\_by(description), type=synchron, dt=10, padding=5, return={(old\_state, new\_state)}]{Process}{Performer}
+\begin{umlcall}[op={update\_by(protocol\_trigger, description)}, type=synchron, return={(old\_state, new\_state)}, dt=10, padding=5]{Performer}{Appliance}
+\begin{umlcall}[op={make\_new\_state\_from(description, old\_state)}, type=synchron, return=new\_state, dt=10, padding=5]{Appliance}{Protocol Trigger}
+\end{umlcall}
+\end{umlcall}
+\end{umlcall}
+\end{umlcall}
+\end{umlcall}
+\end{umlseqdiag}
+\end{tikzpicture}
+\caption{A Performer updating its Appliance from a bus message}
+\label{fig:performer_updating_appliance}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}
+\begin{umlpackage}{home}
+\umlclass[y=4]{Process}{}{
+schedule(performer, trigger) \\
+run(scheduler): ()
+}
+
+\begin{umlpackage}{scheduler}
+\begin{umlpackage}{trigger}
+\umlinterface[y=-1, x=0]{Trigger}{name\\ events}{fork(performer): list(tuple(performer, trigger))}
+\umlemptyclass[y=-4, x=0]{cron Trigger}{}{}
+\umlemptyclass[y=-4.6, x=0.6]{interval Trigger}{}{}
+\umlemptyclass[y=-5.2, x=1.2]{protocol Trigger}{}{}
+
+\umlunicompo[mult=*]{Process}{Trigger}
+\umlimpl{cron Trigger}{Trigger}
+\umlimpl{interval Trigger}{Trigger}
+\umlimpl{protocol Trigger}{Trigger}
+\end{umlpackage}
+\end{umlpackage}
+
+\umlclass[y=4, x=12]{Performer}{
+name }{
+notify(events): (old$\_$state, new$\_$state)
+}
+
+\begin{umlpackage}{appliance}
+\umlclass[y=0, x=8]{Appliance}{
+name }{
+notify(event): (old$\_$state, new$\_$state)
+}
+\end{umlpackage}
+
+\begin{umlpackage}{protocol}
+\umlclass[y=-4, x=12]{Command}{}{
+make$\_$msgs$\_$from(old$\_$state, new$\_$state): list(msgs)
+}
+\end{umlpackage}
+
+\umlunicompo[mult=*]{Process}{Performer}
+\umlunicompo[mult=1]{Performer}{Appliance}
+\umlunicompo[mult=*]{Performer}{Command}
+
+\end{umlpackage}
+\end{tikzpicture}
+\caption{The main Process its Scheduler Triggers and Performers}
+\label{fig:scheduler}
+
+\end{center}
+\end{figure}
+
+% Performer sequence diagram
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}[scale=1]
+\begin{umlseqdiag}
+\umlobject{Scheduler}
+\umlobject{Process}
+\umlobject{Performer}
+\umlobject{Appliance}
+\umlobject{Protocol Command}
+
+\begin{umlcall}[op=schedule(), dt=10, type=synchron]{Scheduler}{Process}
+\begin{umlcall}[op=notify(scheduler\_trigger.events), type=synchron, dt=10, padding=5, return={msgs, (old\_state, new\_state)}]{Process}{Performer}
+\begin{umlcall}[op={notify(event)}, type=synchron, return={(old\_state, new\_state)}, dt=10, padding=5]{Performer}{Appliance}
+\end{umlcall}
+\begin{umlcall}[op={make\_msgs\_from(old\_state, new\_state)}, type=synchron, return={list(msgs)}, dt=10, padding=5]{Performer}{Protocol Command}
+\end{umlcall}
+\end{umlcall}
+\end{umlcall}
+\end{umlseqdiag}
+\end{tikzpicture}
+\caption{The main Process updating an Appliance through its Performer when a Scheduler Trigger is triggered}
+\label{fig:performer_updating_appliance}
+\end{center}
+\end{figure}
+
+%\end{document}

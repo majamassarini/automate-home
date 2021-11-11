@@ -1,0 +1,55 @@
+\begin{figure}[hbp]
+    \begin{center}
+        \resizebox{\columnwidth}{!}{%
+            \begin{tikzpicture}
+                \begin{umlpackage}{home}
+                    \umlclass[y=4]{Process}{}{
+                        schedule(performer, trigger) \\
+                        run(scheduler): ()
+                    }
+
+                    \begin{umlpackage}{scheduler}
+                        \begin{umlpackage}{trigger}
+                            \umlinterface[y=-1, x=0]{Trigger}{name\\ events}{fork(performer): list(tuple(performer, trigger))}
+                            \umlemptyclass[y=-4, x=0]{cron Trigger}{}{}
+                            \umlemptyclass[y=-4.6, x=0.6]{interval Trigger}{}{}
+                            \umlemptyclass[y=-5.2, x=1.2]{protocol Trigger}{}{}
+
+                            \umlunicompo[mult=*]{Process}{Trigger}
+                            \umlimpl{cron Trigger}{Trigger}
+                            \umlimpl{interval Trigger}{Trigger}
+                            \umlimpl{protocol Trigger}{Trigger}
+                        \end{umlpackage}
+                    \end{umlpackage}
+
+                    \umlclass[y=4, x=12]{Performer}{
+                        name }{
+                        notify(events): (old$\_$state, new$\_$state)
+                    }
+
+                    \begin{umlpackage}{appliance}
+                        \umlclass[y=0, x=8]{Appliance}{
+                            name }{
+                            notify(event): (old$\_$state, new$\_$state)
+                        }
+                    \end{umlpackage}
+
+                    \begin{umlpackage}{protocol}
+                        \umlclass[y=-4, x=12]{Command}{}{
+                            make$\_$msgs$\_$from(old$\_$state, new$\_$state): list(msgs)
+                        }
+                    \end{umlpackage}
+
+                    \umlunicompo[mult=*]{Process}{Performer}
+                    \umlunicompo[mult=1]{Performer}{Appliance}
+                    \umlunicompo[mult=*]{Performer}{Command}
+
+                \end{umlpackage}
+            \end{tikzpicture}%
+        }
+        \caption{The main Process its Scheduler Triggers and Performers}
+        \label{fig:scheduler}
+
+    \end{center}
+\end{figure}
+
