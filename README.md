@@ -1,7 +1,7 @@
 # Automate your home
 
-[![Build Status](https://app.travis-ci.com/majamassarini/automate-home.svg?token=...&branch=main)](https://app.travis-ci.com/majamassarini/automate-home)
-[![Codecov](https://codecov.io/gh/majamassarini/automate-home/branch/master/graph/badge.svg?token=...)](https://codecov.io/gh/majamassarini/automate-home)
+[![Build Status](https://app.travis-ci.com/majamassarini/automate-home.svg?token=0b562994-3607-435e-80a8-416c33869baa&branch=main)](https://app.travis-ci.com/majamassarini/automate-home)
+[![Codecov](https://codecov.io/gh/majamassarini/automate-home/branch/master/graph/badge.svg?token=0b562994-3607-435e-80a8-416c33869baa)](https://codecov.io/gh/majamassarini/automate-home)
 [![Documentation Status](https://readthedocs.org/projects/automate-home/badge/?version=latest)](https://automate-home.readthedocs.io/en/latest/?badge=latest)
 
 ![](icon_128x128.png)
