@@ -332,11 +332,6 @@ class Volume:
         event = lookup(self.VOLUME_EVENT, self._events.items())
         self.update_by(event(value))
 
-    # @todo REMOVE!
-    def next_volume(self, value: int) -> "home.appliance.State":
-        if home.event.sleepiness.Event.Sleepy in self.events:
-            return self.next(self.VOLUME_EVENT(value))
-
 
 class Setpoint:
     @property

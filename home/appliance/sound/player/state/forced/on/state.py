@@ -5,6 +5,7 @@
 # Copyright (C) 2021  Maja Massarini
 
 import home
+from home import event as home_event
 from home.appliance import attribute
 from home.appliance.sound.player import event
 from home.appliance.sound.player.state import State as Parent
@@ -57,17 +58,11 @@ class State(
 
         super(State, self).__init__(events, events_disabled)
 
-    @property
-    def volume(self):
-        if home.event.sleepiness.Event.Sleepy in self.events:
+    @attribute.mixin.Volume.volume.getter
+    def volume(self) -> int:
+        if home_event.sleepiness.Event.Sleepy in self.events:
             for klass, obj in self._events.items():
                 if klass == event.sleepy_volume.Event:
                     return obj.value
         else:
             return super(State, self).volume
-
-    def next_volume(self, value):
-        if home.event.sleepiness.Event.Sleepy in self.events:
-            return self.next(event.sleepy_volume.Event(value))
-        else:
-            return self.next(event.volume.Event(value))

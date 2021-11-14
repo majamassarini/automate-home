@@ -59,8 +59,8 @@ class State(
 
         super(State, self).__init__(events, events_disabled)
 
-    @property
-    def playlist(self):
+    @attribute.mixin.Playlist.playlist.getter
+    def playlist(self) -> str:
         lookup = None
         if home.event.user.Event.A in self.events:
             lookup = (
@@ -81,17 +81,3 @@ class State(
         else:
             return "None was found"
 
-    @property
-    def volume(self):
-        if home.event.sleepiness.Event.Sleepy in self.events:
-            for klass, obj in self._events.items():
-                if klass == home.appliance.sound.player.event.sleepy_volume.Event:
-                    return obj.value
-        else:
-            return super(State, self).volume
-
-    def next_volume(self, value):
-        if home.event.sleepiness.Event.Sleepy in self.events:
-            return self.next(event.sleepy_volume.Event(value))
-        else:
-            return self.next(event.volume.Event(value))
