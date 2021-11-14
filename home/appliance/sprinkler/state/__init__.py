@@ -71,9 +71,9 @@ class State(Parent, Mixin, attribute.mixin.Duration):
     DEFAULTS = [
         event.duration.Event(1200),
         event.partially_on.duration.Event(350),
-        home_event.rain.in_the_past.Event.Off,
-        home_event.rain.Event.No,
         home_event.rain.forecast.Event.Off,
+        home_event.rain.Event.No,
+        home_event.rain.in_the_past.Event.Off,
         home_event.enable.Event.Off,
         home_event.sun.phase.Event.Sunrise,
         event.forced.Event.Not,
