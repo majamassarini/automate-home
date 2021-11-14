@@ -23,7 +23,8 @@ class Delay:
         timezone,
     ):
         self._trigger_name = name
-        self._trigger_events = events
+        self._scheduler_trigger_events = events
+        self._protocol_trigger_events = []
         self._timeout = timeout_seconds
         self._timezone = timezone
         self._logger = logging.getLogger(__name__)
@@ -36,6 +37,14 @@ class Delay:
     @timeout.setter
     def timeout(self, value):
         self._timeout = value
+
+    @property
+    def protocol_trigger_events(self):
+        return self._protocol_trigger_events
+
+    @protocol_trigger_events.setter
+    def protocol_trigger_events(self, value: List['home.Event']):
+        self._protocol_trigger_events = value
 
     def fork(
         self, performer: "home.Performer"
@@ -57,7 +66,7 @@ class Delay:
         if name in self._last_resettable_trigger:
             self._last_resettable_trigger[name].disable()
         self._last_resettable_trigger[name] = date.resettable.Trigger(
-            name, self._trigger_events, run_date=run_date, timezone=self._timezone
+            name, (self._scheduler_trigger_events + self.protocol_trigger_events), run_date=run_date, timezone=self._timezone
         )
         result.append((performer, self._last_resettable_trigger[name]))
         return result
@@ -114,11 +123,15 @@ class Trigger(Parent, BaseTrigger):
         """
         super(Trigger, self).__init__(name, events, protocol_trigger)
         self._delay = Delay(
-            self.name, copy.deepcopy(self.events), timeout_seconds, self._timezone
+            self.name, copy.deepcopy(events), timeout_seconds, self._timezone
         )
-        self._events = []  # this trigger has no events, wait for the forked trigger
         self._timeout = timeout_seconds
         self._logger = logging.getLogger(__name__)
+
+    @property
+    def events(self):
+        # this trigger has no events, wait for the forked trigger
+        return []
 
     def __str__(self):
         s = ", delay: %s" % self._timeout
@@ -127,4 +140,5 @@ class Trigger(Parent, BaseTrigger):
     def fork(
         self, performer: "home.Performer"
     ) -> List[Tuple["home.Performer", "home.scheduler.Trigger"]]:
+        self._delay.protocol_trigger_events = self._protocol_trigger.events
         return self._delay.fork(performer)

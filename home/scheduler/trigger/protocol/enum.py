@@ -75,9 +75,9 @@ class Trigger(Parent, BaseTrigger):
 
     @property
     def events(self) -> Iterable["home.Event"]:
-        _events = self._events.copy()
-        _events.append(self._selected)
-        return _events
+        lst = super(Trigger, self).events
+        lst.append(self._selected)
+        return lst
 
     def __str__(self):
         s = ", enum scheduler trigger: %s" % self._selected

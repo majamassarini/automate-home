@@ -33,13 +33,6 @@ class Trigger(Parent, BaseTrigger):
     ):
         super(Trigger, self).__init__(name, events, *args, **kwargs)
         self._protocol_trigger = protocol_trigger
-        if self._protocol_trigger:
-            try:
-                self._events.extend(self._protocol_trigger.events)
-            except TypeError as e:
-                raise e
-        else:
-            raise AttributeError
 
     def is_triggered(self, description: "home.protocol.Description") -> bool:
         """
@@ -69,6 +62,18 @@ class Trigger(Parent, BaseTrigger):
         )  # prevent scheduler from removing trigger
         result = datetime.datetime.now(self._timezone) + timedelta
         return result
+
+    @property
+    def events(self):
+        lst = self._events.copy()
+        if self._protocol_trigger:
+            try:
+                lst.extend(self._protocol_trigger.events)
+            except TypeError as e:
+                raise e
+        else:
+            raise AttributeError
+        return lst
 
 
 from home.scheduler.trigger.protocol import delay
