@@ -439,7 +439,7 @@
     “Sleepy“, “Not“, “Awake“, “sound.player.state.fade_in“, “50“
     “Sleepy“, “On“, “Asleep“, “sound.player.state.fade_out“, “80“
     “Sleepy“, “On“, “Sleepy“, “sound.player.state.forced.on“, “60“
-    “Asleep“, “CircadianRhythm“, “Sleepy“, “sound.player.state.forced.circadian_rhythm“, “60“
+    “Asleep“, “CircadianRhythm“, “Sleepy“, “sound.player.state.forced.circadian_rhythm“, “70“
     “Awake“, “Off“, “Sleepy“, “sound.player.state.forced.off“, “70“
 
 :gherkin-scenario-outline-keyword:`Scenario Outline:` :gherkin-scenario-outline-content:`The Sound Player shows its property\: playlist`

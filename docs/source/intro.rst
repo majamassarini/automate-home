@@ -41,16 +41,25 @@ Examples:
     alarmed and could start blinking, reminding the user that the alarm system has to be unarmed.
 
 
-
 All those models have just one thing in common: **all of them need a device capable of understanding two commands**
-to be realized, an on and an off command. But
+to be realized, an **on** and an **off** command. But
 
 - they could have many *internal states* like a **forced state** to shape their behaviour
 - they could show their *internal states*, like a **presence state**, to be more informative to the user
 
 *Protocol messages* are translated into *Appliance* messages by an entity called *Performer*.
 
-*Appliance* states are translated into protocol commands through the *Performer*.
+*Appliance* states are translated into *Protocol commands* through the *Performer*.
+
+.. note::
+  Some of the system behaviours described above can be realized even without using a non deterministic state machine.
+  Like all other projects do that.
+
+  You need logics/rules using many variables holding the hidden state of the devices.
+
+  **I believe it is more explicit and usable for the end user to have a state named alarmed (for a simple light)
+  rather than to have an on state and an hidden variable somewhere in the rule engine.**
+
 
 Example
 -------
@@ -73,6 +82,7 @@ Example
 
 
 .. _debug-and-reuse:
+
 Behavior-driven development
 ===========================
 
@@ -143,19 +153,19 @@ The *yocto* system is used to build **both an arm and a x86 docker container**.
 
 This project consists of many different repositories:
 
- - home
- - webserver
- - graphite-feeder
- - knx-stack
- - knx-plugin
- - lifx
- - lifx-plugin
- - sonos-plugin (using soco)
- - home-assistant-plugin (using websocket)
-
+ - `automate-home <https://github.com/majamassarini/automate-home>`_: the project core
+ - `automate-ws <https://github.com/majamassarini/automate-ws>`_: a simple web server for the project
+ - `automate-graphite-feeder <https://github.com/majamassarini/automate-graphite-feeder>`_: a simple graphite integration for the webserver
+ - `automate-knx-plugin <https://github.com/majamassarini/automate-knx-plugin>`_: a *KNX* plugin for the project
+ - `knx-stack <https://github.com/majamassarini/knx-stack>`_: a *KNX stack* used by the automate-knx-plugin
+ - `automate-lifx-plugin <https://github.com/majamassarini/automate-lifx-plugin>`_: a *Lifx* plugin for the project
+ - `lifx-lib <https://github.com/majamassarini/lifx-lib>`_: a *Lifx lan library* used by the automate-lifx-plugin
+ - `automate-sonos-plugin <https://github.com/majamassarini/automate-sonos-plugin>`_: a *Sonos* plugin (using soco library) for the project
+ - `automate-home-assistant-plugin <https://github.com/majamassarini/automate-home-assistant-plugin>`_: a *Home Assistant* plugin (using websocket) for the project
 
 What is missing
-^^^^^^^^^^^^^^^
+===============
+
 
 The project configuration is made through yaml files.
 Yaml files are powerful but writing them is boring and error prone.

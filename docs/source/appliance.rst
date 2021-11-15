@@ -12,7 +12,8 @@ they just know that your light should be turned on.
 .. tip::
   The *Appliance* state machine can be modified by a user at any time.
 
-  **Event** processing, inside an *Appliance* instance, can be **disabled/enabled** (:ref:`example <event disable widget>`).
+  **Event** processing, inside an *Appliance* instance, can be **disabled/enabled** (you can see them grayed out in
+  the :ref:`example projects <example_projects>`).
 
   If, as an example, you have a curtain model automated to be opened by the system when it receives the event
   *home.event.sleepiness.Event.Awake*, meaning the user has to be wake up, then the user can inhibit the

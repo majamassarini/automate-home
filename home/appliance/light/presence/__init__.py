@@ -16,10 +16,10 @@ class Appliance(Parent):
 
     - **home.appliance.light.event.forced.Event**: tells the system a user turned *on/off* the light.
 
-      - *home.appliance.light.event.forced.Event.On* -> the system will un-force a forced on light if no one is
-        considered being using it.
-      - *home.appliance.light.event.forced.Event.Off* -> the system will never un-force a forced off light,
-        which is in a off state since off is the default state.
+      - *home.appliance.light.event.forced.Event.On* -> the user turned on the light; the system moves the light model
+        from off state to forced on state.
+      - *home.appliance.light.event.forced.Event.Off* -> the user turned off the light; the system moves the light model
+        from forced on state to off state since the off state is the default state.
 
     - **home.event.presence.Event**: tells the system someone *could/could not* being using the light
 

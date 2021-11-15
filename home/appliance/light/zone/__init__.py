@@ -12,15 +12,16 @@ class Appliance(Parent):
     """
     A light automatically turned **on** when someone is arriving in the light zone or is already there.
     Automatically turned **off** when no one is in the light zone or near it unless it was forced on by the user.
-    If the alarm system is armed and someone is coming the light becomes **alarmed** and starts blinking.
+    If the alarm system is armed and someone is coming the light becomes **alarmed** and could start blinking.
     This light model reacts to the following events:
 
     - **home.appliance.light.event.forced.Event**: tells the system a user turned on/off the light.
 
-      - *home.appliance.light.event.forced.Event.On* -> the system will un-force a forced on light only if
-        in the light zone the brightness is high or no one is in there.
-      - *home.appliance.light.event.forced.Event.Off* -> the system will probably un-force a forced off light when
-        one of the following events arrive: *courtesy, presence, alarm armed, sun brightness*.
+      - *home.appliance.light.event.forced.Event.On* -> the user turned on the light; the system moves the light model
+        from off state to forced on state if the model is not already in the on state.
+      - *home.appliance.light.event.forced.Event.Off* -> the user turned off the light; the system moves the light model
+        from forced on state to off state since the off state is the default state unless was the system to turn on the
+        light in which case the system moves the model from the on state to the forced off state.
 
     - **home.event.courtesy.Event**: tells the system someone *is/is not near* the light zone.
 

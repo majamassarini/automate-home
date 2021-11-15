@@ -23,11 +23,12 @@ I'm pretty sure your smart devices already have a great interface to do that.
 But building a system that acts on behalf of you brings some **problems** that
 this project strives to solve:
 
-    - :ref:`user should win over the system <win-over-the-system>`
-    - :ref:`user should not experience feel of losing control <feel-of-losing-control>`
-    - :ref:`debug and reuse of logics should be simple <debug-and-reuse>`
+  - :ref:`user should win over the system <win-over-the-system>`
+  - :ref:`user should not experience feel of losing control <feel-of-losing-control>`
+  - :ref:`debug and reuse of logics should be simple <debug-and-reuse>`
 
 .. _win-over-the-system:
+
 User should win over the system
 ===============================
 
@@ -139,7 +140,7 @@ If, for any reason, *User Bob* was not aware of *User John*
 then *User Bob* probably thought the system was wrong: since the garage light did not turn off
 (:ref:`an automated light <light-in-this-project>`).
 
-A light model should let *User Bob* know that *User John* **forced the light on**: :ref:`a light description <light widget>`.
+A light model should let *User Bob* know that *User John* **forced the light on**.
 
 Curtain
 ^^^^^^^
@@ -148,7 +149,7 @@ When the curtain is up even if the sun is shining, someone other than you can th
 unless he knows that the curtain is up because you forced open it
 (:ref:`an automated curtain <curtain-in-this-project>`).
 
-A curtain model should let *another user* know that you **forced opened the curtain**: :ref:`a curtain description <curtain widget>`.
+A curtain model should let *another user* know that you **forced opened the curtain**.
 
 
 
