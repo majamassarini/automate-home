@@ -54,6 +54,6 @@ BDD style tests make it quite easy to understand the behaviour of every *Applian
 Documentation
 =============
 
-For a deep dive into this project see the [documentation](https://maja-massarini-automate-home.readthedocs-hosted.com/en/latest/?badge=latest).
+For a deep dive into this project see the [documentation](https://automate-home.readthedocs.io/en/latest/?badge=latest).
 
 For a minute guide to this project see the [landing page](https://majamassarini.github.io/automate-home).
