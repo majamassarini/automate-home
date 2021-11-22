@@ -46,6 +46,6 @@ class State(mixin.IsOn, Mixin, Parent):
 
     def __init__(self, events=None, events_disabled=None):
         self.reset = home.appliance.socket.presence.christmas.state.on.State
-        self.base = home.appliance.socket.presence.christmas.state.off.State
+        self.base = home.appliance.socket.presence.christmas.state.on.State
 
         super(State, self).__init__(events, events_disabled)

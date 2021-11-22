@@ -87,4 +87,4 @@ class Appliance(Parent):
     """
 
     def _init_state(self):
-        return state.off.State()
+        return state.on.State()
