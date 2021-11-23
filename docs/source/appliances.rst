@@ -186,3 +186,19 @@ sound.player.Appliance
     :maxdepth: 4
 
     features/features.sound_player.feature-file
+
+
+Sprinkler
+=========
+
+sprinkler.Appliance
+-------------------
+
+.. _sprinkler.Appliance:
+
+.. autoclass:: home.appliance.sprinkler.Appliance
+
+.. toctree::
+    :maxdepth: 4
+
+    features/features.sprinkler.feature-file

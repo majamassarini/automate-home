@@ -12,6 +12,13 @@ class Appliance(Parent):
     """
     An indoor blackout Curtain. Designed to model an indoor automated curtain in a bedroom.
 
+    It will be **closed** by the system at the sunset.
+
+    It will be **opened** by the system when its time to wake up the user.
+
+    It can be forced opened or forced closed by the user.
+
+
     This curtain model reacts to the following events:
 
     - **home.appliance.curtain.event.forced.Event.(Opened|Closed)**: tells the system a user *opened/closed* the curtain.
@@ -33,12 +40,12 @@ class Appliance(Parent):
 
     Final states:
 
-    - **forced closed**
-    - **forced opened**
-    - **closed**
-    - **opened**
+    - **Forced closed**
+    - **Forced opened**
+    - **Closed**
+    - **Opened**
 
-    Default state is **opened**.
+    Default state is **Opened**.
 
     >>> import home
     >>> c = home.appliance.curtain.indoor.blackout.Appliance("a curtain", [])

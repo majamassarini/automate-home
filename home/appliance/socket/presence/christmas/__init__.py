@@ -14,6 +14,8 @@ class Appliance(Parent):
     a Christmas tree ecc.
 
     It is automatically turned **off** when no one is supposed to be using it unless it is Christmas time.
+
+
     This socket model reacts to the following events:
 
     - **home.appliance.socket.event.forced.Event**: tells the system a user turned *on/off* the socket.
@@ -65,12 +67,12 @@ class Appliance(Parent):
 
     Final states:
 
-    - **forced on**
-    - **forced off**
-    - **on**
-    - **off**
+    - **Forced on**
+    - **Forced off**
+    - **On**
+    - **Off**
 
-    Default state is **on**.
+    Default state is **On**.
 
     >>> import home
     >>> p = home.appliance.socket.presence.christmas.Appliance("a presence Christmas socket", [])

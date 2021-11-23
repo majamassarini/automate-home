@@ -89,10 +89,9 @@
                                 <p>A light automatically turned <strong>on</strong> when someone is arriving in the
                                     light
                                     zone or is already there and the sun brightness is low.</br>
-                                    Automatically turned <strong>off</strong> when no one is in the light zone or
-                                    near it
-                                    unless it was <strong>forced on</strong> by the user or the sun brightness is
-                                    high.</br>
+                                    Automatically turned <strong>off</strong> when no one is in the light zone,
+                                    near it or the sun brightness is high,
+                                    unless it was <strong>forced on</strong> by the user.</br>
                                     If the alarm system is armed and someone is coming the light becomes
                                     <strong>alarmed on</strong> and could start blinking.
                                 </p>
@@ -123,37 +122,34 @@
                     <div class="card card-equal-height">
 
                         <header class="card-header">
-                            <p class="card-header-title is-centered">A dimmerable hue Light</p>
+                            <p class="card-header-title is-centered">A hue Light</p>
                         </header>
 
                         <div class="card-content">
                             <div class="content">
-                                <p>A light wich can work in four different modes and in every
-                                    moment it
-                                    can switch between its working modes.
+                                <p>A light which can work in four different modes and in every
+                                    moment it can switch between its working modes.
                                 <ul>
-                                    <li>it can follow circadian rhythm events when in a <strong>forced circadian
+                                    <li>It can follow circadian rhythm events when in a <strong>forced circadian
                                         rhythm</strong> state.
-                                        A circadian rhythm scheduler trigger will notify circadian rhythm
+                                        A scheduler trigger will notify circadian rhythm
                                         brightness/hue/saturation/temperature
-                                        events during the day making the hue light adjusting its settings.
+                                        events during the day making the light adjusting its settings.
                                     </li>
-                                    <li>it can follow lux balancing events when in a <strong>forced lux
+                                    <li>It can follow lux balancing events when in a <strong>forced lux
                                         balancing</strong> state.
-                                        A protocol scheduler trigger linked to a sun lux balancing protocol trigger
-                                        will
-                                        notify lux balancing brightness
-                                        events making the hue light adjusting its brightness accordingly to the sun
+                                        A scheduler trigger linked to a sun lux balancing protocol trigger
+                                        will notify lux balancing brightness events making the light
+                                        adjusting its brightness accordingly to the sun
                                         brightness.
-                                        The less bright will be the sun the more bright will be the dimmerable
-                                        light.
+                                        The less bright will be the sun the more bright will be the light.
                                     </li>
-                                    <li>it can automatically change its hue, saturation, brightness and temperature
-                                        with
-                                        a given period and for a cycles times, starting and ending from given show
+                                    <li>It can automatically change its hue, saturation, brightness and temperature
+                                        with a given period of time, for a number of cycles,
+                                        starting and ending from given show
                                         events when in a <strong>forced show</strong> state.
                                     </li>
-                                    <li>it can have a fixed brightness when in a <strong>forced on</strong> state.
+                                    <li>It can have a fixed brightness when in a <strong>forced on</strong> state.
                                         Its brightness/hue/saturation/temperature will be adjusted only by the user.
                                     </li>
                                 </ul>
@@ -167,11 +163,11 @@
                             <div class="content">
                                 <p>Possible final states are:</p>
                                 <ul>
-                                    <li>forced on</li>
-                                    <li>forced circadian rhythm</li>
-                                    <li>forced lux balancing</li>
-                                    <li>forced show</li>
-                                    <li>off</li>
+                                    <li>Forced on</li>
+                                    <li>Forced circadian rhythm</li>
+                                    <li>Forced lux balancing</li>
+                                    <li>Forced show</li>
+                                    <li>Off</li>
                                 </ul>
                                 <div class="content">
                                     <p class="button is-link"><a
@@ -263,17 +259,17 @@
  for appliance: "a presence light"
  triggers: []
  commands:
- - !knx_plugin.command.dpt_switch.OnOff {addresses: [0xABCD]}
+ - !knx_plugin.command.dpt_switch.OnOff {addresses: [0xAACD]}
 
 -!Performer
  name: "forced on/forced off event for a presence light"
  for appliance: "a presence light"
  triggers:
  - !knx_plugin.trigger.dpt_switch.On
-      addresses: [0xABCE, 0xABCF]
+      addresses: [0xAACE, 0xAACF]
       events: !home.appliance.light.event.forced.Event.On
  - !knx_plugin.trigger.dpt_switch.Off
-      addresses: [0xABCE, 0xABCF]
+      addresses: [0xAACE, 0xAACF]
       events: !home.appliance.light.event.forced.Event.Off
  commands: []
                 </pre>
@@ -324,7 +320,7 @@
   name: "on/off command for a hue light"
   for appliance: "an indoor hue light"
   commands:
-    - !knx_plugin.command.dpt_switch.OnOff {addresses: [0xABCE]}
+    - !knx_plugin.command.dpt_switch.OnOff {addresses: [0xCCCE]}
   triggers: []
 
 - !Performer
@@ -335,18 +331,43 @@
   triggers: []
 
 - !Performer
-  name: "forced on/forced off event for a hue light"
+  name: "forced lux balancing/off events from push button 1"
   for appliance: "an indoor hue light"
   commands: []
   triggers:
     - !knx_plugin.trigger.dpt_switch.On
-      addresses: [ 0xABCE, ]
+      addresses: [ 0xCCCE, ]
       events:
         - !home.appliance.light.indoor.dimmerable.event.forced.Event.LuxBalancing
     - !knx_plugin.trigger.dpt_switch.Off
-      addresses: [ 0xABCE, ]
+      addresses: [ 0xCCCE, ]
       events:
         - !home.appliance.light.indoor.dimmerable.event.forced.Event.Off
+
+- !Performer
+  name: "forced circadian rhythm/off events from push button 2"
+  for appliance: "an indoor hue light"
+  commands: []
+  triggers:
+    - !knx_plugin.trigger.dpt_switch.On
+      addresses: [ 0xCCCD, ]
+      events:
+        - !home.appliance.light.indoor.dimmerable.event.forced.Event.CircadianRhythm
+    - !knx_plugin.trigger.dpt_switch.Off
+      addresses: [ 0xCCCD, ]
+      events:
+        - !home.appliance.light.indoor.dimmerable.event.forced.Event.Off
+
+- !Performer
+  name: "forced show event from scene button"
+  for appliance: "an indoor hue light"
+  commands: [ ]
+  triggers:
+    - !knx_plugin.trigger.dpt_scene_control.Activate
+      addresses: [ 0xCC0F ]
+      number: 15
+      events:
+        - !home.appliance.light.indoor.dimmerable.event.forced.Event.Show
 
 - !Performer
   name: "color event for a hue light"

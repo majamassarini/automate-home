@@ -12,21 +12,21 @@ from home.appliance.sound.player import state
 
 class Appliance(Parent):
     """
-    A sound player wich can work in *two* different modes at the same time and
-    in every moment it can switch between its working modes.
+    A sound player wich can be forced by the user in **two** different states.
 
-      - it can follow *circadian rhythm* events when in a **forced circadian rhythm** state.
-        A **circadian rhythm** scheduler trigger will notify *circadian rhythm playlist events* during the day
+      - It can follow *circadian rhythm* events when in a **forced circadian rhythm** state.
+        A scheduler trigger will notify *circadian rhythm playlist events* during the day
         making the sound player adjusting the played playlist.
         The playlists, when in a circadian rhythm state, could be associated to three different users: A, B, C.
         A user will choose which are the associated playlist he wants to listen to.
-      - it can have an almost **fixed** playlist and volume when in a *forced on* state.
-        Its playlist and volume will be adjusted only by the user.
+      - It can have an almost *fixed* playlist and volume when in a **forced on** state.
+        The playlist and volume will be adjusted only by the user.
 
-    The system turns on the sound player in a **fade in** mode when the user have to be wake up.
+    The system puts the sound player in a **fade in** state when its time to wake up the user.
 
-    The system turns the sound player in a **fade out** mode if the sound player is forced on or forced in a circadian
-    rhythm state but the user should be asleep.
+    The system puts the sound player in a **fade out** state if the sound player is forced on or forced in a circadian
+    rhythm state and its time for the user to go to bed.
+
 
     This sound player model reacts to the following events:
 
@@ -90,13 +90,14 @@ class Appliance(Parent):
 
     Final states:
 
-    - **forced on**
-    - **forced circadian rhythm**
-    - **fade in**
-    - **fade out**
-    - **off**
+    - **Forced on**
+    - **Forced circadian rhythm**
+    - **Fade in**
+    - **Fade out**
+    - **Off**
 
-    Default state is **off**.
+    Default state is **Off**.
+
     >>> import home
     >>> p = home.appliance.sound.player.Appliance("a player", [])
     >>> old, new = p.notify(home.appliance.sound.player.event.forced.Event.On)

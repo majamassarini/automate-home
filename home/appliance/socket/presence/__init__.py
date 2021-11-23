@@ -12,14 +12,16 @@ class Appliance(Parent):
     """
     A socket automatically turned **off** when no one is supposed to be using it.
     Because, as an example, the alarm system is armed.
+
+
     This socket model reacts to the following events:
 
     - **home.appliance.socket.event.forced.Event**: tells the system a user turned *on/off* the socket.
 
-      - *home.appliance.socket.event.forced.Event.On* -> the system will un-force a forced on socket if no one is
-        considered being using it.
-      - *home.appliance.socket.event.forced.Event.Off* -> the system will never un-force a forced off socket,
-        which is in a off state since off is the default state.
+      - *home.appliance.socket.event.forced.Event.On* -> the user turned on the socket; the system moves the socket model
+        from off state to *forced on* state.
+      - *home.appliance.socket.event.forced.Event.Off* -> the user turned off the socket; the system moves the socket model
+        from forced on state to *off* state since the off state is the default state.
 
     - **home.event.presence.Event**: tells the system someone *could/could not* being using the socket
 
@@ -29,10 +31,10 @@ class Appliance(Parent):
 
     Final states:
 
-    - **forced on**
-    - **off**
+    - **Forced on**
+    - **Off**
 
-    Default state is **off**.
+    Default state is **Off**.
 
     >>> import home
     >>> p = home.appliance.socket.presence.Appliance("a presence socket", [])

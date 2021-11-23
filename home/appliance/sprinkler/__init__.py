@@ -11,10 +11,19 @@ from home.appliance.sprinkler import state
 
 class Appliance(Parent):
     """
-    A sprinkler automatically turned **on** by a scheduler event just after sunset and if is not raining.
-    Automatically turned **off** by a scheduler event.
+    A sprinkler automatically turned **on** by a scheduler event: the enable event.
+    The sprinkler is turned **on** just after sunset and if is not raining.
+    When **on** it is automatically turned **off** after the seconds specified
+    in the *duration event*.
+
     After sunrise is turned **off** even if someone *forced it on*.
-    If has rained or will rain, in the forecast, than it is turned in a state called **partially on**.
+
+    If it has rained or if it will rain than it is turned in a state called **partially on**.
+    When **partially on** it is automatically turned **off** after the seconds specified
+    in the *partially duration event*.
+
+
+    This sprinkler model reacts to the following events:
 
     - **home.appliance.sprinkler.event.forced.Event**: tells the system a user turned on/off the sprinkler.
 
@@ -65,14 +74,14 @@ class Appliance(Parent):
 
     Final states:
 
-    - **forced on**
-    - **forced partially on**
-    - **forced off**
-    - **on**
-    - **partially on**
-    - **off**
+    - **Forced on**
+    - **Forced partially on**
+    - **Forced off**
+    - **On**
+    - **Partially on**
+    - **Off**
 
-    Default state is **off**.
+    Default state is **Off**.
 
     >>> import home
     >>> l = home.appliance.sprinkler.Appliance("a sprinkler", [])

@@ -10,22 +10,22 @@ from home.appliance.light.indoor.hue.state import off
 
 class Appliance(Parent):
     """
-    A light wich can work in *four* different modes at the same time and
-    in every moment it can switch between its working modes.
+    A light which can work in **four** different modes and in every moment it can switch between its working modes.
 
-      - it can follow *circadian rhythm* events when in a **forced circadian rhythm** state.
-        A **circadian rhythm** scheduler trigger will notify *circadian rhythm brightness/hue/saturation/temperature
-        events* during the day making the hue light adjusting its settings.
-      - it can follow *lux balancing* events when in a **forced lux balancing** state.
-        A *protocol scheduler trigger* linked to a *sun lux balancing
-        protocol trigger* will notify *lux balancing brightness events* making the
-        hue light adjusting its brightness accordingly to the sun brightness.
-        The less bright will be the sun the more bright will be the dimmerable light.
-      - it can automatically change its **hue, saturation, brightness and temperature** with a
-        given *period* and for a *cycles* times, starting and ending from given show events
-        when in a **forced show** state.
-      - it can have an almost **fixed** brightness when in a *forced on* state.
+      - It can follow circadian rhythm events when in a **forced circadian rhythm** state.
+        A scheduler trigger will notify circadian rhythm brightness/hue/saturation/temperature
+        events during the day making the light adjusting its settings.
+      - It can follow lux balancing events when in a **forced lux balancing** state.
+        A scheduler trigger linked to a *sun lux balancing protocol trigger*
+        will notify lux balancing brightness events making the light
+        adjusting its brightness accordingly to the sun brightness.
+        The less bright will be the sun the more bright will be the light.
+      - It can automatically change its hue, saturation, brightness and temperature
+        with a given period of time, for a given number of cycles,
+        starting and ending from given show colors when in a **forced show** state.
+      - It can have a fixed brightness when in a **forced on** state.
         Its brightness/hue/saturation/temperature will be adjusted only by the user.
+
 
     This light model reacts to the following events:
 
@@ -99,13 +99,13 @@ class Appliance(Parent):
 
     Final states:
 
-    - **forced on**
-    - **forced circadian rhythm**
-    - **forced lux balancing**
-    - **forced show**
-    - **off**
+    - **Forced on**
+    - **Forced circadian rhythm**
+    - **Forced lux balancing**
+    - **Forced show**
+    - **Off**
 
-    Default state is **off**.
+    Default state is **Off**.
 
     >>> import home
     >>> l = home.appliance.light.indoor.hue.Appliance("a light", [])

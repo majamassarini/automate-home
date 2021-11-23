@@ -12,11 +12,12 @@ class Appliance(Parent):
     """
     An outdoor bedroom Curtain. Designed to model an outdoor automated curtain to be used in a bedroom.
 
-    It is closed by the system when the sun (with an high brightness) hits the curtain's window or at sunset.
+    It will be **closed** by the system when the sun (with an high brightness) hits the curtain's window or at sunset.
 
-    It is opened by the system when it is time to wake up the user (after sunrise) or when the wind is strong.
+    It will be **opened** by the system when it is time to wake up the user (after sunrise) or when the wind is strong.
 
     It could be forced opened or forced closed by a user.
+
 
     This curtain model reacts to the following events:
 
@@ -58,12 +59,12 @@ class Appliance(Parent):
 
     Final states:
 
-    - **forced closed**
-    - **forced opened**
-    - **closed**
-    - **opened**
+    - **Forced closed**
+    - **Forced opened**
+    - **Closed**
+    - **Opened**
 
-    Default state is **opened**.
+    Default state is **Opened**.
 
     >>> import home
     >>> c = home.appliance.curtain.outdoor.bedroom.Appliance("a curtain", [])

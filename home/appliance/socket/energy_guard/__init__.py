@@ -11,15 +11,15 @@ from home.appliance.socket.energy_guard import state
 class Appliance(Parent):
     """
     A socket which is **by default on**. Designed to let the system control the home's power consumption.
-    This socket is supposed to have plugged in a load like it could be a dishwasher.
+    This socket is supposed to have plugged in a load like a dishwasher.
 
-    A *energy guard* socket enters a **detachable** state when its detach logic is enabled and power
+    A energy guard socket enters a **detachable** state when its detach logic is enabled and power
     consuming levels are too much high.
 
-    A *energy guard* socket enters an **off** state when its detach logic is enabled and power consuming
+    A energy guard socket enters an **off** state when its detach logic is enabled and power consuming
     levels are too much high for too much time.
 
-    When power consuming levels lower down it will be **on** again.
+    When power consuming levels lower down it will be turned **on** again by the system.
 
     You could have more energy guard sockets. A socket can enable the detach logic of another socket
     when turning itself off.
@@ -29,6 +29,7 @@ class Appliance(Parent):
       1) when a socket is turned off then it will enable the detach logic of another socket A -> enables -> B -> enables -> C -> enables -> D
       2) when a socket is turned on then it will disable its detach logic by itself,
       3) when power consuming levels are high again than will be enabled the detach logic for the lowest priority socket
+
 
     This socket model reacts to the following events:
 
@@ -57,13 +58,13 @@ class Appliance(Parent):
 
     Final states:
 
-    - **forced off**
-    - **forced on**
-    - **off**
-    - **on**
-    - **detachable**
+    - **Forced off**
+    - **Forced on**
+    - **Off**
+    - **On**
+    - **Detachable**
 
-    Default state is **on**.
+    Default state is **On**.
 
     >>> import home
     >>> p = home.appliance.socket.energy_guard.Appliance("a energy guard socket", [])
