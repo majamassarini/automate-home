@@ -56,6 +56,12 @@ For a minute guide to this project see the [landing page](https://majamassarini.
 
 ### Example projects
 
+Using the docker image:
+
+```shell
+docker pull majamassarini/automate-home:latest
+```
+
 * [lights models](https://majamassarini.github.io/automate-lights-example/pages/172.31.10.243/index.html) ([configuration](https://github.com/majamassarini/automate-lights-example))
 * [curtain models](https://majamassarini.github.io/automate-curtains-example/pages/172.31.10.244/index.html) ([configuration](https://github.com/majamassarini/automate-curtains-example))
 * [sound player model](https://majamassarini.github.io/automate-sound-player-example/pages/172.31.10.247/index.html) ([configuration](https://github.com/majamassarini/automate-sound-player-example))
