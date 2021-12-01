@@ -54,7 +54,36 @@ For a deep dive into this project see the [documentation](https://automate-home.
 
 For a minute guide to this project see the [landing page](https://majamassarini.github.io/automate-home).
 
-### Example projects
+For suggestions, questions or anything else, please, write here: [discussions](https://github.com/majamassarini/automate-home/discussions).
+
+## Example GUI
+
+### Last events
+
+![](docs/images/last_events.png)
+
+### Devices collections
+
+![](docs/images/devices_collections.png)
+
+### Lights collection
+
+![](docs/images/lights_collection.png)
+
+### Light state
+
+![](docs/images/light_state.png)
+
+### Light history
+
+![](docs/images/light_history.png)
+
+### Light graphs
+
+![](docs/images/light_graphs.png)
+
+
+## Example projects
 
 Using the docker image:
 
