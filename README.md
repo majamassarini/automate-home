@@ -58,7 +58,7 @@ For suggestions, questions or anything else, please, write here: [discussions](h
 
 ## Example GUI
 
-### Last events
+### Latest events
 
 ![](docs/images/last_events.png)
 
@@ -66,19 +66,19 @@ For suggestions, questions or anything else, please, write here: [discussions](h
 
 ![](docs/images/devices_collections.png)
 
-### Lights collection
+### Lights
 
 ![](docs/images/lights_collection.png)
 
-### Light state
+### State of a light
 
 ![](docs/images/light_state.png)
 
-### Light history
+### Events history for a light
 
 ![](docs/images/light_history.png)
 
-### Light graphs
+### Events graphs for a light
 
 ![](docs/images/light_graphs.png)
 
