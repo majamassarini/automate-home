@@ -75,3 +75,11 @@ class Trigger(Osmer):
             return True
         else:
             return False
+
+    @property
+    def events(self):
+        if self.is_triggered():
+            return self._events
+        else:
+            return []
+
