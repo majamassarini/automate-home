@@ -66,8 +66,6 @@ I integrated really few protocols, the ones I am using the most at my home: [KNX
 [Lifx](https://github.com/majamassarini/automate-lifx-plugin) and [Sonos](https://github.com/majamassarini/automate-sonos-plugin).
 
 For all the other protocol integrations I needed I have used [Home Assistant](https://github.com/majamassarini/automate-home-assistant-plugin).
-I started writing an integration for *Home Assistant*, but it is not complete yet. 
-I used it with few devices since it introduces a delay that I prefer not to have.
 
 ## Documentation
 
@@ -87,22 +85,24 @@ The automate-home project is licensed under GPL3.
 
 ## Example projects
 
-The following are some example projects. The links point to a **statical html example** of the final GUI you will obtain, 
-and to the github project with the configuration files:
+The following are some example projects. 
+
+These links point to a **statical html example** of the final GUI you will obtain using the configuration files, 
+and to a github project with all the configuration files:
 
  * [lights models](https://majamassarini.github.io/automate-lights-example/pages/172.31.10.243/index.html) ([configuration](https://github.com/majamassarini/automate-lights-example))
  * [curtain models](https://majamassarini.github.io/automate-curtains-example/pages/172.31.10.244/index.html) ([configuration](https://github.com/majamassarini/automate-curtains-example))
  * [sound player model](https://majamassarini.github.io/automate-sound-player-example/pages/172.31.10.247/index.html) ([configuration](https://github.com/majamassarini/automate-sound-player-example))
 
-Ideally you should be able to use them by changing: 
- * the ```configuration.ini``` file, adjusting the ip addresses;
+Ideally, you should be able to use the configuration files in the examples by changing: 
+ * the ```configuration.ini``` file, adjusting the paths and the ip addresses;
  * the files in the ```performer``` directory, modifying the devices addresses 
-   (if you have devices speaking the same protocol!);
+   (if you have devices speaking the same protocol);
  * you can also change automation details in the ```scheduler_triggers``` directory
 
 Maybe, this page can help me clarify what I mean: [landing page](https://majamassarini.github.io/automate-home).
 
-When, the project configuration fits your needs, you can use it in different ways.
+When, the project configuration files fits your needs, you can use them in different ways.
 
 ### Installation
 
@@ -116,12 +116,12 @@ docker pull majamassarini/automate-home:latest
 
 #### Yocto build
 
-Or you can build your personal Linux image with the automate-home framework for your favorite 
+You can build your personal Linux image with the automate-home framework for your favorite 
 hardware using this [yocto distro meta layer](https://github.com/majamassarini/meta-automate-home).
 
 #### Pip install
 
-Or you can just pip install it, but you will not obtain nor the KNX USBHID daemon or the graphite server.
+You can just pip install it, but you will not obtain nor the KNX USBHID daemon or the graphite server.
 
 ```shell
 pip install automate-ws
@@ -135,26 +135,26 @@ python -m graphite_feeder --configuration-file configuration.ini
 
 ### Latest events
 
-![](docs/images/last_events.png)
+![https://github.com/majamassarini/automate-home/blob/main/docs/images/last_events.png](docs/images/last_events.png)
 
 ### Devices collections
 
-![](docs/images/devices_collections.png)
+![https://github.com/majamassarini/automate-home/blob/main/docs/images/devices_collections.png](docs/images/devices_collections.png)
 
 ### Lights
 
-![](docs/images/lights_collection.png)
+![https://github.com/majamassarini/automate-home/blob/main/docs/images/lights_collection.png](docs/images/lights_collection.png)
 
 ### State of a light
 
-![](docs/images/light_state.png)
+![https://github.com/majamassarini/automate-home/blob/main/docs/images/light_state.png](docs/images/light_state.png)
 
 ### Events history for a light
 
-![](docs/images/light_history.png)
+![https://github.com/majamassarini/automate-home/blob/main/docs/images/light_history.png](docs/images/light_history.png)
 
 ### Events graphs for a light
 
-![](docs/images/light_graphs.png)
+![https://github.com/majamassarini/automate-home/blob/main/docs/images/light_graphs.png](docs/images/light_graphs.png)
 
 

@@ -5,7 +5,7 @@ with open(path.join(".", 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(name="automate-home",
-      version="0.9.0",
+      version="0.9.1",
       description="A python3 library to automate (home) devices",
       url="https://github.com/majamassarini/automate-home",
       long_description=long_description,
