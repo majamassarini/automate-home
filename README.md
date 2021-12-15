@@ -7,7 +7,7 @@
 ![](icon_128x128.png)
 
 
-Yet another home automation project because a **smart light is more than just on or off**.
+Yet another home automation (iot) project because a **smart light is more than just on or off**.
 
 ## Overview
 
@@ -48,6 +48,27 @@ BDD style tests make it quite easy to understand the behaviour of every *Applian
 
 **I like to think of this project as a way to share behavioural models for our smart devices more easily.**
 
+### What this project is
+
+***A proof of concept.***
+
+This project allows me to create and test, through python, *automation rules (logics) which can be more complex and more expressive*.
+
+I made a draft (I am not a front-end developer) for a really simple web interface.
+I can interact with the automation rules (logics) through the web interface.
+Looking at the web interface I can always answer the most obvious questions: why the light is turning on/off, 
+why the curtain is being closed/opened...
+
+*I was tired of explaining why **some magic** was happening in my home.
+I think I have built a system able to answer these questions by itself.*
+
+I integrated really few protocols, the ones I am using the most at my home: [KNX](https://github.com/majamassarini/automate-knx-plugin), 
+[Lifx](https://github.com/majamassarini/automate-lifx-plugin) and [Sonos](https://github.com/majamassarini/automate-sonos-plugin).
+
+For all the other protocol integrations I needed I have used [Home Assistant](https://github.com/majamassarini/automate-home-assistant-plugin).
+I started writing an integration for *Home Assistant*, but it is not complete yet. 
+I used it with few devices since it introduces a delay that I prefer not to have.
+
 ## Documentation
 
 For a deep dive into this project see the [documentation](https://automate-home.readthedocs.io/en/latest/?badge=latest).
@@ -56,7 +77,61 @@ For a minute guide to this project see the [landing page](https://majamassarini.
 
 For suggestions, questions or anything else, please, write here: [discussions](https://github.com/majamassarini/automate-home/discussions).
 
-## Example GUI
+## Contributing
+
+Pull requests are welcome!
+
+## License
+
+The automate-home project is licensed under GPL3.
+
+## Example projects
+
+The following are some example projects. The links point to a **statical html example** of the final GUI you will obtain, 
+and to the github project with the configuration files:
+
+ * [lights models](https://majamassarini.github.io/automate-lights-example/pages/172.31.10.243/index.html) ([configuration](https://github.com/majamassarini/automate-lights-example))
+ * [curtain models](https://majamassarini.github.io/automate-curtains-example/pages/172.31.10.244/index.html) ([configuration](https://github.com/majamassarini/automate-curtains-example))
+ * [sound player model](https://majamassarini.github.io/automate-sound-player-example/pages/172.31.10.247/index.html) ([configuration](https://github.com/majamassarini/automate-sound-player-example))
+
+Ideally you should be able to use them by changing: 
+ * the ```configuration.ini``` file, adjusting the ip addresses;
+ * the files in the ```performer``` directory, modifying the devices addresses 
+   (if you have devices speaking the same protocol!);
+ * you can also change automation details in the ```scheduler_triggers``` directory
+
+Maybe, this page can help me clarify what I mean: [landing page](https://majamassarini.github.io/automate-home).
+
+When, the project configuration fits your needs, you can use it in different ways.
+
+### Installation
+
+#### Docker image
+
+You can use the following docker image 
+
+```shell
+docker pull majamassarini/automate-home:latest
+```
+
+#### Yocto build
+
+Or you can build your personal Linux image with the automate-home framework for your favorite 
+hardware using this [yocto distro meta layer](https://github.com/majamassarini/meta-automate-home).
+
+#### Pip install
+
+Or you can just pip install it, but you will not obtain nor the KNX USBHID daemon or the graphite server.
+
+```shell
+pip install automate-ws
+
+python -m home --configuration-file configuration.ini
+python -m ws --configuration-file configuration.ini
+python -m graphite_feeder --configuration-file configuration.ini
+```
+
+## GUI Example
 
 ### Latest events
 
@@ -83,14 +158,3 @@ For suggestions, questions or anything else, please, write here: [discussions](h
 ![](docs/images/light_graphs.png)
 
 
-## Example projects
-
-Using the docker image:
-
-```shell
-docker pull majamassarini/automate-home:latest
-```
-
-* [lights models](https://majamassarini.github.io/automate-lights-example/pages/172.31.10.243/index.html) ([configuration](https://github.com/majamassarini/automate-lights-example))
-* [curtain models](https://majamassarini.github.io/automate-curtains-example/pages/172.31.10.244/index.html) ([configuration](https://github.com/majamassarini/automate-curtains-example))
-* [sound player model](https://majamassarini.github.io/automate-sound-player-example/pages/172.31.10.247/index.html) ([configuration](https://github.com/majamassarini/automate-sound-player-example))
