@@ -135,7 +135,7 @@ This is a **python 3** project using *asyncio* and:
  - APScheduler
  - aioredis
  - hiredis
- - pyephem
+ - ephem
  - pytz
  - PyYAML
 
