@@ -30,7 +30,7 @@ def parser() -> OptionParser:
     ... '--enable-lifx', 'True',
     ... '--enable-somfy-sdn', 'True',
     ... '--enable-home-assistant', 'True',
-    ... '--home-assistant-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI4NWJjZmRkMTE3NWU0YjM5YWMzNWNjMmI5MTRkYjM1NCIsImlhdCI6MTYwMjUwOTQxNiwiZXhwIjoxOTE3ODY5NDE2fQ.LCxbeAzU28rWVrwPdb-qq2ClJdygOJrtloQQF54EXGk',
+    ... '--home-assistant-token', 'HA_Token',
     ... '--home-assistant-host', '172.31.10.236',
     ... '--logging-level', 'INFO',
     ... '--knx-usbhid-logging-level', 'ERROR',
