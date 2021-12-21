@@ -67,7 +67,7 @@ def parser() -> OptionParser:
     parser.add_option(
         "-d",
         "--project-dir",
-        default="/usr/share/etc/homino",
+        default="/usr/share/automate-home",
         dest="project_dir",
         help="Directory where project files will be found",
         metavar="PROJECT DIR",
@@ -75,7 +75,7 @@ def parser() -> OptionParser:
     parser.add_option(
         "-l",
         "--logging-dir",
-        default="/var/log/homino",
+        default="/var/log/automate-home",
         dest="logging_dir",
         help="Log data dir",
         metavar="LOGGING DIR",
@@ -320,7 +320,7 @@ def parser() -> OptionParser:
 
     webserver_group.add_option(
         "--webserver-dir",
-        default="/usr/share/etc/homino",
+        default="/usr/share/automate-home",
         dest="webserver_dir",
         help="Directory where webserver configuration files will be found",
         metavar="WEBSERVER DIRECTORY",
