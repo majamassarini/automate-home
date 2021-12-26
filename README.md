@@ -91,6 +91,7 @@ These links point to a **statical html example** of the final GUI you will obtai
 and to a github project with all the configuration files:
 
  * [lights models](https://majamassarini.github.io/automate-lights-example/pages/172.31.10.243/index.html) ([configuration](https://github.com/majamassarini/automate-lights-example))
+ * [sockets models](https://majamassarini.github.io/automate-sockets-example/sockets/172.31.10.248/index.html) ([configuration](https://github.com/majamassarini/automate-sockets-example))
  * [curtain models](https://majamassarini.github.io/automate-curtains-example/pages/172.31.10.244/index.html) ([configuration](https://github.com/majamassarini/automate-curtains-example))
  * [sound player model](https://majamassarini.github.io/automate-sound-player-example/pages/172.31.10.247/index.html) ([configuration](https://github.com/majamassarini/automate-sound-player-example))
 
