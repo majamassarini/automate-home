@@ -32,7 +32,7 @@ class Trigger(Osmer):
         """
         all_events = events.copy()
         all_events.append(self.EVENT)
-        super(Trigger, self).__init__(name, all_events, url, hour=14, minute=54)
+        super(Trigger, self).__init__(name, all_events, url, hour=14)
         self._probability = probability
         self._zone = zone
 
