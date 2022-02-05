@@ -1,6 +1,6 @@
 APScheduler
 aioredis==1.3.1
-hiredis
+hiredis==1.1.0
 ephem
 pytz
 PyYAML
