@@ -6,10 +6,13 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
+import logging
 import importlib
 import asyncio
 import logging.config
 import sys
+
+import requests.exceptions
 
 import home
 
@@ -102,11 +105,14 @@ if __name__ == "__main__":
         process.add(gateway)
     if options.sonos:
         gateway = soco_plugin.Gateway()
-        loop.run_until_complete(
-            gateway.associate_commands(
-                my_home.commands_by(soco_plugin.Description.PROTOCOL)
+        try:
+            loop.run_until_complete(
+                gateway.associate_commands(
+                    my_home.commands_by(soco_plugin.Description.PROTOCOL)
+                )
             )
-        )
+        except requests.exceptions.ConnectTimeout as e:
+            logging.getLogger(__name__).error(e)
         loop.run_until_complete(
             gateway.associate_triggers(
                 my_home.triggers_by(soco_plugin.Description.PROTOCOL)
