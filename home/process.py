@@ -66,7 +66,12 @@ class Process(object):
     async def _schedule_by_protocol_trigger(self, trigger):
         for scheduler_trigger in self._my_home.scheduler_triggers:
             if scheduler_trigger.type == home.scheduler.trigger.protocol.Trigger.type:
-                if scheduler_trigger.is_triggered(trigger):
+                try:
+                    triggered = scheduler_trigger.is_triggered(trigger)
+                except Exception as e:
+                    triggered = False
+                    self._logger.debug(e)
+                if triggered:
                     for performer in self._my_home.find_performers_by_scheduler_trigger(
                         scheduler_trigger
                     ):
