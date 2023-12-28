@@ -99,7 +99,7 @@ def parser() -> OptionParser:
     parser.add_option(
         "-p",
         "--redis-port",
-        default="6379",
+        default=6379,
         dest="redis_port",
         help="Redis server port",
         metavar="REDIS PORT",
@@ -142,7 +142,7 @@ def parser() -> OptionParser:
     )
     ha_group.add_option(
         "--home-assistant-port",
-        default="8123",
+        default=8123,
         dest="home_assistant_port",
         help="Home Assistant Web Socket Server Port",
         metavar="HOME ASSISTANT WS PORT",
