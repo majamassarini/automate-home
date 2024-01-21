@@ -24,10 +24,7 @@ class Presence(Callable):
 
 class Forced(Callable):
     def run(self, event, state):
-        if event == state.forced_enum.Off:
-            state = self.get_new_state(state, "forced_off")
-        elif event != state.forced_enum.Not:
-            state = self.compute_new_state(
-                state, "base", []
-            )  # go to a new forced state
+        if event in (state.forced_enum.Not, state.forced_enum.Off):
+            state = self.compute_new_state(state, "base", [event])
+        # otherwise do not override this status
         return state
