@@ -65,10 +65,13 @@ class Connection(object):
     async def write(self, channel, data):
         if data:
             msg = json.dumps(data, cls=self._encoder)
-            await self._publisher.publish(
-                "{} from {}".format(channel, self._my_node_name), msg
-            )
-            self._logger.debug("written {} to channel {}".format(msg, channel))
+            if self._publisher:
+                await self._publisher.publish(
+                    "{} from {}".format(channel, self._my_node_name), msg
+                )
+                self._logger.debug("written {} to channel {}".format(msg, channel))
+            else:
+                self._logger.warning("Redis publisher not ready yet")
 
 
 class Stub(Connection):

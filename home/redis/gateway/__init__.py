@@ -104,9 +104,9 @@ class Gateway(object):
     ):
         for client in self._appliances.values():
             asyncio.get_event_loop().create_task(
-                client.run(on_appliance_updated_by_redis)
+                client.run(on_appliance_updated_by_redis), name="Appliance updated by redis"
             )
         for client in self._performers.values():
             asyncio.get_event_loop().create_task(
-                client.run(on_performer_updated_by_redis)
+                client.run(on_performer_updated_by_redis), name="Performer updated by redis"
             )

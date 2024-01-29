@@ -30,37 +30,46 @@ class Connection(object):
             self._connection.close()
 
     async def get(self, key):
-        serializations = await self._connection.execute(
-            "zrange", key, -1, -1, encoding="utf-8"
-        )
-        for entry in serializations:
-            serialization = entry[entry.find(":") + 1 :]
-            obj = json.loads(serialization, object_hook=self._decoder)
-            self._logger.debug("get key {} -> {}".format(key, obj))
-            return obj
+        if self._connection:
+            serializations = await self._connection.execute(
+                "zrange", key, -1, -1, encoding="utf-8"
+            )
+            for entry in serializations:
+                serialization = entry[entry.find(":") + 1 :]
+                obj = json.loads(serialization, object_hook=self._decoder)
+                self._logger.debug("get key {} -> {}".format(key, obj))
+                return obj
+        else:
+            self._logger.warning("Redis connection not ready yet")
 
     async def get_history(self, key, num_of_events):
-        serializations = await self._connection.execute(
-            "zrange", key, -num_of_events, -1, encoding="utf-8"
-        )
-        history = list()
-        for entry in serializations:
-            entry.find(":")
-            colon = entry.find(":")
-            t = entry[0:colon]
-            serialization = entry[colon + 1 :]
-            deserialization = json.loads(serialization, object_hook=self._decoder)
-            history.append((t, deserialization))
-        history.reverse()
-        self._logger.debug("get_history for key {} -> {}".format(key, history))
-        return history
+        if self._connection:
+            serializations = await self._connection.execute(
+                "zrange", key, -num_of_events, -1, encoding="utf-8"
+            )
+            history = list()
+            for entry in serializations:
+                entry.find(":")
+                colon = entry.find(":")
+                t = entry[0:colon]
+                serialization = entry[colon + 1 :]
+                deserialization = json.loads(serialization, object_hook=self._decoder)
+                history.append((t, deserialization))
+            history.reverse()
+            self._logger.debug("get_history for key {} -> {}".format(key, history))
+            return history
+        else:
+            self._logger.warning("Redis connection not ready yet")
 
     async def set(self, key, obj):
-        if obj:
-            s = json.dumps(obj, cls=self._encoder)
-            entry = "{}:{}".format(time.time(), s)
-            await self._connection.execute("zadd", key, 0, entry)
-            self._logger.debug("set key {} -> {}".format(key, entry))
+        if self._connection:
+            if obj:
+                s = json.dumps(obj, cls=self._encoder)
+                entry = "{}:{}".format(time.time(), s)
+                await self._connection.execute("zadd", key, 0, entry)
+                self._logger.debug("set key {} -> {}".format(key, entry))
+        else:
+            self._logger.warning("Redis connection not ready yet")
 
 
 class Stub(Connection):
