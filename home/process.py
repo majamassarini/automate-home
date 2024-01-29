@@ -79,18 +79,21 @@ class Process(object):
 
     async def _update_performers_by_protocol_trigger(self, scheduler, trigger):
         for performer in self._my_home.find_performers_by_trigger(trigger):
-            old_state, new_state = performer.update_by(trigger)
-            if old_state and new_state:
-                await self._schedule_by_appliance_state(
-                    scheduler, performer.appliance, old_state, new_state
-                )
-                msgs = performer.execute(old_state, new_state)
-                await self._redis_gateway.on_appliance_updated_by_process(
-                    performer.appliance, old_state, new_state
-                )
-                if msgs:
-                    for writer in self._protocols_writers:
-                        await writer(msgs, performer)
+            try:
+                old_state, new_state = performer.update_by(trigger)
+                if old_state and new_state:
+                    await self._schedule_by_appliance_state(
+                        scheduler, performer.appliance, old_state, new_state
+                    )
+                    msgs = performer.execute(old_state, new_state)
+                    await self._redis_gateway.on_appliance_updated_by_process(
+                        performer.appliance, old_state, new_state
+                    )
+                    if msgs:
+                        for writer in self._protocols_writers:
+                            await writer(msgs, performer)
+            except Exception as e:
+                self._logger.error(e)
 
     async def _on_appliance_updated_by_redis(self, scheduler, new_appliance):
         old_appliance = self._appliances[new_appliance.name]
@@ -104,30 +107,37 @@ class Process(object):
             if (
                 not performer.triggers
             ):  # otherwise it must be executed when a trigger is triggered...
-                await self._schedule_by_appliance_state(
-                    scheduler, performer.appliance, old_state, new_state
-                )
-                msgs = performer.execute(old_state, new_state)
-                if msgs:
-                    self._logger.info(
-                        "Performer {} updated by redis will send {}".format(
-                            performer.name, msgs
-                        )
+                try:
+                    await self._schedule_by_appliance_state(
+                        scheduler, performer.appliance, old_state, new_state
                     )
-                for writer in self._protocols_writers:
-                    await writer(msgs, performer)
+                    msgs = performer.execute(old_state, new_state)
+                    if msgs:
+                        self._logger.info(
+                            "Performer {} updated by redis will send {}".format(
+                                performer.name, msgs
+                            )
+                        )
+                    for writer in self._protocols_writers:
+                        await writer(msgs, performer)
+                except Exception as e:
+                    self._logger.error(e)
 
     async def _on_performer_updated_by_redis(self, performer, old_state, new_state):
-        msgs = performer.execute(old_state, new_state)
-        self._logger.debug("Performer {} updated by redis".format(performer.name))
-        if msgs:
-            self._logger.info(
-                "Performer {} updated by redis will send {}".format(
-                    performer.name, msgs
+        try:
+            msgs = performer.execute(old_state, new_state)
+            self._logger.debug("Performer {} updated by redis".format(performer.name))
+            if msgs:
+                self._logger.info(
+                    "Performer {} updated by redis will send {}".format(
+                        performer.name, msgs
+                    )
                 )
-            )
-        for writer in self._protocols_writers:
-            await writer(msgs, performer)
+            for writer in self._protocols_writers:
+                await writer(msgs, performer)
+        except Exception as e:
+            self._logger.error(e)
+
 
     async def _on_protocol_event(self, scheduler, trigger):
         await self._schedule_by_protocol_trigger(trigger)
@@ -169,18 +179,28 @@ class Process(object):
 
     def create_tasks(self, loop, scheduler):
         self._queue = asyncio.Queue()
-        loop.create_task(self._run(scheduler))
+        loop.create_task(self._run(scheduler), name="Process _run(scheduler)")
         for gateway in self._protocols:
             loop.create_task(
                 gateway.run(
                     [lambda trigger: self._on_protocol_event(scheduler, trigger)]
-                )
+                ),
+                name=("On protocol {} event".format(gateway.PROTOCOL))
             )
         scheduler.start()
 
+    async def monitor(self):
+        while True:
+            self._logger.warning("\n\nNew tasks:\n")
+            for task in asyncio.all_tasks():
+                self._logger.warning(task.get_name())
+            await asyncio.sleep(180)
+
     def run(self, scheduler):
         loop = asyncio.get_event_loop()
+        loop.set_debug(enabled=False)
         self.create_tasks(loop, scheduler)
+        loop.create_task(self.monitor(), name="monitor")
         try:
             loop.run_until_complete(self._redis_gateway.connect())
             self._redis_gateway.create_tasks(
