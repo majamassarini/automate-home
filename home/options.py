@@ -45,7 +45,7 @@ def parser() -> OptionParser:
     >>> options.other_nodes_names
     ['ws', 'graphite']
     >>> options.redis_port
-    '6379'
+    6379
 
     :return: An enriched OptionParser
     """
