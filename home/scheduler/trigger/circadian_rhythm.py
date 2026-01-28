@@ -69,7 +69,7 @@ class Trigger(Parent, BaseTrigger):
         self._iterator = None
 
         self._next_fire_time = self._get_next_fire_time(
-            None, self._timezone.localize(datetime.datetime.now())
+            None, self._localize(datetime.datetime.now())
         )
 
     @property
@@ -91,7 +91,7 @@ class Trigger(Parent, BaseTrigger):
         :param now: now datetime
         :return: next datetime at which an event will be notified
         """
-        midnight = self._timezone.localize(
+        midnight = self._localize(
             datetime.datetime(
                 year=now.year, month=now.month, day=now.day, hour=0, minute=0
             )
