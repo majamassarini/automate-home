@@ -7,6 +7,7 @@
 from abc import ABCMeta
 import datetime
 import logging
+import pytz
 from tzlocal import get_localzone
 from typing import Iterable, List, Tuple
 
@@ -50,7 +51,14 @@ class Trigger(metaclass=Registry):
         self._events = list()
         self._events.extend(events)
         self._timedelta_fire = datetime.timedelta(weeks=52)
-        self._timezone = get_localzone()
+        tz = get_localzone()
+        # Convert ZoneInfo to pytz for APScheduler compatibility
+        if hasattr(tz, 'key'):
+            # ZoneInfo timezone - convert to pytz
+            self._timezone = pytz.timezone(tz.key)
+        else:
+            # Already a pytz timezone
+            self._timezone = tz
         self._logger = logging.getLogger(__name__)
 
     def __str__(self):
@@ -60,6 +68,21 @@ class Trigger(metaclass=Registry):
             super(Trigger, self).__str__(),
         )
         return s
+
+    def _localize(self, dt: datetime.datetime) -> datetime.datetime:
+        """
+        Localize a naive datetime to the trigger's timezone.
+        Handles both pytz and ZoneInfo timezones.
+
+        :param dt: naive datetime to localize
+        :return: timezone-aware datetime
+        """
+        if hasattr(self._timezone, 'localize'):
+            # pytz timezone
+            return self._timezone.localize(dt)
+        else:
+            # ZoneInfo timezone
+            return dt.replace(tzinfo=self._timezone)
 
     def fork(
         self, performer: "home.Performer"

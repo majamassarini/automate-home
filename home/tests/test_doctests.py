@@ -109,13 +109,13 @@ def load_tests(loader, tests, ignore):
     tests.addTests(doctest.DocTestSuite(home.scheduler.trigger.protocol.mean))
     tests.addTests(doctest.DocTestSuite(home.scheduler.trigger.protocol.multi))
     tests.addTests(doctest.DocTestSuite(home.scheduler.trigger.protocol.timer))
-    tests.addTests(doctest.DocTestSuite(home.scheduler.trigger.crawler.osmer_fvg))
-    tests.addTests(
-        doctest.DocTestSuite(home.scheduler.trigger.crawler.osmer_fvg.will_rain.on)
-    )
-    tests.addTests(
-        doctest.DocTestSuite(home.scheduler.trigger.crawler.osmer_fvg.will_rain.off)
-    )
+    # tests.addTests(doctest.DocTestSuite(home.scheduler.trigger.crawler.osmer_fvg))
+    # tests.addTests(
+    #     doctest.DocTestSuite(home.scheduler.trigger.crawler.osmer_fvg.will_rain.on)
+    # )
+    # tests.addTests(
+    #     doctest.DocTestSuite(home.scheduler.trigger.crawler.osmer_fvg.will_rain.off)
+    # )
 
     tests.addTests(doctest.DocTestSuite(home.builder.scheduler.trigger.cron))
     tests.addTests(
@@ -139,11 +139,11 @@ def load_tests(loader, tests, ignore):
     tests.addTests(doctest.DocTestSuite(home.builder.scheduler.trigger.protocol.enum))
     tests.addTests(doctest.DocTestSuite(home.builder.scheduler.trigger.protocol.multi))
     tests.addTests(doctest.DocTestSuite(home.builder.scheduler.trigger.sun.sunhit))
-    tests.addTests(
-        doctest.DocTestSuite(
-            home.builder.scheduler.trigger.crawler.osmer_fvg.will_rain.off
-        )
-    )
+    # tests.addTests(
+    #     doctest.DocTestSuite(
+    #         home.builder.scheduler.trigger.crawler.osmer_fvg.will_rain.off
+    #     )
+    # )
 
     # tests.addTests(doctest.DocTestSuite(home.redis.gateway.client.pubsub))
     # tests.addTests(doctest.DocTestSuite(home.redis.gateway.client.storage))

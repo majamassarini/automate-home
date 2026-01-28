@@ -43,5 +43,5 @@ class Trigger(sunrise.Trigger):
         self._events.append(sun.twilight.civil.Event.Sunrise)
         self._observer.horizon = "-6"  # civil twilight
         self._next_fire_time = self._get_next_fire_time(
-            None, self._timezone.localize(datetime.datetime.now())
+            None, self._localize(datetime.datetime.now())
         )

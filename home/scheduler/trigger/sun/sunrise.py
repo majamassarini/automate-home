@@ -33,7 +33,7 @@ class Trigger(follow.Trigger, BaseTrigger):
 
         self._events.append(sun.phase.Event.Sunrise)
         self._next_fire_time = self._get_next_fire_time(
-            None, self._timezone.localize(datetime.datetime.now())
+            None, self._localize(datetime.datetime.now())
         )
 
     def _get_next_fire_time(self, _, now: datetime.datetime) -> datetime.datetime:
