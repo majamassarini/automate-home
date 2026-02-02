@@ -73,6 +73,8 @@ For a deep dive into this project see the [documentation](https://automate-home.
 
 For a minute guide to this project see the [landing page](https://majamassarini.github.io/automate-home).
 
+For understanding how state machines process events and why some transitions may not work as expected, see [State Machine Event Processing](STATE_MACHINE_EVENT_PROCESSING.md).
+
 For suggestions, questions or anything else, please, write here: [discussions](https://github.com/majamassarini/automate-home/discussions).
 
 ## Contributing
