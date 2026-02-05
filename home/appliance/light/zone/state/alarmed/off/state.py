@@ -49,6 +49,5 @@ class State(Mixin, mixin.IsAlarmed, mixin.IsOff, Parent):
         self.alarmed_on = home.appliance.light.zone.state.alarmed.on.State
         self.forced_on = home.appliance.light.zone.state.forced.on.State
         self.forced_off = home.appliance.light.zone.state.forced.off.State
-        self._is_on = True
 
         super(State, self).__init__(events, events_disabled)
