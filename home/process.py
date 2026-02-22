@@ -148,27 +148,51 @@ class Process(object):
             performer, trigger, events = await self._queue.get()
             if trigger.is_enabled and events:
                 try:
-                    msgs, old_state, new_state = performer.notify(events)
-                    self._logger.debug(
-                        "Performer {} notified by Scheduler Trigger {}".format(
-                            performer.name, trigger.name
-                        )
-                    )
-                    await self._redis_gateway.on_performer_updated_by_process(
-                        performer, old_state, new_state
-                    )
-                    if msgs:
-                        self._logger.info(
-                            "Performer {} called by Protocol Trigger {} will send {}".format(
-                                performer.name, trigger.name, msgs
+                    if isinstance(
+                        trigger,
+                        home.scheduler.trigger.state.entering.disable_events.Trigger,
+                    ):
+                        for event in events:
+                            performer.appliance.disable(event)
+                        self._logger.debug(
+                            "Performer {} disabled events {} by Trigger {}".format(
+                                performer.name, events, trigger.name
                             )
                         )
-                    for writer in self._protocols_writers:
-                        await writer(msgs, performer)
+                    elif isinstance(
+                        trigger,
+                        home.scheduler.trigger.date.enable_events.Trigger,
+                    ):
+                        for event in events:
+                            performer.appliance.enable(event)
+                        self._logger.debug(
+                            "Performer {} enabled events {} by Trigger {}".format(
+                                performer.name, events, trigger.name
+                            )
+                        )
+                    else:
+                        msgs, old_state, new_state = performer.notify(events)
+                        self._logger.debug(
+                            "Performer {} notified by Scheduler Trigger {}".format(
+                                performer.name, trigger.name
+                            )
+                        )
+                        await self._redis_gateway.on_performer_updated_by_process(
+                            performer, old_state, new_state
+                        )
+                        if msgs:
+                            self._logger.info(
+                                "Performer {} called by Protocol Trigger {}"
+                                " will send {}".format(
+                                    performer.name, trigger.name, msgs
+                                )
+                            )
+                        for writer in self._protocols_writers:
+                            await writer(msgs, performer)
 
-                    await self._schedule_by_appliance_state(
-                        scheduler, performer.appliance, old_state, new_state
-                    )
+                        await self._schedule_by_appliance_state(
+                            scheduler, performer.appliance, old_state, new_state
+                        )
                 except Exception as e:
                     self._logger.error(e)
             if trigger.is_enabled:

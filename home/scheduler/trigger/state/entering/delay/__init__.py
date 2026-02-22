@@ -49,3 +49,4 @@ class Trigger(delay.Trigger):
 
 
 from home.scheduler.trigger.state.entering.delay import duration
+from home.scheduler.trigger.state.entering.delay import enable_events

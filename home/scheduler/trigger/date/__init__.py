@@ -20,3 +20,4 @@ class Trigger(Parent, DateTrigger):
 
 
 from home.scheduler.trigger.date import resettable
+from home.scheduler.trigger.date import enable_events

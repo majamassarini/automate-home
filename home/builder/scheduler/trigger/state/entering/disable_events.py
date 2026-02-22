@@ -4,12 +4,12 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
-from home.builder.scheduler.trigger.state import Builder as Parent
-from home.scheduler.trigger.state.entering import Trigger
+from home.builder.scheduler.trigger.state.entering import Builder as Parent
+from home.scheduler.trigger.state.entering.disable_events import Trigger
 
 
 class Builder(Parent):
-    TAG_NAME = "state.entering.Trigger"
+    TAG_NAME = "state.entering.disable_events.Trigger"
 
     @property
     def trigger(self):
@@ -17,10 +17,6 @@ class Builder(Parent):
 
     def _build_args(self, mapping):
         name = mapping["name"]
-        events = mapping["notify events"]
+        events = mapping["disable events"]
         state = mapping["when appliance state became"]
         return [name, events, state]
-
-
-from home.builder.scheduler.trigger.state.entering import delay
-from home.builder.scheduler.trigger.state.entering import disable_events
