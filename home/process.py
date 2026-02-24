@@ -98,7 +98,11 @@ class Process(object):
     async def _on_appliance_updated_by_redis(self, scheduler, new_appliance):
         old_appliance = self._appliances[new_appliance.name]
         old_state, new_state = old_appliance.update(new_appliance)
-        self._logger.debug("Appliance {} updated by redis".format(new_appliance.name))
+        self._logger.debug(
+            "Appliance {} updated by redis ({} -> {})".format(
+                new_appliance.name, old_state.compute(), new_state.compute()
+            )
+        )
         for performer in [
             performer
             for performer in self._performers
@@ -113,9 +117,10 @@ class Process(object):
                     )
                     msgs = performer.execute(old_state, new_state)
                     if msgs:
-                        self._logger.info(
-                            "Performer {} updated by redis will send {}".format(
-                                performer.name, msgs
+                        self._logger.debug(
+                            "Performer {} sending {} ({} -> {})".format(
+                                performer.name, msgs,
+                                old_state.compute(), new_state.compute()
                             )
                         )
                     for writer in self._protocols_writers:
@@ -128,9 +133,10 @@ class Process(object):
             msgs = performer.execute(old_state, new_state)
             self._logger.debug("Performer {} updated by redis".format(performer.name))
             if msgs:
-                self._logger.info(
-                    "Performer {} updated by redis will send {}".format(
-                        performer.name, msgs
+                self._logger.debug(
+                    "Performer {} sending {} ({} -> {})".format(
+                        performer.name, msgs,
+                        old_state.compute(), new_state.compute()
                     )
                 )
             for writer in self._protocols_writers:
