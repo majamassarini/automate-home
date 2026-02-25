@@ -9,7 +9,7 @@ import logging
 import json
 import time
 
-import aioredis
+import redis.asyncio as aioredis
 
 
 class Connection(object):
@@ -23,19 +23,19 @@ class Connection(object):
         self._logger = logging.getLogger(__name__)
 
     async def connect(self):
-        self._connection = await aioredis.create_connection((self._host, self._port))
+        self._connection = aioredis.Redis(
+            host=self._host, port=self._port, decode_responses=True
+        )
 
     async def disconnect(self):
         if self._connection:
-            self._connection.close()
+            await self._connection.aclose()
 
     async def get(self, key):
         if self._connection:
-            serializations = await self._connection.execute(
-                "zrange", key, -1, -1, encoding="utf-8"
-            )
+            serializations = await self._connection.zrange(key, -1, -1)
             for entry in serializations:
-                serialization = entry[entry.find(":") + 1 :]
+                serialization = entry[entry.find(":") + 1:]
                 obj = json.loads(serialization, object_hook=self._decoder)
                 self._logger.debug("get key {} -> {}".format(key, obj))
                 return obj
@@ -44,19 +44,22 @@ class Connection(object):
 
     async def get_history(self, key, num_of_events):
         if self._connection:
-            serializations = await self._connection.execute(
-                "zrange", key, -num_of_events, -1, encoding="utf-8"
+            serializations = await self._connection.zrange(
+                key, -num_of_events, -1
             )
             history = list()
             for entry in serializations:
-                entry.find(":")
                 colon = entry.find(":")
                 t = entry[0:colon]
-                serialization = entry[colon + 1 :]
-                deserialization = json.loads(serialization, object_hook=self._decoder)
+                serialization = entry[colon + 1:]
+                deserialization = json.loads(
+                    serialization, object_hook=self._decoder
+                )
                 history.append((t, deserialization))
             history.reverse()
-            self._logger.debug("get_history for key {} -> {}".format(key, history))
+            self._logger.debug(
+                "get_history for key {} -> {}".format(key, history)
+            )
             return history
         else:
             self._logger.warning("Redis connection not ready yet")
@@ -66,7 +69,7 @@ class Connection(object):
             if obj:
                 s = json.dumps(obj, cls=self._encoder)
                 entry = "{}:{}".format(time.time(), s)
-                await self._connection.execute("zadd", key, 0, entry)
+                await self._connection.zadd(key, {entry: 0})
                 self._logger.debug("set key {} -> {}".format(key, entry))
         else:
             self._logger.warning("Redis connection not ready yet")
