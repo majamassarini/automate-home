@@ -23,5 +23,12 @@ setup(name="automate-home",
       ],
       packages=find_packages(exclude=[]),
       include_package_data=True,
-      install_requires=['APScheduler==3.9.0', 'hiredis==1.1.0', 'aioredis==1.3.1', 'ephem', 'tzlocal==2.1', 'pytz==2022.1', 'PyYAML']
+      install_requires=[
+          'APScheduler==3.9.0',
+          'redis[hiredis]>=4.2.0',
+          'ephem',
+          'tzlocal==2.1',
+          'pytz==2022.1',
+          'PyYAML',
+      ]
       )
