@@ -221,9 +221,9 @@ class Process(object):
 
     async def monitor(self):
         while True:
-            self._logger.warning("\n\nNew tasks:\n")
+            self._logger.debug("\n\nNew tasks:\n")
             for task in asyncio.all_tasks():
-                self._logger.warning(task.get_name())
+                self._logger.debug(task.get_name())
             await asyncio.sleep(180)
 
     def run(self, scheduler):
