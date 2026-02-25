@@ -102,11 +102,13 @@ class Gateway(object):
     def create_tasks(
         self, loop, on_appliance_updated_by_redis, on_performer_updated_by_redis
     ):
-        for client in self._appliances.values():
+        for appliance, client in self._appliances.items():
             asyncio.get_event_loop().create_task(
-                client.run(on_appliance_updated_by_redis), name="Appliance updated by redis"
+                client.run(on_appliance_updated_by_redis),
+                name="Appliance {} updated by redis".format(appliance.name),
             )
-        for client in self._performers.values():
+        for performer, client in self._performers.items():
             asyncio.get_event_loop().create_task(
-                client.run(on_performer_updated_by_redis), name="Performer updated by redis"
+                client.run(on_performer_updated_by_redis),
+                name="Performer {} updated by redis".format(performer.name),
             )
