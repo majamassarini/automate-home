@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "automate-home"
+version = "0.9.1"
+description = "A python3 library to automate (home) devices"
+readme = "README.md"
+license = "GPL-3.0-only"
+authors = [
+    { name = "Maja Massarini", email = "maja.massarini@gmail.com" },
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Communications",
+    "Intended Audience :: Developers",
+]
+requires-python = ">=3.14"
+dependencies = [
+    "APScheduler>=3.10.0",
+    "redis>=4.2.0",
+    "hiredis>=2.0.0",
+    "ephem",
+    "tzlocal",
+    "pytz",
+    "PyYAML",
+]
+
+[project.optional-dependencies]
+dev = [
+    "behave",
+    "flake8",
+    "black",
+    "coverage",
+]
+doc = [
+    "sphinx-gherkindoc",
+    "sphinx-rtd-theme",
+]
+
+[project.urls]
+Homepage = "https://github.com/majamassarini/automate-home"
+
+[tool.setuptools.packages.find]
+where = ["."]
