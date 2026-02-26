@@ -217,7 +217,7 @@ class Process(object):
                 ),
                 name=("On protocol {} event".format(gateway.PROTOCOL))
             )
-        scheduler.start()
+        loop.call_soon(scheduler.start)
 
     async def monitor(self):
         while True:

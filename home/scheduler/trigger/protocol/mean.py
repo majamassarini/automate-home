@@ -114,7 +114,6 @@ class GreaterThan(Comparison):
     >>> async def wait_for_mean(scheduler_trigger, protocol_trigger):
     ...     while not scheduler_trigger.is_triggered(protocol_trigger):
     ...         await asyncio.sleep(0.01)
-    ...     asyncio.get_event_loop().stop()
     >>>
     >>> protocol_trigger = PT({"a": "description"}, ["an event"])
     >>> scheduler_trigger = home.scheduler.trigger.protocol.mean.GreaterThan("a mean scheduler trigger",
@@ -130,8 +129,11 @@ class GreaterThan(Comparison):
     ...                         args=(scheduler_trigger, protocol_trigger, ),
     ...                         misfire_grace_time=180,
     ...                         coalesce=False)
-    >>> scheduler.start()
-    >>> asyncio.get_event_loop().run_forever()
+    >>> async def main():
+    ...     scheduler.start()
+    ...     await wait_for_mean(scheduler_trigger, protocol_trigger)
+    ...     scheduler.shutdown()
+    >>> asyncio.run(main())
     """
 
     def is_triggered(self, description: "home.protocol.Description") -> bool:
@@ -174,7 +176,6 @@ class LesserThan(Comparison):
     >>> async def wait_for_mean(scheduler_trigger, protocol_trigger):
     ...     while not scheduler_trigger.is_triggered(protocol_trigger):
     ...         await asyncio.sleep(0.01)
-    ...     asyncio.get_event_loop().stop()
     >>>
     >>> protocol_trigger = PT({"a": "description"}, ["an event"])
     >>> scheduler_trigger = home.scheduler.trigger.protocol.mean.LesserThan("a mean scheduler trigger",
@@ -190,8 +191,11 @@ class LesserThan(Comparison):
     ...                         args=(scheduler_trigger, protocol_trigger, ),
     ...                         misfire_grace_time=180,
     ...                         coalesce=False)
-    >>> scheduler.start()
-    >>> asyncio.get_event_loop().run_forever()
+    >>> async def main():
+    ...     scheduler.start()
+    ...     await wait_for_mean(scheduler_trigger, protocol_trigger)
+    ...     scheduler.shutdown()
+    >>> asyncio.run(main())
     """
 
     def is_triggered(self, description: "home.protocol.Description") -> bool:
@@ -234,7 +238,6 @@ class InBetween(Trigger):
     >>> async def wait_for_mean(scheduler_trigger, protocol_trigger):
     ...     while not scheduler_trigger.is_triggered(protocol_trigger):
     ...         await asyncio.sleep(0.01)
-    ...     asyncio.get_event_loop().stop()
     >>>
     >>> protocol_trigger = PT({"a": "description"}, ["an event"])
     >>> scheduler_trigger = home.scheduler.trigger.protocol.mean.InBetween("a mean scheduler trigger",
@@ -251,8 +254,11 @@ class InBetween(Trigger):
     ...                         args=(scheduler_trigger, protocol_trigger, ),
     ...                         misfire_grace_time=180,
     ...                         coalesce=False)
-    >>> scheduler.start()
-    >>> asyncio.get_event_loop().run_forever()
+    >>> async def main():
+    ...     scheduler.start()
+    ...     await wait_for_mean(scheduler_trigger, protocol_trigger)
+    ...     scheduler.shutdown()
+    >>> asyncio.run(main())
     """
 
     def __init__(
