@@ -1,5 +1,6 @@
 APScheduler==3.9.0
-redis[hiredis]>=4.2.0
+redis>=4.2.0
+hiredis>=2.0.0
 ephem
 pytz
 PyYAML
