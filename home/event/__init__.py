@@ -29,6 +29,7 @@ from home.event.enumeration import registry
 from typing import TypeVar
 
 Event = TypeVar(
+    "Event",
     int,
     float,
     str,
