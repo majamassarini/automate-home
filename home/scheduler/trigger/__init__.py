@@ -41,18 +41,22 @@ class Registry(ABCMeta):
 
 class Trigger(metaclass=Registry):
     """
-    A *Scheduler Trigger*.
+    Base class for all scheduler triggers.
 
-    When triggered, given *events* are notified to scheduled *Performers*.
+    When fired by APScheduler, the configured *events* are delivered to
+    every *Performer* that has been associated with this trigger via
+    :py:meth:`MyHome.schedule_performer`.
     """
 
-    @property
-    def type(self):
-        return "SCHEDULER EVENT"
+    type = "SCHEDULER EVENT"
 
     def __init__(
         self, name: str, events: Iterable[home.Event], *args, **kwargs
     ):
+        """
+        :param name: human-readable trigger name used in log messages
+        :param events: events to deliver when this trigger fires
+        """
         super(Trigger, self).__init__(*args, **kwargs)
         self._name = name
         self._events: List[home.Event] = list()
@@ -95,18 +99,28 @@ class Trigger(metaclass=Registry):
         self, performer: home.Performer
     ) -> List[Tuple[home.Performer, "home.scheduler.Trigger"]]:
         """
-        Starts new *Scheduler Triggers*.
+        Produce derived triggers that will notify *performer* after a delay.
 
-        The new *Scheduler Triggers*, when triggered,
-        will notify the given *Performer*.
+        The base implementation returns an empty list. Subclasses that
+        carry a delay (e.g. :py:class:`state.delay.Trigger`) override this
+        to create and return a one-shot
+        :py:class:`date.resettable.Trigger` scheduled to fire after the
+        configured timeout.
 
-        :param performer: a *Performer* to be notified
-        :return: list of (*Performer*, *Scheduler Triggers*) couples
+        :param performer: the performer to notify when the derived trigger fires
+        :return: list of (performer, trigger) pairs to register with APScheduler
         """
         return []
 
     @property
-    def is_enabled(self):
+    def is_enabled(self) -> bool:
+        """
+        Whether this trigger is still active.
+
+        Returns ``False`` for :py:class:`date.resettable.Trigger` instances
+        that have been explicitly disabled (e.g. because a newer fork
+        supersedes them).  The base implementation always returns ``True``.
+        """
         return True
 
     @property

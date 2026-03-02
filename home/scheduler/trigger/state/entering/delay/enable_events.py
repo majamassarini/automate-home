@@ -21,6 +21,17 @@ from home.scheduler.trigger.state.entering.delay import Trigger as Parent
 
 
 class _EnableEventsDelay(Delay):
+    """
+    A :py:class:`Delay` variant that forks into a
+    :py:class:`date.enable_events.Trigger` instead of the default
+    :py:class:`date.resettable.Trigger`.
+
+    When the forked trigger fires, the :py:class:`Process` recognises it
+    as an ``enable_events`` trigger and calls
+    :py:meth:`Appliance.enable` for each event, re-activating them in
+    the appliance state machine.
+    """
+
     def fork(
         self, performer: home.Performer
     ) -> List[Tuple[home.Performer, "home.scheduler.Trigger"]]:
@@ -46,9 +57,14 @@ class _EnableEventsDelay(Delay):
 
 class Trigger(Parent):
     """
-    A **Scheduler Trigger** that, when entering the specified state,
-    starts a timer and after the given timeout re-enables the specified events
-    in the Appliance state machine.
+    A scheduler trigger that, on entering the specified state, starts a
+    timer and re-enables the given events in the appliance state machine
+    once the timer expires.
+
+    A typical use-case is suppressing an event (e.g. ``forced.Off``)
+    immediately on state entry and automatically re-enabling it after a
+    short grace period, so that spurious echoes from the bus are ignored
+    while legitimate commands are still accepted afterwards.
 
     >>> import home
     >>> off = home.appliance.sound.player.state.off.State()
@@ -65,6 +81,12 @@ class Trigger(Parent):
         state: str,
         timeout_seconds: float,
     ):
+        """
+        :param name: human-readable trigger name used in log messages
+        :param events: events to re-enable when the timer expires
+        :param state: the :py:attr:`State.VALUE` string that starts the timer
+        :param timeout_seconds: seconds to wait before re-enabling the events
+        """
         super().__init__(name, events, state, timeout_seconds)
         self._delay = _EnableEventsDelay(
             "delay trigger for {}".format(name),

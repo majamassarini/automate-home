@@ -5,7 +5,7 @@
 # from the environment for the first two.
 SPHINXOPTS    ?=
 SPHINXBUILD   ?= sphinx-build
-SPHINXGHERKIN ?= sphinx-gherkindoc
+PYTHON        ?= python3
 SOURCEDIR     = source
 BUILDDIR      = build
 OUTGHERKINDIR = "$(SOURCEDIR)"/features
@@ -20,7 +20,7 @@ help:
 
 gherkindoc:
 	rm -rf $(OUTGHERKINDIR)
-	@$(SPHINXGHERKIN) "$(INGHERKINDIR)" "$(OUTGHERKINDIR)"
+	@$(PYTHON) gherkindoc.py "$(INGHERKINDIR)" "$(OUTGHERKINDIR)"
 
 
 # Catch-all target: route all unknown targets to Sphinx using the new

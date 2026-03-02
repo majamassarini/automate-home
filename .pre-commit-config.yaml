@@ -18,3 +18,21 @@ repos:
         args: [--config-file=pyproject.toml]
         additional_dependencies: [types-PyYAML, types-pytz, types-tzlocal]
         exclude: ^(home/tests/|docs/)
+
+  - repo: local
+    hooks:
+      - id: behave
+        name: behave
+        entry: behave
+        args: [home/features/]
+        language: python
+        additional_dependencies:
+          - behave
+          - APScheduler>=3.10.0
+          - redis>=4.2.0
+          - hiredis>=2.0.0
+          - ephem
+          - tzlocal
+          - pytz
+          - PyYAML
+        pass_filenames: false

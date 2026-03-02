@@ -4,7 +4,7 @@ Architecture
 
 What's the difference between this project model and other home automation projects?
 
-The main difference is the design of an *Appliance* where, with the name *Appliance*, I refer to entities like a light model, a curtain model, a sound player model ecc.
+The main difference is the design of an *Appliance*, where by *Appliance* I mean entities such as a light model, a curtain model, a sound player model, etc.
 
 One of the most simple *Appliances* I could imagine is a light with two states: on and off.
 
@@ -22,7 +22,7 @@ Examples:
   * a simple light model, named presence light, which owns just two states **off** and **forced on**.
     The system will never turn on this kind of light but will turn it off when the user forgets it **forced on**.
     The system could know that the user forgot the light on if it receives a **presence off** message when, as an example,
-    tha alarm system is armed in the light zone and no one is there anymore.
+    the alarm system is armed in the light zone and no one is there anymore.
 
   * a light model for a highly busy zone, named busy zone light, which owns multiple states **on**, **off**, **forced on**, **forced off**.
     This light model is thought to be used, as an example, in a kitchen.
@@ -52,13 +52,13 @@ to be realized, an **on** and an **off** command. But
 *Appliance* states are translated into *Protocol commands* through the *Performer*.
 
 .. note::
-  Some of the system behaviours described above can be realized even without using a non deterministic state machine.
-  Like all other projects do that.
+  Some of the system behaviours described above can be achieved without using a non-deterministic state machine,
+  as other projects do.
 
-  You need logics/rules using many variables holding the hidden state of the devices.
+  You would need rules using many variables to hold the hidden state of the devices.
 
   **I believe it is more explicit and usable for the end user to have a state named alarmed (for a simple light)
-  rather than to have an on state and an hidden variable somewhere in the rule engine.**
+  rather than to have an on state and a hidden variable somewhere in the rule engine.**
 
 
 Example
@@ -86,14 +86,14 @@ Example
 Behavior-driven development
 ===========================
 
-I believe logics are the building bricks of a smart home system.
-But they are complex to build, debug and share and this project goal is to make it easier.
+I believe automations are the building blocks of a smart home system.
+They are complex to build, debug, and share — and the goal of this project is to make it easier.
 
 Having an *Appliance* grouping together all its logic **simplifies logic debug and reuse**.
 
 All *Appliance* inner states can be tested with BDD style tests.
 
-:ref:`BDD style tests <Features>` make it quite easy to understand the behaviour of every *Appliance* in every possible state and thus make it more **shareable**.
+:ref:`BDD style tests <Features>` make it quite easy to understand the behaviour of every *Appliance* in every possible state, making it more **shareable**.
 
 **I like to think of this project as a way to easily share behavioural models for our smart devices.**
 

@@ -7,7 +7,7 @@ Appliance
 **Appliances are abstract non deterministic state machines**, they do not know how to turn on your light,
 they just know that your light should be turned on.
 
-**Events** are notified to *Appliances* and can make transit the state machine.
+**Events** are delivered to *Appliances* and can cause the state machine to transition.
 
 .. tip::
   The *Appliance* state machine can be modified by a user at any time.
@@ -16,7 +16,7 @@ they just know that your light should be turned on.
   the :ref:`example projects <example_projects>`).
 
   If, as an example, you have a curtain model automated to be opened by the system when it receives the event
-  *home.event.sleepiness.Event.Awake*, meaning the user has to be wake up, then the user can inhibit the
+  *home.event.sleepiness.Event.Awake*, meaning the user needs to wake up, then the user can inhibit the
   processing of such an event every time he does not want to be wake up.
 
 Appliances states are designed to be **easily reusable**.

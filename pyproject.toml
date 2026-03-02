@@ -39,7 +39,7 @@ dev = [
     "coverage",
 ]
 doc = [
-    "sphinx-gherkindoc",
+    "sphinx",
     "sphinx-rtd-theme",
 ]
 
