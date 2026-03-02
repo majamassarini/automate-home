@@ -20,14 +20,14 @@ from home.scheduler.trigger import Trigger as Parent
 
 class Trigger(Parent, BaseTrigger):
     """
-    A **Scheduler Trigger** triggered when its **Protocol Trigger** is triggered.
+    A scheduler trigger that fires whenever its associated protocol
+    trigger is activated by an incoming bus message.
 
-    When triggered will notify given *events* plus the *protocol trigger events*.
+    When fired, it delivers the union of its own *events* and the events
+    carried by the protocol trigger to the associated performers.
     """
 
-    @property
-    def type(self):
-        return "PROTOCOL EVENT"
+    type = "PROTOCOL EVENT"
 
     def __init__(
         self,
@@ -37,16 +37,23 @@ class Trigger(Parent, BaseTrigger):
         *args,
         **kwargs,
     ):
+        """
+        :param name: human-readable trigger name used in log messages
+        :param events: extra events to deliver in addition to those from
+            the protocol trigger
+        :param protocol_trigger: the protocol-level trigger that activates
+            this scheduler trigger
+        """
         super(Trigger, self).__init__(name, events, *args, **kwargs)
         self._protocol_trigger = protocol_trigger
 
     def is_triggered(self, description: home.protocol.Description) -> bool:
         """
-        Check if the given protocol message description triggers
-        the inner *Protocol Trigger*
+        Return ``True`` when the given protocol message description
+        activates the inner protocol trigger.
 
-        :param description: a message from a home.protocol.Gateway
-        :return: if the *Protocol Trigger* is triggered
+        :param description: a message description received from a protocol gateway
+        :return: ``True`` if the protocol trigger matches the description
         """
         return self._protocol_trigger.is_triggered(description)
 
@@ -56,12 +63,17 @@ class Trigger(Parent, BaseTrigger):
 
     def get_next_fire_time(self, _, now):
         """
-        When the inner *Protocol Trigger* is triggered this
-        *Scheduler Trigger* is armed to be *immediately triggered*.
+        Return a fire time far in the future so that APScheduler never
+        removes this trigger from the scheduler.
 
-        :param _:
-        :param now: datetime now
-        :return: datetime now
+        Protocol-based triggers are fired manually (via
+        :py:meth:`Process._schedule_by_protocol_trigger`) whenever the
+        matching protocol message arrives; they are not supposed to fire
+        on their own.
+
+        :param _: previous fire time (unused)
+        :param now: current datetime (unused)
+        :return: a datetime 52 weeks from now
         """
         timedelta = datetime.timedelta(
             weeks=52
@@ -71,6 +83,10 @@ class Trigger(Parent, BaseTrigger):
 
     @property
     def events(self):
+        """
+        Return the combined list of this trigger's own events and those
+        carried by the inner protocol trigger.
+        """
         lst = self._events.copy()
         if self._protocol_trigger:
             try:

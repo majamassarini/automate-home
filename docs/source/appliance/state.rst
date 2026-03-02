@@ -9,7 +9,7 @@ A curtain could be **Closed** for many different reasons:
  - it could be *Closed* because someone *forced it to be closed*
  - or it could be *Closed* because *the sun is hitting the window* and the system closes it.
 
-It is up to the *non deterministic state machine design* decide which are the events that allow a *Closed* curtain to become *Opened*:
+It is up to the *non-deterministic state machine design* to decide which events allow a *Closed* curtain to become *Opened*:
  - a state called *forced.Closed* receiving the *sun is not hitting the window anymore event* will result in the same *forced.Closed* state.
  - a state called *Closed* receiving the *sun is not hitting the window anymore event* will result in a new *Opened* state.
 
@@ -47,14 +47,13 @@ Example
 
 The sun is hitting the window and the appliance non deterministic state machine says the curtain should be in a *Closed* state.
 But you need it to be opened and pressing a button you open it in a *Forced Opened* state.
-Few minutes later the wind starts blowing strong and the system says that the curtain should be in a *Opened* state.
+A few minutes later the wind starts blowing strongly and the system says that the curtain should be in an *Opened* state.
 Now you and the system agree and the curtain state can be moved from a *Forced Opened* state to an *Opened* state.
 
 .. hint::
-  Every *Event* changing the state could unlock a *forced* state. But sometimes *Events* comes so often,
-  and make the state change so often, that is better if they will not unlock a state.
-  Is up to the non deterministic state machine
-  design decide which are the events which will reset a forced state.
+  Every *Event* that changes the state could unlock a *forced* state. But sometimes *Events* arrive so often
+  and cause the state to change so frequently that it is better if they do not unlock a state.
+  It is up to the non-deterministic state machine design to decide which events will reset a forced state.
 
 .. raw:: latex
 

@@ -7,8 +7,8 @@ A **Performer** is the entity that binds together an *Appliance*, its **protocol
 **Protocol triggers** map protocol messages from one or more physical devices to *events* for the realized *Appliance*.
 
 *Performers* translate received protocol messages to **events** for an *Appliance* through *protocol triggers*.
-When an *Appliance* has changed its *State*, *Performers* translate the **transaction** from an
-*old Appliance State* to a *new Appliance State* in a list of protocol messages through *protocol commands*.
+When an *Appliance* changes its *State*, *Performers* translate the **transition** from the
+*old Appliance State* to the *new Appliance State* into a list of protocol messages via *protocol commands*.
 
 .. tip::
   Many commands and triggers can be grouped together inside the same *Performer*.
@@ -50,7 +50,7 @@ When a KNX push button, with address 0x0C09, is pressed to send a DPT_Control_Di
 .. note::
   The **home** package has only an **abstract definition for every entity in the home.protocol package**.
 
-Implementations are found in external packages, one for every protocol.
+Implementations are found in external packages, one per protocol.
 
 Right now, available protocol plugins are:
 
@@ -82,7 +82,7 @@ Performer (Class Diagram)
 Protocol Triggers
 -----------------
 
-Every time the system receives a message through one of its *Protocol Gateways* the message is checked against compatible *Protocol Triggers*.
+Every time the system receives a message through one of its *Protocol Gateways*, the message is checked against compatible *Protocol Triggers*.
 
 When a *Protocol Trigger* is triggered all the *Performers* which own it will
 potentially notify related **events** to their *Appliances*.
@@ -98,7 +98,7 @@ potentially notify related **events** to their *Appliances*.
 
 A *Protocol Trigger* owns a list of *Events* which are used when it has been triggered.
 
-Returned *Events* can be obtained applying functions to data collected in the trigger: values in the payload, a mean of multiple messages values, a count of messages and so on.
+Returned *Events* can be obtained by applying functions to data collected in the trigger: values from the payload, a mean of multiple message values, a count of messages, and so on.
 
 .. raw:: latex
 
@@ -186,10 +186,10 @@ Light is forced on example
 When a button is pressed by the user to turn on the light then
 the user is saying to the system:
 
-hei, I want the light to stay turned on, do not touch it.
+hey, I want the light to stay on — don't touch it.
 
 The following is a simple KNX Trigger with a *forcing on* event notified every time
-a *on message* on address 0xBBBB through the knx protocol is received::
+an *on message* on address 0xBBBB is received through the KNX protocol::
 
   >>> knx_plugin.trigger.dpt_switch.On.make([0xBBBB, ], [home.appliance.light.event.forced.Event.On,])
 
@@ -263,8 +263,8 @@ Adjust lifx bulb color when knx switch is turned on example
 Adjust lifx bulb color a few seconds later the knx switch is turned on example
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-A *Performer Command* will send a message to bus few seconds later a *Protocol Trigger* is triggered if
-a *Scheduler Trigger* owning the *Performer Trigger* has been **scheduled** with the *Performer Command* as a target::
+A *Performer Command* will send a message to the bus a few seconds after a *Protocol Trigger* is activated,
+if a *Scheduler Trigger* that references the *Protocol Trigger* has been **scheduled** with the *Performer Command* as a target::
 
     - !Performer
       name: "force on a lifx bulb"
@@ -312,8 +312,8 @@ Appliances and Performers reusability
 --------------------------------------
 
 When an *Appliance* model has been defined together with the *Performers* that can change its state then
-both the *Appliance* and the *Performers* can be **easily reused simply changing
-Protocol Triggers and Protocol Commands** and, if needed, customizing *Appliance* and *Performers* names.
+both the *Appliance* and the *Performers* can be **easily reused by simply changing the
+Protocol Triggers and Protocol Commands** and, if needed, customizing the *Appliance* and *Performer* names.
 
 .. raw:: latex
 

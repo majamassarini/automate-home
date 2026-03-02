@@ -1,4 +1,4 @@
-name: Unit Tests
+name: Tests
 
 on:
   push:
@@ -27,6 +27,10 @@ jobs:
     - name: Run unit tests with coverage
       run: |
         python -m coverage run -m unittest discover -s home/tests -t . -v
+
+    - name: Run behave tests with coverage
+      run: |
+        python -m coverage run --append -m behave home/features/
 
     - name: Generate coverage report
       run: |

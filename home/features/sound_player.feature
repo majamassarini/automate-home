@@ -14,7 +14,7 @@ Feature: A sound player appliance
       | presence | sleepiness | elapsed | from_state                 | event                         | to_state                   |
       | On       | Awake      | On      | sound.player.state.off     | event.presence.Event.On       | sound.player.state.off     |
       | On       | Awake      | On      | sound.player.state.off     | event.presence.Event.Off      | sound.player.state.off     |
-      | On       | Awake      | On      | sound.player.state.off     | event.sleepiness.Event.Awake  | sound.player.state.off     |
+      | On       | Awake      | On      | sound.player.state.off     | event.sleepiness.Event.Awake  | sound.player.state.fade_in |
       | On       | Awake      | On      | sound.player.state.off     | event.sleepiness.Event.Sleepy | sound.player.state.off     |
       | On       | Awake      | On      | sound.player.state.off     | event.sleepiness.Event.Asleep | sound.player.state.off     |
       | On       | Awake      | On      | sound.player.state.off     | event.elapsed.Event.On        | sound.player.state.off     |
@@ -56,7 +56,7 @@ Feature: A sound player appliance
       | On       | Sleepy     | Off     | sound.player.state.off     | event.elapsed.Event.Off       | sound.player.state.off     |
       | Off      | Awake      | On      | sound.player.state.off     | event.presence.Event.On       | sound.player.state.off     |
       | Off      | Awake      | On      | sound.player.state.off     | event.presence.Event.Off      | sound.player.state.off     |
-      | Off      | Awake      | On      | sound.player.state.off     | event.sleepiness.Event.Awake  | sound.player.state.off     |
+      | Off      | Awake      | On      | sound.player.state.off     | event.sleepiness.Event.Awake  | sound.player.state.fade_in |
       | Off      | Awake      | On      | sound.player.state.off     | event.sleepiness.Event.Sleepy | sound.player.state.off     |
       | Off      | Awake      | On      | sound.player.state.off     | event.sleepiness.Event.Asleep | sound.player.state.off     |
       | Off      | Awake      | On      | sound.player.state.off     | event.elapsed.Event.On        | sound.player.state.off     |

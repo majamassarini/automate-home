@@ -16,18 +16,20 @@ from home.scheduler.trigger.state import Trigger as Parent
 
 class Trigger(Parent):
     """
-    A **Scheduler Trigger** triggered when the given states,
-    are changed and the old state was equal to the specified state.
+    A scheduler trigger that fires when the appliance *exits* the
+    specified state (i.e. the state changes and the old state matched
+    the configured state value).
     """
 
     def is_triggered(
         self, old_state: home.appliance.State, new_state: home.appliance.State
     ) -> bool:
         """
-        When state is changed and its value is no more like those the trigger wants return True
+        Return ``True`` when the state changes and the old state matched
+        the configured state value.
 
-        :param old_state: the old appliance state
-        :param new_state: the new appliance state
+        :param old_state: the appliance state before the last event
+        :param new_state: the appliance state after the last event
         """
         triggered = False
         if (old_state and new_state) and (old_state.VALUE != new_state.VALUE):

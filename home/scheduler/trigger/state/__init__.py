@@ -19,18 +19,21 @@ from home.scheduler.trigger import Trigger as Parent
 
 class Trigger(Parent, BaseTrigger):
     """
-    A **Scheduler Trigger** triggered when the Appliance is already in the specified state.
+    A scheduler trigger that fires when the appliance *remains* in the
+    specified state (i.e. old state and new state are identical and both
+    equal to the configured state value).
+
+    Use :py:class:`entering.Trigger` if you want to react to the
+    *transition* into a state rather than to its steady presence.
     """
 
-    @property
-    def type(self):
-        return "APPLIANCE STATE"
+    type = "APPLIANCE STATE"
 
     def __init__(self, name: str, events: Iterable[home.Event], state: str):
         """
-        :param name: the scheduler trigger name
-        :param events: events to be notified
-        :param state: a str representing a state
+        :param name: human-readable trigger name used in log messages
+        :param events: events to deliver when this trigger fires
+        :param state: the :py:attr:`State.VALUE` string that must match
         """
         super(Trigger, self).__init__(name, events)
         self._state = state
@@ -39,10 +42,11 @@ class Trigger(Parent, BaseTrigger):
         self, old_state: home.appliance.State, new_state: home.appliance.State
     ) -> bool:
         """
-        When Appliance state is already in the specified state returns True
+        Return ``True`` when the state has not changed and equals the
+        configured state value.
 
-        :param old_state: the old appliance state
-        :param new_state: the new appliance state
+        :param old_state: the appliance state before the last event
+        :param new_state: the appliance state after the last event
         """
         triggered = False
         if (old_state and new_state) and (old_state.VALUE == new_state.VALUE):
@@ -66,6 +70,14 @@ class Trigger(Parent, BaseTrigger):
         return super(Trigger, self).__str__() + s
 
     def get_next_fire_time(self, previous_fire_time, now):
+        """
+        Return a fire time far in the future so that APScheduler never
+        removes this trigger from the scheduler.
+
+        State-based triggers are fired manually (via
+        :py:meth:`Process._schedule_by_appliance_state`) whenever the
+        appliance state changes; they are not supposed to fire on their own.
+        """
         timedelta = datetime.timedelta(
             weeks=52
         )  # prevent scheduler from removing trigger

@@ -22,6 +22,20 @@ from home.scheduler.trigger.protocol import Trigger as Parent
 
 
 class Delay:
+    """
+    Helper that manages the creation and reset of one-shot
+    :py:class:`date.resettable.Trigger` instances on behalf of delay
+    triggers.
+
+    Each call to :py:meth:`fork` creates a new resettable trigger
+    scheduled to fire ``timeout_seconds`` from now and disables the
+    previous one (if any) for the same performer, so that only the most
+    recent timer is active at any time.
+
+    Subclasses (e.g. :py:class:`_EnableEventsDelay`) can override
+    :py:meth:`fork` to produce a different kind of date trigger.
+    """
+
     def __init__(
         self,
         name: str,
@@ -29,26 +43,32 @@ class Delay:
         timeout_seconds: float,
         timezone,
     ):
+        """
+        :param name: label used when naming the forked triggers
+        :param events: events the forked trigger will deliver
+        :param timeout_seconds: delay in seconds before the forked trigger fires
+        :param timezone: pytz timezone used to compute the run date
+        """
         self._trigger_name = name
-        self._scheduler_trigger_events: Iterable[home.Event] = events  # type: ignore[assignment]
+        self._scheduler_trigger_events: List[home.Event] = list(events)
         self._protocol_trigger_events: List[home.Event] = []
         self._timeout = timeout_seconds
         self._timezone = timezone
         self._logger = logging.getLogger(__name__)
-        self._last_resettable_trigger: Dict[str, Any] = (
-            {}
-        )  # one for every performer
+        self._last_resettable_trigger: Dict[str, Any] = {}  # one per performer
 
     @property
-    def timeout(self):
+    def timeout(self) -> float:
+        """Delay in seconds before the forked trigger fires."""
         return self._timeout
 
     @timeout.setter
-    def timeout(self, value):
+    def timeout(self, value: float):
         self._timeout = value
 
     @property
-    def protocol_trigger_events(self):
+    def protocol_trigger_events(self) -> List:
+        """Extra events contributed by the owning protocol trigger."""
         return self._protocol_trigger_events
 
     @protocol_trigger_events.setter
@@ -59,13 +79,15 @@ class Delay:
         self, performer: home.Performer
     ) -> List[Tuple[home.Performer, "home.scheduler.Trigger"]]:
         """
-        Starts a new 'home.scheduler.date.resettable.Trigger' which will
-        be triggered in *timeout* seconds unless reset.
+        Create a new :py:class:`date.resettable.Trigger` scheduled to
+        fire ``timeout`` seconds from now and deliver events to
+        *performer*.
 
-        When triggered will notify the given Performer.
+        If a previous forked trigger for the same performer is still
+        pending, it is disabled before the new one is scheduled.
 
-        :param performer: a *Performer* to be notified
-        :return: a list of (performer, trigger) couples
+        :param performer: the performer to notify when the timer fires
+        :return: a list containing one ``(performer, resettable_trigger)`` pair
         """
         result = list()
         name = "date.resettable.Trigger for parent trigger {} and performer {}".format(
@@ -88,8 +110,15 @@ class Delay:
 
 class Trigger(Parent, BaseTrigger):
     """
-    A **Scheduler Trigger** triggered *timeout_seconds* after its **Protocol Trigger** has been triggered.
-    If the *Protocol Trigger* has been triggered twice, the old scheduler trigger is disabled and new one is started.
+    A scheduler trigger that fires *timeout_seconds* after its protocol
+    trigger is activated.
+
+    The trigger itself carries no events (``events`` is always ``[]``);
+    the actual events are delivered by the forked
+    :py:class:`date.resettable.Trigger` and include both the configured
+    events and those from the protocol trigger.  If the protocol trigger
+    fires again before the timer expires, the old pending trigger is
+    disabled and a new timer is started.
     """
 
     def __init__(
@@ -130,10 +159,10 @@ class Trigger(Parent, BaseTrigger):
         >>> new_resettable_trigger.is_enabled
         True
 
-        :param name: the scheduler trigger name
-        :param events: events to be notified
-        :param protocol_trigger: a protocol trigger
-        :param timeout_seconds: starts a new scheduler trigger that will be triggered in timeout seconds
+        :param name: human-readable trigger name used in log messages
+        :param events: events to include in the forked trigger's payload
+        :param protocol_trigger: the protocol trigger that starts the timer
+        :param timeout_seconds: delay in seconds before the forked trigger fires
         """
         super(Trigger, self).__init__(name, events, protocol_trigger)
         self._delay = Delay(
@@ -144,7 +173,7 @@ class Trigger(Parent, BaseTrigger):
 
     @property
     def events(self):
-        # this trigger has no events, wait for the forked trigger
+        # Events are delivered by the forked date trigger, not this one.
         return []
 
     def __str__(self):
@@ -154,5 +183,12 @@ class Trigger(Parent, BaseTrigger):
     def fork(
         self, performer: home.Performer
     ) -> List[Tuple[home.Performer, "home.scheduler.Trigger"]]:
+        """
+        Snapshot the current protocol trigger events and delegate to the
+        :py:class:`Delay` helper to create a one-shot resettable trigger.
+
+        :param performer: the performer to notify when the timer fires
+        :return: list containing one ``(performer, resettable_trigger)`` pair
+        """
         self._delay.protocol_trigger_events = self._protocol_trigger.events  # type: ignore[assignment]
         return self._delay.fork(performer)

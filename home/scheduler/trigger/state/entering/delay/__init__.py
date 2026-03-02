@@ -16,6 +16,12 @@ from home.scheduler.trigger.state import delay
 
 class Trigger(delay.Trigger):
     """
+    A delayed scheduler trigger that fires *timeout_seconds* after the
+    appliance *enters* the specified state.
+
+    If the appliance enters the same state again before the timer expires,
+    the previous pending trigger is disabled and a new timer is started.
+
     >>> import home
     >>> off = home.appliance.sound.player.state.off.State()
     >>> fade_in = home.appliance.sound.player.state.fade_in.State()
@@ -28,10 +34,11 @@ class Trigger(delay.Trigger):
         self, old_state: home.appliance.State, new_state: home.appliance.State
     ) -> bool:
         """
-        When state is changed and its value is like those the trigger wants return True
+        Return ``True`` when the state changes and the new state matches
+        the configured state value.
 
-        :param old_state: the old appliance state
-        :param new_state: the new appliance state
+        :param old_state: the appliance state before the last event
+        :param new_state: the appliance state after the last event
         """
         triggered = False
         if (old_state and new_state) and (old_state.VALUE != new_state.VALUE):
