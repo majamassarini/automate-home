@@ -15,9 +15,9 @@ from home.appliance.socket.energy_guard.state.detachable import (
 class Mixin(object):
     def init_callables(self):
         callables = {
-            type(home.event.power.consumption.Event.No): detachable_callable.Power(
-                off=self.off, on=self.on
-            ),
+            type(
+                home.event.power.consumption.Event.No
+            ): detachable_callable.Power(off=self.off, on=self.on),
             type(
                 home.event.power.consumption.duration.Event.Short
             ): detachable_callable.Duration(off=self.off, on=self.on),
@@ -46,7 +46,11 @@ class State(Mixin, mixin.IsDetachable, mixin.IsOn, Parent):
     def __init__(self, events=None, events_disabled=None):
         self.off = home.appliance.socket.energy_guard.state.off.State
         self.on = home.appliance.socket.energy_guard.state.on.State
-        self.forced_on = home.appliance.socket.energy_guard.state.forced.on.State
-        self.forced_off = home.appliance.socket.energy_guard.state.forced.off.State
+        self.forced_on = (
+            home.appliance.socket.energy_guard.state.forced.on.State
+        )
+        self.forced_off = (
+            home.appliance.socket.energy_guard.state.forced.off.State
+        )
 
         super(State, self).__init__(events, events_disabled)

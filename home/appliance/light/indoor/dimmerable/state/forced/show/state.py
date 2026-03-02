@@ -19,9 +19,9 @@ class Mixin(object):
             type(home.event.presence.Event.On): forced_show.Presence(
                 reset=self.reset, base=self.base
             ),
-            type(home.event.sun.brightness.Event.Bright): forced_show.Brightness(
-                reset=self.reset, base=self.base
-            ),
+            type(
+                home.event.sun.brightness.Event.Bright
+            ): forced_show.Brightness(reset=self.reset, base=self.base),
             self.forced_enum: forced_show.Forced(
                 reset=self.reset,
                 base=self.base,
@@ -57,6 +57,8 @@ class State(
         self.forced_lux_balance = (
             home.appliance.light.indoor.dimmerable.state.forced.lux_balance.State
         )
-        self.forced_on = home.appliance.light.indoor.dimmerable.state.forced.on.State
+        self.forced_on = (
+            home.appliance.light.indoor.dimmerable.state.forced.on.State
+        )
 
         super(State, self).__init__(events, events_disabled)

@@ -4,6 +4,13 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import home
+
 from abc import ABC, abstractmethod
 
 from typing import Iterable, Any, Callable
@@ -23,7 +30,9 @@ class Gateway(ABC):
     PROTOCOL = "a_protocol_identifier_name"
 
     @abstractmethod
-    def associate_commands(self, descriptions: "home.protocol.Description") -> Any:
+    def associate_commands(
+        self, descriptions: home.protocol.Description
+    ) -> Any:
         """
         Connect the *Protocol Commands* with the *Gateway*, if needed.
 
@@ -35,7 +44,7 @@ class Gateway(ABC):
         ...
 
     @abstractmethod
-    def associate_triggers(self, descriptions: "home.protocol.Description"):
+    def associate_triggers(self, descriptions: home.protocol.Description):
         """
         Connect the *Protocol Triggers* with the *Gateway*, if needed.
 
@@ -70,7 +79,7 @@ class Gateway(ABC):
         ...
 
     @staticmethod
-    def make_trigger(msg: Any) -> "home.protocol.Trigger":
+    def make_trigger(msg: Any) -> home.protocol.Trigger:
         """
         Make a *Protocol Trigger* from a protocol message.
 
@@ -80,5 +89,7 @@ class Gateway(ABC):
         ...
 
     def _wrap_tasks(self, tasks: Iterable[Callable]):
-        wrapped_tasks = [lambda msg: task(self.make_trigger(msg)) for task in tasks]
+        wrapped_tasks = [
+            lambda msg: task(self.make_trigger(msg)) for task in tasks
+        ]
         return wrapped_tasks

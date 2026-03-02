@@ -4,6 +4,13 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import home
+
 import datetime
 import pytz
 
@@ -24,19 +31,23 @@ class Trigger(follow.Trigger, BaseTrigger):
     def __init__(
         self,
         name: str,
-        events: Iterable["home.Event"],
+        events: Iterable[home.Event],
         latitude: float,
         longitude: float,
         elevation: int,
     ):
-        super(Trigger, self).__init__(name, events, latitude, longitude, elevation)
+        super(Trigger, self).__init__(
+            name, events, latitude, longitude, elevation
+        )
 
         self._events.append(sun.phase.Event.Sunrise)
         self._next_fire_time = self._get_next_fire_time(
             None, self._localize(datetime.datetime.now())
         )
 
-    def _get_next_fire_time(self, _, now: datetime.datetime) -> datetime.datetime:
+    def _get_next_fire_time(
+        self, _, now: datetime.datetime
+    ) -> datetime.datetime:
         """
         >>> import datetime
         >>> s = Trigger("sunrise", [], 45.20, 13.20, 280)
@@ -53,7 +64,9 @@ class Trigger(follow.Trigger, BaseTrigger):
         :return: next rising sun datetime
         """
         self._observer.date = now.astimezone(pytz.timezone("UTC"))
-        next_rising = self._observer.next_rising(self._sun, use_center=True).datetime()
+        next_rising = self._observer.next_rising(
+            self._sun, use_center=True
+        ).datetime()
         next_rising = next_rising.replace(tzinfo=pytz.timezone("UTC"))
         next_rising = next_rising.astimezone(tz=self._timezone)
         self._logger.info(

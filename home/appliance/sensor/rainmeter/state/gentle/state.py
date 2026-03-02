@@ -6,7 +6,9 @@
 
 import home
 from home.appliance.sensor.rainmeter.state import State as Parent
-from home.appliance.sensor.rainmeter.state.gentle import callable as gentle_callable
+from home.appliance.sensor.rainmeter.state.gentle import (
+    callable as gentle_callable,
+)
 
 
 class State(Parent):

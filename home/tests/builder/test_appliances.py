@@ -31,4 +31,6 @@ class TestPerfomersBuilder(Helper):
         self.assertIn("Tapparelle", appliances)
         self.assertEqual(len(appliances["Luci"]), 1)
         self.assertEqual(len(appliances["Tapparelle"]), 2)
-        self.assertIsInstance(appliances.find("finestra studio"), home.Appliance)
+        self.assertIsInstance(
+            appliances.find("finestra studio"), home.Appliance
+        )

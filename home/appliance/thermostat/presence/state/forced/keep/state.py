@@ -16,9 +16,9 @@ from home.appliance.thermostat.presence.state import State as Parent
 class Mixin(object):
     def init_callables(self):
         callables = {
-            type(home.event.clima.command.Event.Off): forced_keep_callable.Command(
-                reset=self.reset, base=self.base
-            ),
+            type(
+                home.event.clima.command.Event.Off
+            ): forced_keep_callable.Command(reset=self.reset, base=self.base),
             type(home.event.presence.Event.Off): forced_keep_callable.Presence(
                 reset=self.reset, base=self.base
             ),
@@ -44,7 +44,11 @@ class State(mixin.IsOn, mixin.IsKeeping, mixin.Setpoint, Mixin, Parent):
     def __init__(self, events=None, events_disabled=None):
         self.reset = home.appliance.thermostat.presence.state.keep.State
         self.base = home.appliance.thermostat.presence.state.keep.State
-        self.forced_on = home.appliance.thermostat.presence.state.forced.on.State
-        self.forced_off = home.appliance.thermostat.presence.state.forced.off.State
+        self.forced_on = (
+            home.appliance.thermostat.presence.state.forced.on.State
+        )
+        self.forced_off = (
+            home.appliance.thermostat.presence.state.forced.off.State
+        )
 
         super(State, self).__init__(events, events_disabled)

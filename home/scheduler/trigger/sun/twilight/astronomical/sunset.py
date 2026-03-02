@@ -24,7 +24,9 @@ class Trigger(sunset.Trigger):
     (2018, 10, 19, 19, 54)
     """
 
-    def __init__(self, name, events, latitude, longitude, elevation, *args, **kwargs):
+    def __init__(
+        self, name, events, latitude, longitude, elevation, *args, **kwargs
+    ):
         super(Trigger, self).__init__(
             name, events, latitude, longitude, elevation, *args, **kwargs
         )

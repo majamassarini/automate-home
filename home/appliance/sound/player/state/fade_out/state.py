@@ -14,8 +14,12 @@ from home.appliance.sound.player.state.fade_out import callable as _callable
 class Mixin(object):
     def init_callables(self):
         callables = {
-            type(home.event.elapsed.Event.Off): _callable.Elapsed(off=self.off),
-            type(home.event.presence.Event.Off): _callable.Presence(off=self.off),
+            type(home.event.elapsed.Event.Off): _callable.Elapsed(
+                off=self.off
+            ),
+            type(home.event.presence.Event.Off): _callable.Presence(
+                off=self.off
+            ),
             self.forced_enum: _callable.Forced(
                 forced_off=self.forced_off,
                 forced_on=self.forced_on,

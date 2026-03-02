@@ -4,8 +4,15 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import home
+
 from abc import abstractmethod
-from typing import Iterable, Dict
+from typing import Collection, Dict, Type
 
 
 class Callable(object):
@@ -13,20 +20,20 @@ class Callable(object):
     A single transaction used to build up a non deterministic state machine.
     """
 
-    def __init__(self, **kwargs: Dict[str, "home.appliance.State"]) -> "Callable":
+    def __init__(self, **kwargs: Type[home.appliance.State]) -> None:
         """
         This single transaction can result in one of the states listed in given dictionary.
 
-        :param kwargs: A dictionary of named states.
+        :param kwargs: A dictionary of named state classes.
         """
-        self._output_states = {}
+        self._output_states: Dict[str, Type[home.appliance.State]] = {}
         for key, value in kwargs.items():
             self._output_states[key] = value
 
     @abstractmethod
     def run(
-        self, event: "home.Event", state: "home.appliance.State"
-    ) -> "home.appliance.State":
+        self, event: home.Event, state: home.appliance.State
+    ) -> home.appliance.State:
         """
         Do a transaction.
         From given state, processing given event, choose a final state.
@@ -38,8 +45,8 @@ class Callable(object):
         ...
 
     def get_new_state(
-        self, old_state: "home.appliance.State", new_state_key: str
-    ) -> "home.appliance.State":
+        self, old_state: home.appliance.State, new_state_key: str
+    ) -> home.appliance.State:
         """
         Get the internal named *new_state_key* state . Build it using events taken from given *old_state*.
 
@@ -53,10 +60,10 @@ class Callable(object):
 
     def compute_new_state(
         self,
-        old_state: "home.appliance.State",
+        old_state: home.appliance.State,
         new_state_key: str,
-        events: Iterable["home.Event"],
-    ):
+        events: Collection[home.Event],
+    ) -> home.appliance.State:
         """
         Get the internal named *new_state_key* state . Build it using events taken from given *old_state*,
         excluding those specified in given *events*.
@@ -67,17 +74,18 @@ class Callable(object):
         :return: The new choose state instance.
         """
         klass = self._output_states[new_state_key]
-        state = klass.make(
-            [e for e in old_state.events if e not in events], old_state.events_disabled
+        state = klass.make(  # type: ignore[attr-defined, type-var]
+            [e for e in old_state.events if e not in events],
+            old_state.events_disabled,
         )
         return state
 
 
 class Forced(Callable):
-    def run(self, event: "home.Event", state: "home.appliance.State"):
+    def run(self, event: home.Event, state: home.appliance.State):
         if "reset" in self._output_states:
             new_state = self.compute_new_state(
-                state, "base", [f for f in state.forced_enum]
+                state, "base", [f for f in state.forced_enum]  # type: ignore[attr-defined]
             )
             if new_state.__class__ == self._output_states["reset"]:
                 state = state.unforce()

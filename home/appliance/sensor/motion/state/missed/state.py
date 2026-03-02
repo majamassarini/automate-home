@@ -6,7 +6,9 @@
 
 import home
 from home.appliance.sensor.motion.state import State as Parent
-from home.appliance.sensor.motion.state.missed import callable as missed_callable
+from home.appliance.sensor.motion.state.missed import (
+    callable as missed_callable,
+)
 
 
 class State(Parent):

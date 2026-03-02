@@ -24,7 +24,9 @@ class State(
     def __init__(self, events=None, events_disabled=None):
         self.reset = home.appliance.light.indoor.hue.state.off.State
         self.base = home.appliance.light.indoor.hue.state.off.State
-        self.forced_show = home.appliance.light.indoor.hue.state.forced.show.State
+        self.forced_show = (
+            home.appliance.light.indoor.hue.state.forced.show.State
+        )
         self.forced_circadian_rhythm = (
             home.appliance.light.indoor.hue.state.forced.circadian_rhythm.State
         )

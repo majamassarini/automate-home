@@ -43,7 +43,9 @@ class TestPerfomersBuilder(Helper):
         Builder.SUBDIRS = [""]
         Builder.FILE_EXTENSION = self._path
         self._appliances = home.appliance.Collection()
-        self._appliances["luci"] = set([home.appliance.light.Appliance("luce", [])])
+        self._appliances["luci"] = set(
+            [home.appliance.light.Appliance("luce", [])]
+        )
 
         self._out_fd, self._out_path = tempfile.mkstemp()
         self._out_file = os.fdopen(self._out_fd, "w")

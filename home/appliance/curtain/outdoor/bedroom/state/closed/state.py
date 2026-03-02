@@ -17,12 +17,12 @@ from home.appliance.curtain.outdoor.bedroom.state import State as Parent
 class Mixin(object):
     def init_callables(self):
         callables = {
-            type(home.event.sleepiness.Event.Awake): closed_callable.Sleepiness(
-                opened=self.opened
-            ),
-            type(home.event.sun.brightness.Event.Dark): closed_callable.Brightness(
-                opened=self.opened
-            ),
+            type(
+                home.event.sleepiness.Event.Awake
+            ): closed_callable.Sleepiness(opened=self.opened),
+            type(
+                home.event.sun.brightness.Event.Dark
+            ): closed_callable.Brightness(opened=self.opened),
             type(
                 home.event.sun.twilight.civil.Event.Sunrise
             ): closed_callable.SunTwilight(opened=self.opened),

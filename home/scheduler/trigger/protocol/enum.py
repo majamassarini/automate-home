@@ -4,6 +4,13 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import home
+
 import enum
 import logging
 
@@ -28,10 +35,10 @@ class Trigger(Parent, BaseTrigger):
     def __init__(
         self,
         name: str,
-        events: Iterable["home.Event"],
-        selected: "home.enum.definition.Event",
+        events: Iterable[home.Event],
+        selected: home.event.Enum,
         direction: str,
-        protocol_trigger: "home.protocol.Trigger",
+        protocol_trigger: home.protocol.Trigger,
     ):
         """
         >>> import home
@@ -74,7 +81,7 @@ class Trigger(Parent, BaseTrigger):
         self._logger = logging.getLogger(__name__)
 
     @property
-    def events(self) -> Iterable["home.Event"]:
+    def events(self) -> Iterable[home.Event]:  # type: ignore[override]
         lst = super(Trigger, self).events
         lst.append(self._selected)
         return lst
@@ -92,7 +99,8 @@ class Trigger(Parent, BaseTrigger):
             index = (index - 1) % len(events)
         return events[index]
 
-    def is_triggered(self, description: "home.protocol.Description") -> bool:
+    def is_triggered(self, description: home.protocol.Description) -> bool:
         if self._protocol_trigger.is_triggered(description):
             self._selected = self._next_or_previous_event()
             return True
+        return False

@@ -5,7 +5,9 @@
 # Copyright (C) 2021  Maja Massarini
 
 from home.appliance.light.event.circadian_rhythm.temperature import Event
-from home.redis.gateway.serialization.temperature import Deserializer as DParent
+from home.redis.gateway.serialization.temperature import (
+    Deserializer as DParent,
+)
 from home.redis.gateway.serialization.temperature import Serializer as SParent
 
 KEY = "home.appliance.light.event.circadian_rhythm.temperature.Event"

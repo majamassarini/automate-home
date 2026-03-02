@@ -33,7 +33,9 @@ class Builder(Parent):
         month = mapping["month"] if "month" in mapping else None
         day = mapping["day"] if "day" in mapping else None
         week = mapping["week"] if "week" in mapping else None
-        day_of_week = mapping["day_of_week"] if "day_of_week" in mapping else None
+        day_of_week = (
+            mapping["day_of_week"] if "day_of_week" in mapping else None
+        )
         hour = mapping["hour"] if "hour" in mapping else None
         minute = mapping["minute"] if "minute" in mapping else None
         second = mapping["second"] if "second" in mapping else None

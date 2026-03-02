@@ -8,7 +8,9 @@ import home
 from home.appliance import attribute
 from home.appliance.sprinkler import event
 from home.appliance.sprinkler.state import State as Parent
-from home.appliance.sprinkler.state.forced.partially_on import callable as _callable
+from home.appliance.sprinkler.state.forced.partially_on import (
+    callable as _callable,
+)
 
 
 class Mixin(object):

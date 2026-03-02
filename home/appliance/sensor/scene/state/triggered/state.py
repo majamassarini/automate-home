@@ -6,7 +6,9 @@
 
 import home
 from home.appliance.sensor.scene.state import State as Parent
-from home.appliance.sensor.scene.state.triggered import callable as triggered_callable
+from home.appliance.sensor.scene.state.triggered import (
+    callable as triggered_callable,
+)
 
 
 class State(Parent):

@@ -14,8 +14,7 @@ from home.redis.gateway.serialization import serializer
 class Serializer(serializer.Serializer):
     @property
     @abc.abstractmethod
-    def key(self) -> str:
-        ...
+    def key(self) -> str: ...
 
     def run(self, obj):
         serialization = obj.value
@@ -25,13 +24,11 @@ class Serializer(serializer.Serializer):
 class Deserializer(deserializer.Deserializer):
     @property
     @abc.abstractmethod
-    def key(self) -> str:
-        ...
+    def key(self) -> str: ...
 
     @property
     @abc.abstractmethod
-    def klass(self) -> Type:
-        ...
+    def klass(self) -> Type: ...
 
     def check(self, serialization):
         if self.key in serialization:

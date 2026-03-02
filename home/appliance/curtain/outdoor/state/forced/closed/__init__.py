@@ -5,4 +5,7 @@
 # Copyright (C) 2021  Maja Massarini
 
 from home.appliance.curtain.outdoor.state.forced.closed import callable
-from home.appliance.curtain.outdoor.state.forced.closed.state import State, Mixin
+from home.appliance.curtain.outdoor.state.forced.closed.state import (
+    State,
+    Mixin,
+)

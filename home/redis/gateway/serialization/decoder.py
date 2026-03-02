@@ -74,9 +74,9 @@ class Decoder:
 
     def run(self, serialization):
         try:
-            return self._events_deserializers[[k for k in serialization.keys()][0]](
-                serialization
-            )
+            return self._events_deserializers[
+                [k for k in serialization.keys()][0]
+            ](serialization)
         except KeyError:
             pass
 

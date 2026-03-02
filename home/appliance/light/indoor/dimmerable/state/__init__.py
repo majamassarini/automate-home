@@ -106,9 +106,13 @@ class State(
 
         callables = {
             type(event.brightness.Event): Brightness(),
-            type(event.circadian_rhythm.brightness.Event): CircadianBrightness(),
+            type(
+                event.circadian_rhythm.brightness.Event
+            ): CircadianBrightness(),
             type(event.lux_balancing.brightness.Event): BalancedBrightness(),
-            type(event.show.starting_brightness.Event): ShowStartingBrightness(),
+            type(
+                event.show.starting_brightness.Event
+            ): ShowStartingBrightness(),
             type(event.show.ending_brightness.Event): ShowEndingBrightness(),
             type(event.show.cycles.Event): ShowCycles(),
             type(event.show.period.Event): ShowPeriod(),

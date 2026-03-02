@@ -11,7 +11,9 @@ from home.appliance import callable
 class Presence(callable.Callable):
     def run(self, event, state):
         if event == home.event.presence.Event.Off:
-            state = self.compute_new_state(state, "base", [state.forced_enum.On])
+            state = self.compute_new_state(
+                state, "base", [state.forced_enum.On]
+            )
         return state
 
 

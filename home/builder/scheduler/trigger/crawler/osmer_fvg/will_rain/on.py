@@ -4,7 +4,9 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
-from home.builder.scheduler.trigger.crawler.osmer_fvg.will_rain import Builder as Parent
+from home.builder.scheduler.trigger.crawler.osmer_fvg.will_rain import (
+    Builder as Parent,
+)
 from home.scheduler.trigger.crawler.osmer_fvg.will_rain.on import Trigger
 
 

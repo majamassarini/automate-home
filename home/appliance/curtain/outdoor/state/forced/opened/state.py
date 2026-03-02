@@ -21,13 +21,17 @@ class Mixin(object):
             ),
             type(
                 home.event.sun.brightness.Event.Dark
-            ): forced_opened_callable.Brightness(base=self.base, reset=self.reset),
-            type(
-                home.event.sun.twilight.civil.Event.Sunrise
-            ): forced_opened_callable.SunTwilight(base=self.base, reset=self.reset),
-            type(home.event.sun.hit.Event.Sunleft): forced_opened_callable.SunHit(
+            ): forced_opened_callable.Brightness(
                 base=self.base, reset=self.reset
             ),
+            type(
+                home.event.sun.twilight.civil.Event.Sunrise
+            ): forced_opened_callable.SunTwilight(
+                base=self.base, reset=self.reset
+            ),
+            type(
+                home.event.sun.hit.Event.Sunleft
+            ): forced_opened_callable.SunHit(base=self.base, reset=self.reset),
             self.forced_enum: forced_opened_callable.Forced(
                 base=self.base, reset=self.reset
             ),

@@ -5,4 +5,7 @@
 # Copyright (C) 2021  Maja Massarini
 
 from home.appliance.socket.presence.christmas.state.forced.off import callable
-from home.appliance.socket.presence.christmas.state.forced.off.state import State, Mixin
+from home.appliance.socket.presence.christmas.state.forced.off.state import (
+    State,
+    Mixin,
+)

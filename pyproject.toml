@@ -33,7 +33,9 @@ dependencies = [
 dev = [
     "behave",
     "flake8",
+    "flake8-pyproject",
     "black",
+    "mypy",
     "coverage",
 ]
 doc = [
@@ -46,3 +48,50 @@ Homepage = "https://github.com/majamassarini/automate-home"
 
 [tool.setuptools.packages.find]
 where = ["."]
+
+[tool.mypy]
+no_strict_optional = true
+exclude = ["home/tests/"]
+
+# Packages that ship no stubs and no py.typed marker
+[[tool.mypy.overrides]]
+module = ["apscheduler.*", "ephem.*"]
+ignore_missing_imports = true
+
+# Packages whose stubs are not available in the pre-commit isolated environment
+[[tool.mypy.overrides]]
+module = ["redis.*", "requests.*"]
+ignore_missing_imports = true
+
+# External plugins: installed at runtime but not present in the dev venv
+[[tool.mypy.overrides]]
+module = [
+    "knx_plugin",
+    "lifx_plugin",
+    "soco_plugin",
+    "somfy_sdn_plugin",
+    "home_assistant_plugin",
+    "behave",
+]
+ignore_missing_imports = true
+
+[tool.black]
+line-length = 79
+
+[tool.flake8]
+max-line-length = 79
+extend-ignore = [
+    # whitespace before ':' – black formats slices this way
+    "E203",
+    # line break before binary operator – black prefers this
+    "W503",
+    # line too long – black handles code; doctest strings can't be wrapped
+    "E501",
+    # undefined name in string annotations (forward references)
+    "F821",
+]
+per-file-ignores = [
+    # deferred imports at bottom of __init__.py break circular imports;
+    # the symbols are public API re-exports, not unused imports
+    "*/__init__.py:F401,E402",
+]

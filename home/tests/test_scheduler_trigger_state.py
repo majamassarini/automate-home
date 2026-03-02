@@ -49,7 +49,9 @@ class Stub(home.MyHome):
         performers.append(performer)
         appliance = self.appliances.find("light2")
         command_light2 = CommandLight2()
-        performer = home.Performer(appliance.name, appliance, [command_light2], [])
+        performer = home.Performer(
+            appliance.name, appliance, [command_light2], []
+        )
         performers.append(performer)
         return performers
 

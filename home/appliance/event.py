@@ -4,12 +4,15 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
+from typing import Any
+
 from home.appliance.data import Registry
+from home.event.base import Event
 
 
-class Int(metaclass=Registry):
+class Int(Event, metaclass=Registry):
     def __init__(self, value: int):
-        self._value = value
+        self._value: Any = value
         self._str = "An abstract int event: {}"
 
     def __eq__(self, other):

@@ -4,11 +4,18 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import home
+
 import collections
 import datetime
 import pytz
 
-from typing import Iterable
+from typing import Any, Iterable
 from apscheduler.triggers.base import BaseTrigger
 from home.event import sun
 from home.scheduler.trigger.sun import follow
@@ -27,17 +34,21 @@ class Trigger(follow.Trigger, BaseTrigger):
     def __init__(
         self,
         name: str,
-        events: Iterable["home.Event"],
+        events: Iterable[home.Event],
         latitude: float,
         longitude: float,
         elevation: int,
-        position: "home.scheduler.trigger.sun.Position",
+        position: home.scheduler.trigger.sun.Position,
     ):
-        super(Trigger, self).__init__(name, events, latitude, longitude, elevation)
+        super(Trigger, self).__init__(
+            name, events, latitude, longitude, elevation
+        )
 
         self._events.append(sun.hit.Event.Sunhit)
-        self._position = position
-        self._timedelta = datetime.timedelta(seconds=self.TIMEDELTA)
+        self._position: Any = position
+        self._timedelta: datetime.timedelta = datetime.timedelta(
+            seconds=self.TIMEDELTA
+        )
 
         self._next_fire_time = self._get_next_fire_time(
             None, datetime.datetime.now(self._timezone)
@@ -59,7 +70,9 @@ class Trigger(follow.Trigger, BaseTrigger):
         )
         return is_sun_over
 
-    def _get_next_fire_time(self, _, now: datetime.datetime) -> datetime.datetime:
+    def _get_next_fire_time(
+        self, _, now: datetime.datetime
+    ) -> datetime.datetime:
         """
         >>> import home
         >>> s = Trigger("sunhit", [], 46.201685, 13.209001, 280,
@@ -125,8 +138,12 @@ class Trigger(follow.Trigger, BaseTrigger):
         """
         sunhit = self._is_sun_over(now)
         if sunhit:  # wait next transit over the window
-            now = self._observer.next_rising(self._sun, use_center=True).datetime()
-            now = now.replace(tzinfo=pytz.timezone("UTC")).astimezone(self._timezone)
+            now = self._observer.next_rising(
+                self._sun, use_center=True
+            ).datetime()
+            now = now.replace(tzinfo=pytz.timezone("UTC")).astimezone(
+                self._timezone
+            )
         timedelta = self._timedelta
         sunhit = False
         while not sunhit and timedelta < datetime.timedelta(days=1):

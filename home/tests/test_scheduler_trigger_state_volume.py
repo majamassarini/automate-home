@@ -49,7 +49,9 @@ class Stub(home.MyHome):
         appliance = self.appliances.find("player")
         trigger1 = Trigger1()
         command1 = Command1()
-        performer = home.Performer("set volume", appliance, [command1], [trigger1])
+        performer = home.Performer(
+            "set volume", appliance, [command1], [trigger1]
+        )
         performers.append(performer)
         command2 = Command2()
         performer = home.Performer("turn off", appliance, [command2], [])
@@ -67,7 +69,9 @@ class Stub(home.MyHome):
         trigger_a = home.scheduler.trigger.state.entering.delay.Trigger(
             name="fade 1",
             events=[
-                home.appliance.sound.player.event.fade_in.volume.Event(self.VOLUME_A)
+                home.appliance.sound.player.event.fade_in.volume.Event(
+                    self.VOLUME_A
+                )
             ],
             state="Fade In",
             timeout_seconds=1,
@@ -76,7 +80,9 @@ class Stub(home.MyHome):
         trigger_b = home.scheduler.trigger.state.entering.delay.Trigger(
             name="fade 2",
             events=[
-                home.appliance.sound.player.event.fade_in.volume.Event(self.VOLUME_B)
+                home.appliance.sound.player.event.fade_in.volume.Event(
+                    self.VOLUME_B
+                )
             ],
             state="Fade In",
             timeout_seconds=2,
@@ -85,7 +91,9 @@ class Stub(home.MyHome):
         trigger_c = home.scheduler.trigger.state.entering.delay.Trigger(
             name="fade 3",
             events=[
-                home.appliance.sound.player.event.fade_in.volume.Event(self.VOLUME_C)
+                home.appliance.sound.player.event.fade_in.volume.Event(
+                    self.VOLUME_C
+                )
             ],
             state="Fade In",
             timeout_seconds=3,

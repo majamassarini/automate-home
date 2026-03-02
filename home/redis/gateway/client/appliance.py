@@ -26,7 +26,9 @@ class Client(object):
         if new_appliance:
             if not hasattr(new_appliance, "events"):
                 self._logger.error(
-                    "new_appliance: {} not correctly serialized".format(new_appliance)
+                    "new_appliance: {} not correctly serialized".format(
+                        new_appliance
+                    )
                 )
             else:
                 for event in new_appliance.events_disabled:
@@ -49,7 +51,9 @@ class Client(object):
         return self._appliance
 
     async def get_history(self, num_of_events):
-        history = await self._storage_connection.get_history(self._id, num_of_events)
+        history = await self._storage_connection.get_history(
+            self._id, num_of_events
+        )
         return history
 
     async def run(self, on_appliance_updated):

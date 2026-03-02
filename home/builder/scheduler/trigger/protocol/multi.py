@@ -90,10 +90,18 @@ class Builder(Parent):
         return Trigger
 
     def _run(self, mapping, group_of_performers):
-        positive_a = group_of_performers[mapping["when A is triggered by performer"]]
-        negative_a = group_of_performers[mapping["and A is not reset by performer"]]
-        positive_b = group_of_performers[mapping["and B is triggered by performer"]]
-        negative_b = group_of_performers[mapping["and B is not reset by performer"]]
+        positive_a = group_of_performers[
+            mapping["when A is triggered by performer"]
+        ]
+        negative_a = group_of_performers[
+            mapping["and A is not reset by performer"]
+        ]
+        positive_b = group_of_performers[
+            mapping["and B is triggered by performer"]
+        ]
+        negative_b = group_of_performers[
+            mapping["and B is not reset by performer"]
+        ]
         scheduler_triggers = list()
         if (
             len(positive_a.triggers) != 1

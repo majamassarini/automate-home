@@ -26,7 +26,9 @@ class Builder(Parent):
         logger = logging.getLogger(__name__)
         kwargs = self._build_kwargs(mapping)
         try:
-            performers = group_of_performers[mapping["when triggered performers"]]
+            performers = group_of_performers[
+                mapping["when triggered performers"]
+            ]
         except KeyError as e:
             logger.error(e)
             return list()

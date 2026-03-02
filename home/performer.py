@@ -4,6 +4,13 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import home
+
 import logging
 
 from typing import Iterable, Any, Tuple
@@ -22,9 +29,9 @@ class Performer(object):
     def __init__(
         self,
         name: str,
-        appliance: "home.Appliance",
-        commands: Iterable["home.protocol.Command"],
-        triggers: Iterable["home.protocol.Trigger"],
+        appliance: home.Appliance,
+        commands: Iterable[home.protocol.Command],
+        triggers: Iterable[home.protocol.Trigger],
     ):
         self._name = name
         self._appliance = appliance
@@ -46,18 +53,18 @@ class Performer(object):
         return self._name
 
     @property
-    def triggers(self) -> Iterable["home.protocol.Trigger"]:
+    def triggers(self) -> Iterable[home.protocol.Trigger]:
         return self._triggers
 
     @property
-    def commands(self) -> Iterable["home.protocol.Command"]:
+    def commands(self) -> Iterable[home.protocol.Command]:
         return self._commands
 
     @property
-    def appliance(self) -> "home.Appliance":
+    def appliance(self) -> home.Appliance:
         return self._appliance
 
-    def has(self, description: "home.protocol.Description") -> bool:
+    def has(self, description: home.protocol.Description) -> bool:
         """
         The Performer has a trigger or command for the given
         protocol message description?
@@ -65,9 +72,9 @@ class Performer(object):
         :param description: A protocol message description
         :return: bool
         """
-        return description in self.commands or description in self.triggers
+        return description in self.commands or description in self.triggers  # type: ignore[operator]
 
-    def is_for(self, appliance: "home.Appliance") -> bool:
+    def is_for(self, appliance: home.Appliance) -> bool:
         """
         The Performer is for the given Appliance?
 
@@ -77,7 +84,7 @@ class Performer(object):
         return self._appliance == appliance
 
     def execute(
-        self, old_state: "home.appliance.State", new_state: "home.appliance.State"
+        self, old_state: home.appliance.State, new_state: home.appliance.State
     ) -> Iterable[Any]:
         """
         For every command in Performer make them
@@ -93,8 +100,8 @@ class Performer(object):
         return result
 
     def notify(
-        self, events: Iterable["home.Event"]
-    ) -> Tuple[Iterable[Any], "home.appliance.State", "home.appliance.State"]:
+        self, events: Iterable[home.Event]
+    ) -> Tuple[Iterable[Any], home.appliance.State, "home.appliance.State"]:
         """
         Notify to the contained Appliance the given Events.
         Create the protocol messages with old and new Appliance state.
@@ -103,7 +110,7 @@ class Performer(object):
         :return: protocol messages to be sent through the Gateway, \
         old Appliance State and new Appliance State
         """
-        msgs = []
+        msgs: list[Any] = []
         old_old_state = None
         new_state = None
         for event in events:
@@ -120,7 +127,7 @@ class Performer(object):
                 old_old_state = old_state
         return msgs, old_old_state, new_state
 
-    def is_notified(self, event: "home.Event") -> bool:
+    def is_notified(self, event: home.Event) -> bool:
         """
         The given Event is already inside the Appliance State?
 
@@ -130,8 +137,8 @@ class Performer(object):
         return self._appliance.is_notified(event)
 
     def update_by(
-        self, description: "home.protocol.Description"
-    ) -> Tuple["home.appliance.State", "home.appliance.State"]:
+        self, description: home.protocol.Description
+    ) -> Tuple[home.appliance.State, "home.appliance.State"]:
         """
         Update the contained *Appliance State* through the given
         protocol message description.
@@ -144,18 +151,22 @@ class Performer(object):
         for trigger in self._triggers:
             triggered = trigger.is_triggered(description)
             if triggered:
-                old_state, new_state = self._appliance.update_by(trigger, description)
+                old_state, new_state = self._appliance.update_by(
+                    trigger, description
+                )
                 old_states.append(old_state)
                 new_states.append(new_state)
                 try:
                     self._logger.info(
                         "Performer {} updated by Trigger {}".format(
-                            self.name, trigger.name
+                            self.name, trigger.name  # type: ignore[attr-defined]
                         )
                     )
                 except AttributeError:
                     self._logger.info(
-                        "Performer {} updated by Trigger {}".format(self.name, trigger)
+                        "Performer {} updated by Trigger {}".format(
+                            self.name, trigger
+                        )
                     )
         if old_states and new_states:
             return old_states[0], new_states[-1]
@@ -167,10 +178,14 @@ class Performers(list):
     def __init__(self, performers):
         super(Performers, self).__init__(performers)
         self._commands = [
-            command for performer in performers for command in performer.commands
+            command
+            for performer in performers
+            for command in performer.commands
         ]
         self._triggers = [
-            trigger for performer in performers for trigger in performer.triggers
+            trigger
+            for performer in performers
+            for trigger in performer.triggers
         ]
         self._performers = performers
 

@@ -4,6 +4,13 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import home
+
 import collections
 import functools
 import datetime
@@ -22,8 +29,8 @@ class Trigger(Parent, BaseTrigger):
     def __init__(
         self,
         name: str,
-        events: Iterable["home.Event"],
-        protocol_trigger: "home.protocol.mean.Mixin",
+        events: Iterable[home.Event],
+        protocol_trigger: home.protocol.mean.Mixin,
         num_of_samples: int,
         timeout_seconds: float,
     ):
@@ -34,10 +41,12 @@ class Trigger(Parent, BaseTrigger):
         :param num_of_samples: num of samples for calculating mean value
         :param timeout_seconds: starts a new scheduler trigger that will be triggered in timeout seconds
         """
-        super(Trigger, self).__init__(name, events, protocol_trigger)
+        super(Trigger, self).__init__(name, events, protocol_trigger)  # type: ignore[arg-type]
         self._timeout = timeout_seconds
         self._last_compared_value = 0
-        self._samples = collections.deque(maxlen=num_of_samples)
+        self._samples: collections.deque[float] = collections.deque(
+            maxlen=num_of_samples
+        )
         self._mean = 0
         self._logger = logging.getLogger(__name__)
 
@@ -51,17 +60,18 @@ class Trigger(Parent, BaseTrigger):
 
     def update_mean(self, value):
         self._samples.append(value)
-        self._mean = functools.reduce(lambda a, b: a + b, self._samples, 0) / len(
-            self._samples
-        )
+        self._mean = functools.reduce(
+            lambda a, b: a + b, self._samples, 0
+        ) / len(self._samples)
         self._logger.debug(str(self._mean) + " ")
 
-    def is_triggered(self, description: "home.protocol.Description") -> bool:
+    def is_triggered(self, description: home.protocol.Description) -> bool:
         if self._protocol_trigger.is_triggered(description):
-            value = self._protocol_trigger.get_value(description)
+            value = self._protocol_trigger.get_value(description)  # type: ignore[attr-defined]
             self._last_compared_value = value
             self.update_mean(value)
             return True
+        return False
 
     def get_next_fire_time(self, _, now):
         self.update_mean(self._last_compared_value)
@@ -73,8 +83,8 @@ class Comparison(Trigger):
     def __init__(
         self,
         name: str,
-        events: Iterable["home.Event"],
-        protocol_trigger: "home.protocol.mean.Mixin",
+        events: Iterable[home.Event],
+        protocol_trigger: home.protocol.mean.Mixin,
         num_of_samples: int,
         hit_value: float,
         timeout_seconds: float,
@@ -136,10 +146,11 @@ class GreaterThan(Comparison):
     >>> asyncio.run(main())
     """
 
-    def is_triggered(self, description: "home.protocol.Description") -> bool:
+    def is_triggered(self, description: home.protocol.Description) -> bool:
         if super(GreaterThan, self).is_triggered(description):
             if self.mean > self._hit_value:
                 return True
+        return False
 
     @property
     def is_enabled(self):
@@ -198,10 +209,11 @@ class LesserThan(Comparison):
     >>> asyncio.run(main())
     """
 
-    def is_triggered(self, description: "home.protocol.Description") -> bool:
+    def is_triggered(self, description: home.protocol.Description) -> bool:
         if super(LesserThan, self).is_triggered(description):
             if self.mean < self._hit_value:
                 return True
+        return False
 
     @property
     def is_enabled(self):
@@ -264,8 +276,8 @@ class InBetween(Trigger):
     def __init__(
         self,
         name: str,
-        events: Iterable["home.Event"],
-        protocol_trigger: "home.protocol.mean.Mixin",
+        events: Iterable[home.Event],
+        protocol_trigger: home.protocol.mean.Mixin,
         num_of_samples: int,
         min_value: float,
         max_value: float,
@@ -277,10 +289,11 @@ class InBetween(Trigger):
         self._min_value = min_value
         self._max_value = max_value
 
-    def is_triggered(self, description: "home.protocol.Description") -> bool:
+    def is_triggered(self, description: home.protocol.Description) -> bool:
         if super(InBetween, self).is_triggered(description):
             if self._min_value < self.mean < self._max_value:
                 return True
+        return False
 
     @property
     def is_enabled(self):

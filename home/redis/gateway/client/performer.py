@@ -23,7 +23,11 @@ class Client(object):
         await self._pubsub_connection.subscribe(self._id)
 
     async def notify(self, performer, old_state, new_state):
-        obj = {"performer": performer, "old_state": old_state, "new_state": new_state}
+        obj = {
+            "performer": performer,
+            "old_state": old_state,
+            "new_state": new_state,
+        }
         await self._pubsub_connection.write(self._id, obj)
 
     async def run(self, on_performer_updated):

@@ -63,7 +63,9 @@ class Stub(home.MyHome):
             ),
             (
                 self.find_group_of_performers("player triggers"),
-                self.find_scheduler_triggers("enable forced off after fade in"),
+                self.find_scheduler_triggers(
+                    "enable forced off after fade in"
+                ),
             ),
         ]
 
@@ -112,9 +114,7 @@ class TestDisableEnableEvents(TestCase):
 
             async def test_state(self):
                 i = 0
-                while (
-                    self.EVENT_ENABLED not in events and i < self.MAX_LOOP
-                ):
+                while self.EVENT_ENABLED not in events and i < self.MAX_LOOP:
                     await asyncio.sleep(0.3)
                     i += 1
 

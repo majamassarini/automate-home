@@ -5,4 +5,6 @@
 # Copyright (C) 2021  Maja Massarini
 
 from home.appliance.curtain.indoor.blackout.state.forced.opened import callable
-from home.appliance.curtain.indoor.blackout.state.forced.opened.state import State
+from home.appliance.curtain.indoor.blackout.state.forced.opened.state import (
+    State,
+)
