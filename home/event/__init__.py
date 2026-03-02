@@ -4,6 +4,13 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import home
+
 from home.event import alarm
 from home.event import clima
 from home.event import courtesy
@@ -25,38 +32,4 @@ from home.event import user
 from home.event import toggle
 from home.event.enumeration import Enum
 from home.event.enumeration import registry
-
-from typing import TypeVar
-
-Event = TypeVar(
-    "Event",
-    int,
-    float,
-    str,
-    "home.Enum",
-    "home.appliance.light.event.hue.Event",
-    "home.appliance.light.event.brightness.Event",
-    "home.appliance.light.event.saturation.Event",
-    "home.appliance.light.event.temperature.Event",
-    "home.appliance.light.show.cycles.Event",
-    "home.appliance.light.show.ending_brightness.Event",
-    "home.appliance.light.show.ending_hue.Event",
-    "home.appliance.light.show.period.Event",
-    "home.appliance.light.show.starting_brightness.Event",
-    "home.appliance.light.show.starting_hue.Event",
-    "home.appliance.light.event.lux_balancing.brightness.Event",
-    "home.appliance.light.event.circadian_rhythm.brightness.Event",
-    "home.appliance.light.event.circadian_rhythm.hue.Event",
-    "home.appliance.light.event.circadian_rhythm.saturation.Event",
-    "home.appliance.light.event.circadian_rhythm.temperature.Event",
-    "home.appliance.sound.player.event.volume.Event",
-    "home.appliance.sound.player.event.sleepy_volume.Event",
-    "home.appliance.sound.player.event.playlist.Event",
-    "home.appliance.sound.player.event.forced.circadian_rhythm.playlist_a.Event",
-    "home.appliance.sound.player.event.forced.circadian_rhythm.playlist_b.Event",
-    "home.appliance.sound.player.event.forced.circadian_rhythm.playlist_c.Event",
-    "home.appliance.sound.player.event.fade_in.volume.Event",
-    "home.appliance.sound.player.event.fade_in.playlist.Event",
-    "home.appliance.sound.player.event.fade_out.volume.Event",
-    "home.appliance.sound.player.event.fade_out.playlist.Event",
-)
+from home.event.base import Event

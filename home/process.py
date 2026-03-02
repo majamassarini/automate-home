@@ -38,7 +38,9 @@ class Process(object):
 
     def add(self, protocol):
         self._protocols.append(protocol)
-        self._protocols_writers = [protocol.writer for protocol in self._protocols]
+        self._protocols_writers = [
+            protocol.writer for protocol in self._protocols
+        ]
 
     async def schedule(self, performer, trigger):
         await self._queue.put((performer, trigger, trigger.events))
@@ -47,10 +49,13 @@ class Process(object):
         self, scheduler, appliance, old_state, new_state
     ):
         for performer in self._my_home.find_performers_by_appliance(appliance):
-            for scheduler_trigger in self._my_home.find_scheduler_trigger_by_performer(
-                performer
-            ):
-                if scheduler_trigger.type == home.scheduler.trigger.state.Trigger.type:
+            for (
+                scheduler_trigger
+            ) in self._my_home.find_scheduler_trigger_by_performer(performer):
+                if (
+                    scheduler_trigger.type
+                    == home.scheduler.trigger.state.Trigger.type
+                ):
                     if scheduler_trigger.is_triggered(old_state, new_state):
                         await self.schedule(performer, scheduler_trigger)
                         self._schedule_by_trigger_fork(
@@ -65,14 +70,19 @@ class Process(object):
 
     async def _schedule_by_protocol_trigger(self, trigger):
         for scheduler_trigger in self._my_home.scheduler_triggers:
-            if scheduler_trigger.type == home.scheduler.trigger.protocol.Trigger.type:
+            if (
+                scheduler_trigger.type
+                == home.scheduler.trigger.protocol.Trigger.type
+            ):
                 try:
                     triggered = scheduler_trigger.is_triggered(trigger)
                 except Exception as e:
                     triggered = False
                     self._logger.debug(e)
                 if triggered:
-                    for performer in self._my_home.find_performers_by_scheduler_trigger(
+                    for (
+                        performer
+                    ) in self._my_home.find_performers_by_scheduler_trigger(
                         scheduler_trigger
                     ):
                         await self.schedule(performer, scheduler_trigger)
@@ -119,8 +129,10 @@ class Process(object):
                     if msgs:
                         self._logger.debug(
                             "Performer {} sending {} ({} -> {})".format(
-                                performer.name, msgs,
-                                old_state.compute(), new_state.compute()
+                                performer.name,
+                                msgs,
+                                old_state.compute(),
+                                new_state.compute(),
                             )
                         )
                     for writer in self._protocols_writers:
@@ -128,22 +140,27 @@ class Process(object):
                 except Exception as e:
                     self._logger.error(e)
 
-    async def _on_performer_updated_by_redis(self, performer, old_state, new_state):
+    async def _on_performer_updated_by_redis(
+        self, performer, old_state, new_state
+    ):
         try:
             msgs = performer.execute(old_state, new_state)
-            self._logger.debug("Performer {} updated by redis".format(performer.name))
+            self._logger.debug(
+                "Performer {} updated by redis".format(performer.name)
+            )
             if msgs:
                 self._logger.debug(
                     "Performer {} sending {} ({} -> {})".format(
-                        performer.name, msgs,
-                        old_state.compute(), new_state.compute()
+                        performer.name,
+                        msgs,
+                        old_state.compute(),
+                        new_state.compute(),
                     )
                 )
             for writer in self._protocols_writers:
                 await writer(msgs, performer)
         except Exception as e:
             self._logger.error(e)
-
 
     async def _on_protocol_event(self, scheduler, trigger):
         await self._schedule_by_protocol_trigger(trigger)
@@ -197,13 +214,18 @@ class Process(object):
                             await writer(msgs, performer)
 
                         await self._schedule_by_appliance_state(
-                            scheduler, performer.appliance, old_state, new_state
+                            scheduler,
+                            performer.appliance,
+                            old_state,
+                            new_state,
                         )
                 except Exception as e:
                     self._logger.error(e)
             if trigger.is_enabled:
                 try:
-                    self._schedule_by_trigger_fork(scheduler, trigger, performer)
+                    self._schedule_by_trigger_fork(
+                        scheduler, trigger, performer
+                    )
                 except Exception as e:
                     self._logger.error(e)
 
@@ -213,9 +235,13 @@ class Process(object):
         for gateway in self._protocols:
             loop.create_task(
                 gateway.run(
-                    [lambda trigger: self._on_protocol_event(scheduler, trigger)]
+                    [
+                        lambda trigger: self._on_protocol_event(
+                            scheduler, trigger
+                        )
+                    ]
                 ),
-                name=("On protocol {} event".format(gateway.PROTOCOL))
+                name=("On protocol {} event".format(gateway.PROTOCOL)),
             )
         loop.call_soon(scheduler.start)
 

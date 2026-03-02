@@ -4,6 +4,13 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import home
+
 import logging
 
 from typing import Iterable, List, Tuple
@@ -20,7 +27,7 @@ class Trigger(Parent):
     def __init__(
         self,
         name: str,
-        events: Iterable["home.Event"],
+        events: Iterable[home.Event],
         state: str,
         timeout_seconds: float,
     ):
@@ -52,9 +59,14 @@ class Trigger(Parent):
         """
         super(Trigger, self).__init__(name, events, state)
         self._delay = Delay(
-            "delay trigger for {}".format(name), events, timeout_seconds, self._timezone
+            "delay trigger for {}".format(name),
+            events,
+            timeout_seconds,
+            self._timezone,
         )
-        self._events = []  # this trigger has no events, wait for the forked trigger
+        self._events = (
+            []
+        )  # this trigger has no events, wait for the forked trigger
         self._timeout = timeout_seconds
         self._logger = logging.getLogger(__name__)
 
@@ -63,6 +75,6 @@ class Trigger(Parent):
         return super(Trigger, self).__str__() + s
 
     def fork(
-        self, performer: "home.Performer"
-    ) -> List[Tuple["home.Performer", "home.scheduler.Trigger"]]:
+        self, performer: home.Performer
+    ) -> List[Tuple[home.Performer, "home.scheduler.Trigger"]]:
         return self._delay.fork(performer)

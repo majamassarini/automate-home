@@ -7,6 +7,8 @@
 import enum
 import functools
 
+from home.event.base import Event
+
 registry = dict()
 
 
@@ -30,7 +32,9 @@ class Registry(enum.EnumMeta):
         return cls
 
 
-class Enum(enum.Enum, metaclass=Registry):
+class Enum(Event, enum.Enum, metaclass=Registry):
     def __str__(self):
         ss = super(Enum, self).__str__().split(".")
-        return functools.reduce(lambda s, i: s + "." + i, ss, str(self.__module__))
+        return functools.reduce(
+            lambda s, i: s + "." + i, ss, str(self.__module__)
+        )

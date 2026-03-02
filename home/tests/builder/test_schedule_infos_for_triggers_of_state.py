@@ -58,7 +58,9 @@ class TestSchedulerTriggersBuilder(Helper):
                     ),
                     home.Performer(
                         "another performer",
-                        home.appliance.light.Appliance("for another light", []),
+                        home.appliance.light.Appliance(
+                            "for another light", []
+                        ),
                         [],
                         [Trigger()],
                     ),

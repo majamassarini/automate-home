@@ -1,5 +1,7 @@
 from home import event
-from home.scheduler.trigger.crawler.osmer_fvg.will_rain.on import Trigger as Parent
+from home.scheduler.trigger.crawler.osmer_fvg.will_rain.on import (
+    Trigger as Parent,
+)
 
 
 class Trigger(Parent):

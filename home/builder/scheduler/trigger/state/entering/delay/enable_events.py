@@ -4,7 +4,9 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
-from home.builder.scheduler.trigger.state.entering.delay import Builder as Parent
+from home.builder.scheduler.trigger.state.entering.delay import (
+    Builder as Parent,
+)
 from home.scheduler.trigger.state.entering.delay.enable_events import Trigger
 
 

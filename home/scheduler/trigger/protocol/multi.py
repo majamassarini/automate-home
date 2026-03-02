@@ -4,6 +4,13 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import home
+
 from typing import Iterable
 from apscheduler.triggers.base import BaseTrigger
 from home.scheduler.trigger.protocol import Trigger as Parent
@@ -20,11 +27,11 @@ class Trigger(Parent, BaseTrigger):
     def __init__(
         self,
         name: str,
-        events: Iterable["home.Event"],
-        positive_a: "home.protocol.Trigger",
-        negative_a: "home.protocol.Trigger",
-        positive_b: "home.protocol.Trigger",
-        negative_b: "home.protocol.Trigger",
+        events: Iterable[home.Event],
+        positive_a: home.protocol.Trigger,
+        negative_a: home.protocol.Trigger,
+        positive_b: home.protocol.Trigger,
+        negative_b: home.protocol.Trigger,
     ):
         """
         >>> import home
@@ -106,7 +113,7 @@ class Trigger(Parent, BaseTrigger):
         self._triggered_a = False
         self._triggered_b = False
 
-    def is_triggered(self, description: "home.protocol.Description"):
+    def is_triggered(self, description: home.protocol.Description):
         """
         Check if the given protocol message description triggers
         the last untriggered *Protocol Trigger*
@@ -132,6 +139,9 @@ class Trigger(Parent, BaseTrigger):
 
     def __str__(self):
         s = " AND protocol trigger: positive a {}, negative a {}, positive b {}, negative {}".format(
-            self._positive_a, self._negative_a, self._positive_b, self._negative_b
+            self._positive_a,
+            self._negative_a,
+            self._positive_b,
+            self._negative_b,
         )
         return super(Trigger, self).__str__() + s

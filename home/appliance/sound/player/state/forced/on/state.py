@@ -58,11 +58,12 @@ class State(
 
         super(State, self).__init__(events, events_disabled)
 
-    @attribute.mixin.Volume.volume.getter
+    @attribute.mixin.Volume.volume.getter  # type: ignore[attr-defined]
     def volume(self) -> int:
-        if home_event.sleepiness.Event.Sleepy in self.events:
+        if home_event.sleepiness.Event.Sleepy in self.events:  # type: ignore[operator]
             for klass, obj in self._events.items():
                 if klass == event.sleepy_volume.Event:
                     return obj.value
+            return super(State, self).volume
         else:
             return super(State, self).volume

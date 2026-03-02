@@ -15,9 +15,9 @@ from home.appliance.socket.energy_guard.state import State as Parent
 class Mixin(object):
     def init_callables(self):
         callables = {
-            type(home.event.power.consumption.Event.No): forced_on_callable.Power(
-                reset=self.reset, base=self.base
-            ),
+            type(
+                home.event.power.consumption.Event.No
+            ): forced_on_callable.Power(reset=self.reset, base=self.base),
             type(
                 home.event.power.consumption.duration.Event.Short
             ): forced_on_callable.Duration(reset=self.reset, base=self.base),

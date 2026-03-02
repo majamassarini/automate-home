@@ -16,9 +16,9 @@ class Mixin(object):
             type(home.event.alarm.armed.Event.Off): alarm_callable.Unarmed(
                 unarmed=self.unarmed
             ),
-            type(home.event.alarm.triggered.Event.Off): alarm_callable.Triggered(
-                triggered=self.triggered
-            ),
+            type(
+                home.event.alarm.triggered.Event.Off
+            ): alarm_callable.Triggered(triggered=self.triggered),
         }
 
         self._callables.update(callables)

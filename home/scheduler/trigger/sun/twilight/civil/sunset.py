@@ -4,6 +4,13 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import home
+
 import datetime
 
 from typing import Iterable
@@ -22,7 +29,7 @@ class Trigger(sunset.Trigger):
     def __init__(
         self,
         name: str,
-        events: Iterable["home.Event"],
+        events: Iterable[home.Event],
         latitude: float,
         longitude: float,
         elevation: int,
@@ -39,7 +46,9 @@ class Trigger(sunset.Trigger):
         >>> (d.year, d.month, d.day, d.hour, d.minute)
         (2018, 10, 19, 18, 45)
         """
-        super(Trigger, self).__init__(name, events, latitude, longitude, elevation)
+        super(Trigger, self).__init__(
+            name, events, latitude, longitude, elevation
+        )
         self._events.append(sun.twilight.civil.Event.Sunset)
         self._observer.horizon = "-6"  # civil twilight
         self._next_fire_time = self._get_next_fire_time(

@@ -17,7 +17,9 @@ from home.appliance.curtain.outdoor.bedroom.state.forced.closed import (
 class Mixin(object):
     def init_callables(self):
         callables = {
-            type(home.event.sleepiness.Event.Awake): forced_closed_callable.Sleepiness(
+            type(
+                home.event.sleepiness.Event.Awake
+            ): forced_closed_callable.Sleepiness(
                 base=self.base, reset=self.reset
             ),
         }

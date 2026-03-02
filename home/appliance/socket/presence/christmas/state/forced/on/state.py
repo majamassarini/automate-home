@@ -18,18 +18,22 @@ class Mixin(object):
             type(home.event.presence.Event.On): forced_on_callable.Presence(
                 reset=self.reset, base=self.base
             ),
-            type(home.event.holiday.christmas.Event.Over): forced_on_callable.Christmas(
-                reset=self.reset, base=self.base
-            ),
+            type(
+                home.event.holiday.christmas.Event.Over
+            ): forced_on_callable.Christmas(reset=self.reset, base=self.base),
             type(
                 home.event.holiday.san_silvester.Event.Over
-            ): forced_on_callable.SanSilvester(reset=self.reset, base=self.base),
-            type(home.event.holiday.epiphany.Event.Over): forced_on_callable.Epiphany(
+            ): forced_on_callable.SanSilvester(
                 reset=self.reset, base=self.base
             ),
             type(
+                home.event.holiday.epiphany.Event.Over
+            ): forced_on_callable.Epiphany(reset=self.reset, base=self.base),
+            type(
                 home.event.sun.brightness.Event.Bright
-            ): forced_on_callable.SunBrightness(reset=self.reset, base=self.base),
+            ): forced_on_callable.SunBrightness(
+                reset=self.reset, base=self.base
+            ),
             self.forced_enum: forced_on_callable.Forced(
                 reset=self.reset, base=self.base
             ),

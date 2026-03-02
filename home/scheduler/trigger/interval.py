@@ -4,6 +4,13 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import home
+
 from apscheduler.triggers.interval import IntervalTrigger
 from home.scheduler.trigger import Trigger as Parent
 
@@ -15,5 +22,7 @@ class Trigger(Parent, IntervalTrigger):
     An extension of the `APScheduler IntervalTrigger <https://apscheduler.readthedocs.io/en/stable/modules/triggers/interval.html>`_.
     """
 
-    def __init__(self, name: str, events: Iterable["home.Event"], *args, **kwargs):
+    def __init__(
+        self, name: str, events: Iterable[home.Event], *args, **kwargs
+    ):
         super(Trigger, self).__init__(name, events, *args, **kwargs)

@@ -26,9 +26,9 @@ class Unknown(home.appliance.Appliance):
         return Empty()
 
 
-class NoDetailYamlPerformer(yaml.YAMLObject, dict):
+class NoDetailYamlPerformer(yaml.YAMLObject, dict):  # type: ignore[misc]
 
-    yaml_tag = u"!Performer"
+    yaml_tag = "!Performer"
 
     def __init__(self, name, appliance_name):
         self.name = name
@@ -38,12 +38,14 @@ class NoDetailYamlPerformer(yaml.YAMLObject, dict):
         self._logger = logging.getLogger(__name__)
 
     def __repr__(self):
-        return "{}(name={}, for appliance={}, commands={}, triggers={})".format(
-            self.__class__.__name__,
-            self.name,
-            self.for_appliance.name,
-            self.commands,
-            self.triggers,
+        return (
+            "{}(name={}, for appliance={}, commands={}, triggers={})".format(
+                self.__class__.__name__,
+                self.name,
+                self.for_appliance.name,
+                self.commands,
+                self.triggers,
+            )
         )
 
 
@@ -72,7 +74,8 @@ class Builder(Parent):
         for tag in home.protocol.message.registry:
             yaml.add_constructor("!{}".format(tag), self.message_constructor)
         yaml.add_constructor(
-            "!Performer", lambda loader, node: self.performer_constructor(loader, node)
+            "!Performer",
+            lambda loader, node: self.performer_constructor(loader, node),
         )
         performers = list()
         for performers_ in self.find_in_dirs(
@@ -104,7 +107,10 @@ class Builder(Parent):
             return Performer(mapping["name"], appliance, [], [])
         else:
             return Performer(
-                mapping["name"], appliance, mapping["commands"], mapping["triggers"]
+                mapping["name"],
+                appliance,
+                mapping["commands"],
+                mapping["triggers"],
             )
 
     def performer_constructor(self, loader, node):
@@ -116,7 +122,9 @@ class Builder(Parent):
             for performer in self.run()
         ]
         with open(filename, "w") as outfile:
-            data = yaml.dump(nodetail_yaml_performers, default_flow_style=False)
+            data = yaml.dump(
+                nodetail_yaml_performers, default_flow_style=False
+            )
             data = data.replace("for_appliance", "for appliance")
             outfile.write(data)
             outfile.flush()

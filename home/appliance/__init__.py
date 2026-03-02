@@ -4,10 +4,17 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import home
+
 import copy
 import logging
 from abc import ABCMeta, abstractmethod
-from typing import Tuple, Iterable
+from typing import Tuple, Iterable, Type
 
 registry = list()
 registry_for_redis = list()
@@ -41,8 +48,8 @@ class Appliance(metaclass=Registry):
     def __init__(
         self,
         name: str,
-        events: Iterable["home.Event"] = None,
-        events_disabled: Iterable["home.Event"] = None,
+        events: Iterable[home.Event] = None,
+        events_disabled: Iterable[home.Event] = None,
     ):
         """
         :param name: the Appliance identifier string name
@@ -66,8 +73,7 @@ class Appliance(metaclass=Registry):
         return appliance
 
     @abstractmethod
-    def _init_state(self) -> "home.appliance.State":
-        ...
+    def _init_state(self) -> home.appliance.State: ...
 
     def __str__(self):
         return "Appliance %s in %s" % (self.name, self._state)
@@ -105,33 +111,35 @@ class Appliance(metaclass=Registry):
         return self._name
 
     @property
-    def events(self) -> Iterable["home.Event"]:
+    def events(self) -> Iterable[home.Event]:
         """A list of Events already notified to the Appliance"""
         return self._state.events
 
     @property
-    def events_disabled(self) -> Iterable["home.Event"]:
+    def events_disabled(self) -> Iterable[home.Event]:
         """A list of Events disabled in the Appliance state machine"""
         return self._state.events_disabled
 
     @property
-    def state(self) -> "home.appliance.State":
+    def state(self) -> home.appliance.State:
         """The Appliance state"""
         return self._state
 
     @property
-    def forced_enum(self) -> "home.Event":
+    def forced_enum(self) -> Type[home.Event]:
         """An Event capable of making the Appliance forced (if any)"""
         return self._state.forced_enum
 
     def _update(self, state) -> None:
         if self._state != state:
-            self._logger.info("Appliance %s updated in %s" % (self.name, state))
+            self._logger.info(
+                "Appliance %s updated in %s" % (self.name, state)
+            )
             self._state = state
 
     def update(
-        self, other: "home.Appliance"
-    ) -> Tuple["home.appliance.State", "home.appliance.State"]:
+        self, other: home.Appliance
+    ) -> Tuple[home.appliance.State, "home.appliance.State"]:
         """
         Update state using events taken from another Appliance
 
@@ -146,21 +154,23 @@ class Appliance(metaclass=Registry):
         for event in self.events_disabled:
             enable.append(event)
         [self.enable(event) for event in enable]
-        for event in other.events_disabled:
+        for event in other.events_disabled:  # type: ignore[assignment]
             disable.append(event)
         [self.disable(event) for event in disable]
         for event in other.state - old_state:
-            new_state = new_state.next(event)
+            new_state = new_state.next(event)  # type: ignore[assignment]
         if (
             new_state.VALUE != other.state.VALUE
         ):  # no event, could be a reset from a forced state
-            new_state = other.state.make(other.state.events, other.events_disabled)
+            new_state = other.state.make(other.state.events, other.events_disabled)  # type: ignore[type-var]
         self._update(new_state)
         return old_state, new_state
 
     def update_by(
-        self, trigger: "home.protocol.Trigger", description: "home.protocol.Description"
-    ) -> Tuple["home.appliance.State", "home.appliance.State"]:
+        self,
+        trigger: home.protocol.Trigger,
+        description: home.protocol.Description,
+    ) -> Tuple[home.appliance.State, "home.appliance.State"]:
         """
         Update state using trigger.
         A trigger is capable of creating a new state using its method make_new_state_from.
@@ -178,8 +188,8 @@ class Appliance(metaclass=Registry):
         return old_state, new_state
 
     def notify(
-        self, event: "home.Event"
-    ) -> Tuple["home.appliance.State", "home.appliance.State"]:
+        self, event: home.Event
+    ) -> Tuple[home.appliance.State, "home.appliance.State"]:
         """
         Notify a new event to the Appliance
 
@@ -192,7 +202,7 @@ class Appliance(metaclass=Registry):
         self._update(new_state)
         return old_state, new_state
 
-    def is_notified(self, event: "home.Event") -> bool:
+    def is_notified(self, event: home.Event) -> bool:
         """
         Event has been notified to the Appliance?
 
@@ -201,7 +211,7 @@ class Appliance(metaclass=Registry):
         """
         return event in self._state
 
-    def is_enabled(self, event: "home.Event") -> bool:
+    def is_enabled(self, event: home.Event) -> bool:
         """
         Events of the same given type are enabled in the state machine?
 
@@ -210,7 +220,7 @@ class Appliance(metaclass=Registry):
         """
         return self._state.is_enabled(event)
 
-    def enable(self, event: "home.Event"):
+    def enable(self, event: home.Event):
         """
         Enable events of the same given type in the state machine
 
@@ -219,7 +229,7 @@ class Appliance(metaclass=Registry):
         """
         self._state.enable(event)
 
-    def disable(self, event: "home.Event"):
+    def disable(self, event: home.Event):
         """
         Disable events of the same given type in the state machine
 

@@ -16,12 +16,16 @@ from home.appliance.curtain.indoor.blackout.state import State as Parent
 class Mixin(object):
     def init_callables(self):
         callables = {
-            type(home.event.sleepiness.Event.Awake): forced_opened_callable.Sleepiness(
+            type(
+                home.event.sleepiness.Event.Awake
+            ): forced_opened_callable.Sleepiness(
                 base=self.base, reset=self.reset
             ),
             type(
                 home.event.sun.twilight.civil.Event.Sunrise
-            ): forced_opened_callable.SunTwilight(base=self.base, reset=self.reset),
+            ): forced_opened_callable.SunTwilight(
+                base=self.base, reset=self.reset
+            ),
             self.forced_enum: forced_opened_callable.Forced(
                 base=self.base, reset=self.reset
             ),

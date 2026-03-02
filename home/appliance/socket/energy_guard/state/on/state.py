@@ -34,8 +34,14 @@ class Mixin(object):
 
 class State(Mixin, mixin.IsOn, mixin.IsNotDetachable, Parent):
     def __init__(self, events=None, events_disabled=None):
-        self.detachable = home.appliance.socket.energy_guard.state.detachable.State
-        self.forced_on = home.appliance.socket.energy_guard.state.forced.on.State
-        self.forced_off = home.appliance.socket.energy_guard.state.forced.off.State
+        self.detachable = (
+            home.appliance.socket.energy_guard.state.detachable.State
+        )
+        self.forced_on = (
+            home.appliance.socket.energy_guard.state.forced.on.State
+        )
+        self.forced_off = (
+            home.appliance.socket.energy_guard.state.forced.off.State
+        )
 
         super(State, self).__init__(events, events_disabled)

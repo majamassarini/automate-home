@@ -57,7 +57,9 @@ class Builder(Parent):
                     self._logging.error(e)
                 return []
 
-            yaml.add_constructor("!{}".format(tag_), scheduler_trigger_constructor)
+            yaml.add_constructor(
+                "!{}".format(tag_), scheduler_trigger_constructor
+            )
 
         scheduler_triggers = list()
         for scheduler_triggers_ in self.find_in_dirs(

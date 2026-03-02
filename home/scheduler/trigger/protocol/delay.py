@@ -4,11 +4,18 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import home
+
 import datetime
 import logging
 import copy
 
-from typing import Iterable, List, Tuple
+from typing import Any, Dict, Iterable, List, Tuple
 from apscheduler.triggers.base import BaseTrigger
 from home.scheduler.trigger import date
 from home.scheduler.trigger.protocol import Trigger as Parent
@@ -18,17 +25,19 @@ class Delay:
     def __init__(
         self,
         name: str,
-        events: Iterable["home.Event"],
+        events: Iterable[home.Event],
         timeout_seconds: float,
         timezone,
     ):
         self._trigger_name = name
-        self._scheduler_trigger_events = events
-        self._protocol_trigger_events = []
+        self._scheduler_trigger_events: Iterable[home.Event] = events  # type: ignore[assignment]
+        self._protocol_trigger_events: List[home.Event] = []
         self._timeout = timeout_seconds
         self._timezone = timezone
         self._logger = logging.getLogger(__name__)
-        self._last_resettable_trigger = {}  # one for every performer
+        self._last_resettable_trigger: Dict[str, Any] = (
+            {}
+        )  # one for every performer
 
     @property
     def timeout(self):
@@ -43,12 +52,12 @@ class Delay:
         return self._protocol_trigger_events
 
     @protocol_trigger_events.setter
-    def protocol_trigger_events(self, value: List['home.Event']):
-        self._protocol_trigger_events = value
+    def protocol_trigger_events(self, value: List[home.Event]):
+        self._protocol_trigger_events = value  # type: ignore[assignment]
 
     def fork(
-        self, performer: "home.Performer"
-    ) -> List[Tuple["home.Performer", "home.scheduler.Trigger"]]:
+        self, performer: home.Performer
+    ) -> List[Tuple[home.Performer, "home.scheduler.Trigger"]]:
         """
         Starts a new 'home.scheduler.date.resettable.Trigger' which will
         be triggered in *timeout* seconds unless reset.
@@ -62,11 +71,16 @@ class Delay:
         name = "date.resettable.Trigger for parent trigger {} and performer {}".format(
             self._trigger_name, performer.name
         )
-        run_date = datetime.datetime.now() + datetime.timedelta(seconds=self._timeout)
+        run_date = datetime.datetime.now() + datetime.timedelta(
+            seconds=self._timeout
+        )
         if name in self._last_resettable_trigger:
             self._last_resettable_trigger[name].disable()
         self._last_resettable_trigger[name] = date.resettable.Trigger(
-            name, (self._scheduler_trigger_events + self.protocol_trigger_events), run_date=run_date, timezone=self._timezone
+            name,
+            (self._scheduler_trigger_events + self.protocol_trigger_events),
+            run_date=run_date,
+            timezone=self._timezone,
         )
         result.append((performer, self._last_resettable_trigger[name]))
         return result
@@ -81,8 +95,8 @@ class Trigger(Parent, BaseTrigger):
     def __init__(
         self,
         name: str,
-        events: Iterable["home.Event"],
-        protocol_trigger: "home.protocol.Trigger",
+        events: Iterable[home.Event],
+        protocol_trigger: home.protocol.Trigger,
         timeout_seconds: float,
     ):
         """
@@ -138,7 +152,7 @@ class Trigger(Parent, BaseTrigger):
         return super(Trigger, self).__str__() + s
 
     def fork(
-        self, performer: "home.Performer"
-    ) -> List[Tuple["home.Performer", "home.scheduler.Trigger"]]:
-        self._delay.protocol_trigger_events = self._protocol_trigger.events
+        self, performer: home.Performer
+    ) -> List[Tuple[home.Performer, "home.scheduler.Trigger"]]:
+        self._delay.protocol_trigger_events = self._protocol_trigger.events  # type: ignore[assignment]
         return self._delay.fork(performer)

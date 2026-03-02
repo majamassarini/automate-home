@@ -1,3 +1,10 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import home
+
 import datetime
 
 from typing import List
@@ -13,7 +20,7 @@ class Trigger(Osmer):
     def __init__(
         self,
         name: str,
-        events: List["home.Event"],
+        events: List[home.Event],
         url,
         zone: int = 4,
         probability: int = 60,
@@ -82,4 +89,3 @@ class Trigger(Osmer):
             return self._events
         else:
             return []
-

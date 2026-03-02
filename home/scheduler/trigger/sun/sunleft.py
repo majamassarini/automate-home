@@ -4,10 +4,17 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import home
+
 import datetime
 import pytz
 
-from typing import Iterable
+from typing import Any, Iterable
 from apscheduler.triggers.base import BaseTrigger
 from home.event import sun
 from home.scheduler.trigger.sun import sunhit
@@ -24,19 +31,21 @@ class Trigger(sunhit.Trigger, BaseTrigger):
     def __init__(
         self,
         name: str,
-        events: Iterable["home.Event"],
+        events: Iterable[home.Event],
         latitude: float,
         longitude: float,
         elevation: int,
-        position: "home.scheduler.trigger.sun.Position",
+        position: home.scheduler.trigger.sun.Position,
     ):
         super(Trigger, self).__init__(
             name, events, latitude, longitude, elevation, position
         )
 
         self._events.append(sun.hit.Event.Sunleft)
-        self._position = position
-        self._timedelta = datetime.timedelta(seconds=self.TIMEDELTA)
+        self._position: Any = position
+        self._timedelta: datetime.timedelta = datetime.timedelta(
+            seconds=self.TIMEDELTA
+        )
 
         self._next_fire_time = self._get_next_fire_time(
             None, datetime.datetime.now(self._timezone)
@@ -95,7 +104,9 @@ class Trigger(sunhit.Trigger, BaseTrigger):
         timedelta = self._timedelta
         if not sunhit:
             now = super(Trigger, self)._get_next_fire_time(None, now)
-            now = now.replace(tzinfo=pytz.timezone("UTC")).astimezone(self._timezone)
+            now = now.replace(tzinfo=pytz.timezone("UTC")).astimezone(
+                self._timezone
+            )
             sunhit = self._is_sun_over(now)
         while sunhit and timedelta < datetime.timedelta(days=1):
             timedelta = timedelta + self._timedelta

@@ -4,6 +4,13 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import home
+
 import copy
 import datetime
 from typing import Iterable, List, Tuple
@@ -15,8 +22,8 @@ from home.scheduler.trigger.state.entering.delay import Trigger as Parent
 
 class _EnableEventsDelay(Delay):
     def fork(
-        self, performer: "home.Performer"
-    ) -> List[Tuple["home.Performer", "home.scheduler.Trigger"]]:
+        self, performer: home.Performer
+    ) -> List[Tuple[home.Performer, "home.scheduler.Trigger"]]:
         result = list()
         name = (
             "date.enable_events.Trigger for parent trigger"
@@ -54,7 +61,7 @@ class Trigger(Parent):
     def __init__(
         self,
         name: str,
-        events: Iterable["home.Event"],
+        events: Iterable[home.Event],
         state: str,
         timeout_seconds: float,
     ):

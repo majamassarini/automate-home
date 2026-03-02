@@ -21,7 +21,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 sys.path.append("..")
 
 if __name__ == "__main__":
-    (options, _) = home.options.parser().parse_args()
+    options, _ = home.options.parser().parse_args()
     if options.configuration_file:
         options = home.configs.parse(vars(options), options.configuration_file)
 
@@ -92,8 +92,12 @@ if __name__ == "__main__":
                 options.knxnet_ip_nat_client_host,
                 int(options.knxnet_ip_nat_client_port),
             )
-        gateway.associate_commands(my_home.commands_by(knx_plugin.Description.PROTOCOL))
-        gateway.associate_triggers(my_home.triggers_by(knx_plugin.Description.PROTOCOL))
+        gateway.associate_commands(
+            my_home.commands_by(knx_plugin.Description.PROTOCOL)
+        )
+        gateway.associate_triggers(
+            my_home.triggers_by(knx_plugin.Description.PROTOCOL)
+        )
         process.add(gateway)
     if options.lifx:
         gateway = lifx_plugin.Gateway(lifx_plugin.Client)

@@ -22,10 +22,16 @@ class TestGroupOfPerfomersBuilder(Helper):
         Builder.FILE_EXTENSION = self._path
         self._performers = [
             home.Performer(
-                "presa 1", home.appliance.light.Appliance("presa 1", []), [], []
+                "presa 1",
+                home.appliance.light.Appliance("presa 1", []),
+                [],
+                [],
             ),
             home.Performer(
-                "presa 2", home.appliance.light.Appliance("presa 2", []), [], []
+                "presa 2",
+                home.appliance.light.Appliance("presa 2", []),
+                [],
+                [],
             ),
         ]
         return []

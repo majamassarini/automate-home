@@ -19,11 +19,12 @@ class Mixin(object):
             type(
                 home.event.sun.twilight.civil.Event.Sunrise
             ): closed_callable.SunTwilight(opened=self.opened),
-            type(home.event.sleepiness.Event.Awake): closed_callable.Sleepiness(
-                opened=self.opened
-            ),
+            type(
+                home.event.sleepiness.Event.Awake
+            ): closed_callable.Sleepiness(opened=self.opened),
             self.forced_enum: closed_callable.Forced(
-                forced_closed=self.forced_closed, forced_opened=self.forced_opened
+                forced_closed=self.forced_closed,
+                forced_opened=self.forced_opened,
             ),
         }
 

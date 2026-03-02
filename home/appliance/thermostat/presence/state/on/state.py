@@ -39,8 +39,14 @@ class State(Mixin, mixin.IsOn, mixin.IsNotKeeping, mixin.Setpoint, Parent):
     def __init__(self, events=None, events_disabled=None):
         self.off = home.appliance.thermostat.presence.state.off.State
         self.keep = home.appliance.thermostat.presence.state.keep.State
-        self.forced_on = home.appliance.thermostat.presence.state.forced.on.State
-        self.forced_off = home.appliance.thermostat.presence.state.forced.off.State
-        self.forced_keep = home.appliance.thermostat.presence.state.forced.keep.State
+        self.forced_on = (
+            home.appliance.thermostat.presence.state.forced.on.State
+        )
+        self.forced_off = (
+            home.appliance.thermostat.presence.state.forced.off.State
+        )
+        self.forced_keep = (
+            home.appliance.thermostat.presence.state.forced.keep.State
+        )
 
         super(State, self).__init__(events, events_disabled)

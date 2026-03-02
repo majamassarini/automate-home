@@ -43,7 +43,9 @@ class Mixin(object):
     def init_callables(self):
         callables = {
             type(event.duration.Event(1200)): Duration(),
-            type(event.partially_on.duration.Event(350)): PartiallyOnDuration(),
+            type(
+                event.partially_on.duration.Event(350)
+            ): PartiallyOnDuration(),
             type(home_event.rain.in_the_past.Event.Off): HasRained(),
             type(home_event.rain.Event.No): IsRaining(),
             type(home_event.rain.forecast.Event.Off): WillRain(),

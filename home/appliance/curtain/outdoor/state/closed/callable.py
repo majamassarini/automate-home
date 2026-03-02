@@ -6,7 +6,9 @@
 
 import home
 from home.appliance.callable import Callable
-from home.appliance.curtain.outdoor.state.opened import callable as opened_callable
+from home.appliance.curtain.outdoor.state.opened import (
+    callable as opened_callable,
+)
 
 
 class Wind(Callable):

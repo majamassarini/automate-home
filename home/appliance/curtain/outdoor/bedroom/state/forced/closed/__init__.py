@@ -5,4 +5,6 @@
 # Copyright (C) 2021  Maja Massarini
 
 from home.appliance.curtain.outdoor.bedroom.state.forced.closed import callable
-from home.appliance.curtain.outdoor.bedroom.state.forced.closed.state import State
+from home.appliance.curtain.outdoor.bedroom.state.forced.closed.state import (
+    State,
+)

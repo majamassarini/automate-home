@@ -59,25 +59,23 @@ class State(
 
         super(State, self).__init__(events, events_disabled)
 
-    @attribute.mixin.Playlist.playlist.getter
+    @attribute.mixin.Playlist.playlist.getter  # type: ignore[attr-defined]
     def playlist(self) -> str:
         lookup = None
-        if home.event.user.Event.A in self.events:
+        if home.event.user.Event.A in self.events:  # type: ignore[attr-defined, operator]
             lookup = (
                 home.appliance.sound.player.event.forced.circadian_rhythm.playlist_a.Event
             )
-        elif home.event.user.Event.B in self.events:
+        elif home.event.user.Event.B in self.events:  # type: ignore[attr-defined]
             lookup = (
-                home.appliance.sound.player.event.forced.circadian_rhythm.playlist_b.Event
+                home.appliance.sound.player.event.forced.circadian_rhythm.playlist_b.Event  # type: ignore[assignment]
             )
-        elif home.event.user.Event.C in self.events:
+        elif home.event.user.Event.C in self.events:  # type: ignore[attr-defined]
             lookup = (
-                home.appliance.sound.player.event.forced.circadian_rhythm.playlist_c.Event
+                home.appliance.sound.player.event.forced.circadian_rhythm.playlist_c.Event  # type: ignore[assignment]
             )
         if lookup:
-            for klass, obj in self._events.items():
+            for klass, obj in self._events.items():  # type: ignore[attr-defined]
                 if klass == lookup:
                     return obj.value
-        else:
-            return "None was found"
-
+        return "None was found"
