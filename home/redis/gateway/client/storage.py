@@ -35,7 +35,7 @@ class Connection(object):
         if self._connection:
             serializations = await self._connection.zrange(key, -1, -1)
             for entry in serializations:
-                serialization = entry[entry.find(":") + 1:]
+                serialization = entry[entry.find(":") + 1 :]
                 obj = json.loads(serialization, object_hook=self._decoder)
                 self._logger.debug("get key {} -> {}".format(key, obj))
                 return obj
@@ -51,7 +51,7 @@ class Connection(object):
             for entry in serializations:
                 colon = entry.find(":")
                 t = entry[0:colon]
-                serialization = entry[colon + 1:]
+                serialization = entry[colon + 1 :]
                 deserialization = json.loads(
                     serialization, object_hook=self._decoder
                 )

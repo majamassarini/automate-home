@@ -18,9 +18,13 @@ class TestSerialization(unittest.TestCase):
 
     def test_appliances_serializations(self):
         appliances = list()
-        appliances.append(home.appliance.curtain.indoor.blackout.Appliance("", []))
+        appliances.append(
+            home.appliance.curtain.indoor.blackout.Appliance("", [])
+        )
         appliances.append(home.appliance.curtain.outdoor.Appliance("", []))
-        appliances.append(home.appliance.curtain.outdoor.bedroom.Appliance("", []))
+        appliances.append(
+            home.appliance.curtain.outdoor.bedroom.Appliance("", [])
+        )
         appliances.append(home.appliance.thermostat.presence.Appliance("", []))
         appliances.append(home.appliance.sensor.alarm.Appliance("", []))
         appliances.append(home.appliance.sensor.anemometer.Appliance("", []))
@@ -34,7 +38,9 @@ class TestSerialization(unittest.TestCase):
         appliances.append(home.appliance.light.Appliance("", []))
         appliances.append(home.appliance.light.presence.Appliance("", []))
         appliances.append(home.appliance.light.zone.Appliance("", []))
-        appliances.append(home.appliance.light.indoor.dimmerable.Appliance("", []))
+        appliances.append(
+            home.appliance.light.indoor.dimmerable.Appliance("", [])
+        )
         appliances.append(home.appliance.light.indoor.hue.Appliance("", []))
         appliances.append(home.appliance.sound.player.Appliance("", []))
         appliances.append(home.appliance.sprinkler.Appliance("", []))
@@ -57,7 +63,9 @@ class TestSerialization(unittest.TestCase):
         self.assertEqual(a.state.compute(), "Off")
 
     def test_performer_serialization(self):
-        performer = home.Performer("", home.appliance.light.Appliance("", []), [], [])
+        performer = home.Performer(
+            "", home.appliance.light.Appliance("", []), [], []
+        )
         serialization = json.dumps(performer, cls=self._encoder)
         p = json.loads(serialization, object_hook=self._decoder)
         self.assertIsInstance(p, home.Performer)

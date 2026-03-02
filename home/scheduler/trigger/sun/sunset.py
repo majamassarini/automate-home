@@ -4,6 +4,13 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import home
+
 import datetime
 import pytz
 
@@ -24,19 +31,23 @@ class Trigger(follow.Trigger, BaseTrigger):
     def __init__(
         self,
         name: str,
-        events: Iterable["home.Event"],
+        events: Iterable[home.Event],
         latitude: float,
         longitude: float,
         elevation: int,
     ):
-        super(Trigger, self).__init__(name, events, latitude, longitude, elevation)
+        super(Trigger, self).__init__(
+            name, events, latitude, longitude, elevation
+        )
 
         self._events.append(sun.phase.Event.Sunset)
         self._next_fire_time = self._get_next_fire_time(
             None, datetime.datetime.now(tz=self._timezone)
         )
 
-    def _get_next_fire_time(self, _, now: datetime.datetime) -> datetime.datetime:
+    def _get_next_fire_time(
+        self, _, now: datetime.datetime
+    ) -> datetime.datetime:
         """
         >>> import datetime
         >>> s = Trigger("sunset", [], 45.20, 13.20, 280)

@@ -128,15 +128,21 @@ class State(
 
         callables = {
             type(event.show.starting_hue.Event): ShowStartingHue(),
-            type(event.show.starting_saturation.Event): ShowStartingSaturation(),
+            type(
+                event.show.starting_saturation.Event
+            ): ShowStartingSaturation(),
             type(event.show.ending_hue.Event): ShowEndingHue(),
             type(event.show.ending_saturation.Event): ShowEndingSaturation(),
             type(event.hue.Event): Hue(),
             type(event.circadian_rhythm.hue.Event): CircadianHue(),
             type(event.saturation.Event): Saturation(),
-            type(event.circadian_rhythm.saturation.Event): CircadianSaturation(),
+            type(
+                event.circadian_rhythm.saturation.Event
+            ): CircadianSaturation(),
             type(event.temperature.Event): Temperature(),
-            type(event.circadian_rhythm.temperature.Event): CircadianTemperature(),
+            type(
+                event.circadian_rhythm.temperature.Event
+            ): CircadianTemperature(),
         }
         self._callables.update(callables)
 

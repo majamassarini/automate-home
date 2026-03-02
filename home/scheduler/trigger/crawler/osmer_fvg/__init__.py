@@ -1,3 +1,10 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import home
+
 import urllib.request
 import html
 from xml.etree import ElementTree
@@ -9,7 +16,7 @@ from home.scheduler.trigger.cron import Trigger
 
 class Osmer(Trigger):
     def __init__(
-        self, name: str, events: List["home.Event"], url: str, *args, **kwargs
+        self, name: str, events: List[home.Event], url: str, *args, **kwargs
     ):
         """
         >>> url = "https://dev.meteo.fvg.it/xml/previsioni/PW20211013.xml"
@@ -33,7 +40,9 @@ class Osmer(Trigger):
         return xml_text
 
     def open(self, url):
-        request = urllib.request.Request(url, headers={"Accept": "application/xml"})
+        request = urllib.request.Request(
+            url, headers={"Accept": "application/xml"}
+        )
         response = urllib.request.urlopen(request)
         tree = ElementTree.parse(response)
         return tree.getroot()
@@ -802,7 +811,7 @@ Sabato cielo da poco nuvoloso a variabile; domenica cielo sereno o poco nuvoloso
 </data>
 <!--
 
-AREE: 
+AREE:
 A1 Alpi Carniche
 A2 Alpi Giulie
 A3 Prealpi Carniche
@@ -890,7 +899,7 @@ EVOLUZIONI (simboli):
  13 coperto con temporali
  14 coperto con piogge abbondanti e nevicate
  15 coperto con nevicate
--->    
+-->
     """
 
 

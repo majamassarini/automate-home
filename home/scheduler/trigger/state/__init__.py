@@ -4,6 +4,13 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import home
+
 import datetime
 from typing import Iterable
 from apscheduler.triggers.base import BaseTrigger
@@ -15,12 +22,11 @@ class Trigger(Parent, BaseTrigger):
     A **Scheduler Trigger** triggered when the Appliance is already in the specified state.
     """
 
-    @staticmethod
     @property
     def type(self):
         return "APPLIANCE STATE"
 
-    def __init__(self, name: str, events: Iterable["home.Events"], state: str):
+    def __init__(self, name: str, events: Iterable[home.Event], state: str):
         """
         :param name: the scheduler trigger name
         :param events: events to be notified
@@ -30,7 +36,7 @@ class Trigger(Parent, BaseTrigger):
         self._state = state
 
     def is_triggered(
-        self, old_state: "home.appliance.State", new_state: "home.appliance.State"
+        self, old_state: home.appliance.State, new_state: home.appliance.State
     ) -> bool:
         """
         When Appliance state is already in the specified state returns True

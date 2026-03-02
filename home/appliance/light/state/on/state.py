@@ -13,10 +13,12 @@ from home.appliance.light.state.on import callable as on_callable
 class Mixin(object):
     def init_callables(self):
         callables = {
-            type(home.event.courtesy.Event.Off): on_callable.Courtesy(off=self.off),
-            type(home.event.sun.brightness.Event.Bright): on_callable.Brightness(
+            type(home.event.courtesy.Event.Off): on_callable.Courtesy(
                 off=self.off
             ),
+            type(
+                home.event.sun.brightness.Event.Bright
+            ): on_callable.Brightness(off=self.off),
             self.forced_enum: on_callable.Forced(
                 forced_off=self.forced_off, forced_on=self.forced_on
             ),

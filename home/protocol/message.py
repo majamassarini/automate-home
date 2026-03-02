@@ -4,16 +4,24 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import home
+
 import copy
 from abc import ABC, ABCMeta, abstractmethod
-from typing import Any, List
+from typing import Any, ClassVar, List
 
 registry = list()
 
 
 def register_class(target_class):
     klass = "{}.{}".format(
-        target_class.__module__.replace(".definition", ""), target_class.__name__
+        target_class.__module__.replace(".definition", ""),
+        target_class.__name__,
     )
     registry.append(klass)
 
@@ -63,7 +71,7 @@ class Description(metaclass=Registry):
         self._label = value
 
     @classmethod
-    def make(cls, *args, **kwargs) -> "home.protocol.Description":
+    def make(cls, *args, **kwargs) -> home.protocol.Description:
         """
         Make a protocol message Description given the arguments.
 
@@ -74,7 +82,7 @@ class Description(metaclass=Registry):
         ...
 
     @classmethod
-    def make_from_yaml(cls, *args, **kwargs) -> "home.protocol.Description":
+    def make_from_yaml(cls, *args, **kwargs) -> home.protocol.Description:
         """
         Make a protocol message Description given the yaml arguments.
 
@@ -85,7 +93,7 @@ class Description(metaclass=Registry):
         ...
 
     @classmethod
-    def make_from(cls, msg: Any) -> "home.protocol.Description":
+    def make_from(cls, msg: Any) -> home.protocol.Description:
         """
         Make a protocol message Description given the protocol message
 
@@ -100,19 +108,21 @@ class Trigger(Description, ABC):
     An abstract Trigger for a protocol message.
     """
 
-    DEFAULT_EVENTS = []
+    DEFAULT_EVENTS: ClassVar[List[Any]] = []
 
-    def __init__(self, description: Any, events: List["home.Event"] = None):
+    def __init__(self, description: Any, events: List[home.Event] = None):
         """
 
         :param events: A list of events to be notified when this Trigger is triggered
         """
         super(Trigger, self).__init__(description)
-        self._events = events if events else []
+        self._events: List[Any] = events if events else []
         self._events.extend(self.DEFAULT_EVENTS)
 
     @abstractmethod
-    def is_triggered(self, another_description: "home.protocol.Description") -> bool:
+    def is_triggered(
+        self, another_description: home.protocol.Description
+    ) -> bool:
         """
         This trigger is triggered by the given protocol message Description?
 
@@ -122,7 +132,7 @@ class Trigger(Description, ABC):
         return self.PROTOCOL == another_description.PROTOCOL
 
     @property
-    def events(self) -> List["home.Event"]:
+    def events(self) -> List[home.Event]:
         """
         Events to be notified when this Trigger is triggered.
 
@@ -132,9 +142,9 @@ class Trigger(Description, ABC):
 
     def make_new_state_from(
         self,
-        another_description: "home.protocol.Description",
-        old_state: "home.appliance.State",
-    ) -> "home.appliance.State":
+        another_description: home.protocol.Description,
+        old_state: home.appliance.State,
+    ) -> home.appliance.State:
         """
         Given the protocol message Description, if this Trigger is
         triggered, notify Trigger's Events to the given state
@@ -154,7 +164,9 @@ class Trigger(Description, ABC):
 
 
 class Unknown(Trigger):
-    def is_triggered(self, another_description: "home.protocol.Description") -> bool:
+    def is_triggered(
+        self, another_description: home.protocol.Description
+    ) -> bool:
         return False
 
 
@@ -182,7 +194,7 @@ class Command(Description, ABC):
 
     @abstractmethod
     def make_msgs_from(
-        self, old_state: "home.appliance.State", new_state: "home.appliance.State"
+        self, old_state: home.appliance.State, new_state: home.appliance.State
     ) -> List[Any]:
         """
         Update the internal protocol message representation and

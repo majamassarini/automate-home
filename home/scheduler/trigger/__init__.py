@@ -4,13 +4,19 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import home
+
 from abc import ABCMeta
 import datetime
 import logging
 import pytz
 from tzlocal import get_localzone
 from typing import Iterable, List, Tuple
-
 
 registry = list()
 
@@ -40,25 +46,26 @@ class Trigger(metaclass=Registry):
     When triggered, given *events* are notified to scheduled *Performers*.
     """
 
-    @staticmethod
     @property
     def type(self):
         return "SCHEDULER EVENT"
 
-    def __init__(self, name: str, events: Iterable["home.Event"], *args, **kwargs):
+    def __init__(
+        self, name: str, events: Iterable[home.Event], *args, **kwargs
+    ):
         super(Trigger, self).__init__(*args, **kwargs)
         self._name = name
-        self._events = list()
+        self._events: List[home.Event] = list()
         self._events.extend(events)
         self._timedelta_fire = datetime.timedelta(weeks=52)
         tz = get_localzone()
         # Convert ZoneInfo to pytz for APScheduler compatibility
-        if hasattr(tz, 'key'):
+        if hasattr(tz, "key"):
             # ZoneInfo timezone - convert to pytz
             self._timezone = pytz.timezone(tz.key)
         else:
             # Already a pytz timezone
-            self._timezone = tz
+            self._timezone = tz  # type: ignore[assignment]
         self._logger = logging.getLogger(__name__)
 
     def __str__(self):
@@ -77,7 +84,7 @@ class Trigger(metaclass=Registry):
         :param dt: naive datetime to localize
         :return: timezone-aware datetime
         """
-        if hasattr(self._timezone, 'localize'):
+        if hasattr(self._timezone, "localize"):
             # pytz timezone
             return self._timezone.localize(dt)
         else:
@@ -85,8 +92,8 @@ class Trigger(metaclass=Registry):
             return dt.replace(tzinfo=self._timezone)
 
     def fork(
-        self, performer: "home.Performer"
-    ) -> List[Tuple["home.Performer", "home.scheduler.Trigger"]]:
+        self, performer: home.Performer
+    ) -> List[Tuple[home.Performer, "home.scheduler.Trigger"]]:
         """
         Starts new *Scheduler Triggers*.
 
@@ -110,7 +117,7 @@ class Trigger(metaclass=Registry):
         return self._name
 
     @property
-    def events(self) -> Iterable["home.Event"]:
+    def events(self) -> Iterable[home.Event]:
         """
         :return: *Events* to be notified
         """

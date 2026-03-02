@@ -17,7 +17,9 @@ class Yaml(MyHome):
         return home.builder.appliances.Builder(self._yaml_dir).run()
 
     def _build_performers(self):
-        return home.builder.performers.Builder(self._yaml_dir, self._appliances).run()
+        return home.builder.performers.Builder(
+            self._yaml_dir, self._appliances
+        ).run()
 
     def _build_group_of_performers(self):
         return home.builder.group_of_performers.Builder(
@@ -31,9 +33,13 @@ class Yaml(MyHome):
 
     def _build_schedule_infos(self):
         return home.builder.schedule_infos.Builder(
-            self._yaml_dir, self._group_of_performers, self._scheduler_triggers_by_name
+            self._yaml_dir,
+            self._group_of_performers,
+            self._scheduler_triggers_by_name,
         ).run()
 
     def dump_for_ws(self, filename):
         appliances = home.builder.appliances.Builder(self._yaml_dir).run()
-        home.builder.performers.Builder(self._yaml_dir, appliances).dump(filename)
+        home.builder.performers.Builder(self._yaml_dir, appliances).dump(
+            filename
+        )

@@ -7,16 +7,20 @@
 import home
 from home.appliance import attribute
 from home.appliance.light.indoor.dimmerable.state import State as Parent
-from home.appliance.light.indoor.dimmerable.state.on import callable as on_callable
+from home.appliance.light.indoor.dimmerable.state.on import (
+    callable as on_callable,
+)
 
 
 class Mixin(object):
     def init_callables(self):
         callables = {
-            type(home.event.presence.Event.On): on_callable.Presence(off=self.off),
-            type(home.event.sun.brightness.Event.Bright): on_callable.Brightness(
+            type(home.event.presence.Event.On): on_callable.Presence(
                 off=self.off
             ),
+            type(
+                home.event.sun.brightness.Event.Bright
+            ): on_callable.Brightness(off=self.off),
             self.forced_enum: on_callable.Forced(
                 forced_on=self.forced_on,
                 forced_show=self.forced_show,
@@ -40,7 +44,9 @@ class State(
 ):
     def __init__(self, events=None, events_disabled=None):
         self.off = home.appliance.light.indoor.dimmerable.state.off.State
-        self.forced_on = home.appliance.light.indoor.dimmerable.state.forced.on.State
+        self.forced_on = (
+            home.appliance.light.indoor.dimmerable.state.forced.on.State
+        )
         self.forced_circadian_rhythm = (
             home.appliance.light.indoor.dimmerable.state.forced.circadian_rhythm.State
         )

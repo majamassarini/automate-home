@@ -8,7 +8,6 @@ from abc import ABCMeta, abstractmethod
 from typing import Type, List
 from home.scheduler import Trigger
 
-
 registry = dict()
 
 
@@ -20,7 +19,9 @@ class Registry(ABCMeta):
     def __new__(mcs, name, bases, class_dict):
         cls = super().__new__(mcs, name, bases, class_dict)
         if name not in registry:
-            register_class(cls.TAG_NAME, (cls.__module__ + "." + cls.__name__, cls))
+            register_class(
+                cls.TAG_NAME, (cls.__module__ + "." + cls.__name__, cls)
+            )
         return cls
 
 
@@ -30,8 +31,7 @@ class Builder(metaclass=Registry):
 
     @property
     @abstractmethod
-    def trigger(self) -> Type:
-        ...
+    def trigger(self) -> Type: ...
 
     def _run(self, mapping, group_of_performers) -> List[Type[Trigger]]:
         return [self.trigger(**mapping)]

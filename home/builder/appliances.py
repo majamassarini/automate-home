@@ -31,7 +31,9 @@ class Builder(Parent):
             yaml.add_constructor("!{}".format(tag), self.appliance_constructor)
         yaml.add_constructor("!Appliances", self.appliances_constructor)
         appliances = {}
-        with open(os.path.join(self._yaml_dir, self.FILE_NAME), mode="r") as stream:
+        with open(
+            os.path.join(self._yaml_dir, self.FILE_NAME), mode="r"
+        ) as stream:
             appliances = yaml.load(stream, Loader=yaml.Loader)
         return appliances
 

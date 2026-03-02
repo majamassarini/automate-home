@@ -6,7 +6,9 @@
 
 import home
 from home.appliance.attribute import mixin
-from home.appliance.light.state.forced.off import callable as forced_off_callable
+from home.appliance.light.state.forced.off import (
+    callable as forced_off_callable,
+)
 from home.appliance.light.state import State as Parent
 
 
@@ -18,7 +20,9 @@ class Mixin(object):
             ),
             type(
                 home.event.sun.brightness.Event.Bright
-            ): forced_off_callable.Brightness(reset=self.reset, base=self.base),
+            ): forced_off_callable.Brightness(
+                reset=self.reset, base=self.base
+            ),
             self.forced_enum: forced_off_callable.Forced(
                 reset=self.reset, base=self.base
             ),

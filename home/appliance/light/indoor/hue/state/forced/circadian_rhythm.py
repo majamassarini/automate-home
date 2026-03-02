@@ -7,7 +7,9 @@
 import home
 from home.appliance import attribute
 from home.appliance.light import event
-from home.appliance.light.indoor.dimmerable.state.forced.circadian_rhythm import Mixin
+from home.appliance.light.indoor.dimmerable.state.forced.circadian_rhythm import (
+    Mixin,
+)
 from home.appliance.light.indoor.hue.state import State as Parent
 
 
@@ -31,7 +33,9 @@ class State(
         self.reset = home.appliance.light.indoor.hue.state.off.State
         self.base = home.appliance.light.indoor.hue.state.off.State
         self.forced_on = home.appliance.light.indoor.hue.state.forced.on.State
-        self.forced_show = home.appliance.light.indoor.hue.state.forced.show.State
+        self.forced_show = (
+            home.appliance.light.indoor.hue.state.forced.show.State
+        )
         self.forced_lux_balance = (
             home.appliance.light.indoor.hue.state.forced.lux_balance.State
         )

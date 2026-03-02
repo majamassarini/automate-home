@@ -38,7 +38,10 @@ class Encoder(json.JSONEncoder):
         self._events_serializers = {
             k: v
             for k, v in (
-                (home.appliance.light.event.brightness.Event, brightness.Serializer()),
+                (
+                    home.appliance.light.event.brightness.Event,
+                    brightness.Serializer(),
+                ),
                 (
                     home.appliance.light.event.circadian_rhythm.brightness.Event,
                     circadian_rhythm.brightness.Serializer(),
@@ -68,7 +71,10 @@ class Encoder(json.JSONEncoder):
                     home.appliance.light.event.show.ending_hue.Event,
                     show.ending_hue.Serializer(),
                 ),
-                (home.appliance.light.event.saturation.Event, saturation.Serializer()),
+                (
+                    home.appliance.light.event.saturation.Event,
+                    saturation.Serializer(),
+                ),
                 (
                     home.appliance.light.event.circadian_rhythm.saturation.Event,
                     circadian_rhythm.saturation.Serializer(),
@@ -97,7 +103,10 @@ class Encoder(json.JSONEncoder):
                     home.appliance.light.event.show.period.Event,
                     show.period.Serializer(),
                 ),
-                (home.appliance.sound.player.event.volume.Event, volume.Serializer()),
+                (
+                    home.appliance.sound.player.event.volume.Event,
+                    volume.Serializer(),
+                ),
                 (
                     home.appliance.sound.player.event.sleepy_volume.Event,
                     sleepy_volume.Serializer(),
@@ -134,7 +143,10 @@ class Encoder(json.JSONEncoder):
                     home.appliance.sound.player.event.fade_out.playlist.Event,
                     fade_out.playlist.Serializer(),
                 ),
-                (home.appliance.sprinkler.event.duration.Event, duration.Serializer()),
+                (
+                    home.appliance.sprinkler.event.duration.Event,
+                    duration.Serializer(),
+                ),
                 (
                     home.appliance.sprinkler.event.partially_on.duration.Event,
                     partially_on.duration.Serializer(),

@@ -4,6 +4,13 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import home
+
 import datetime
 
 from typing import Iterable
@@ -18,7 +25,6 @@ class Trigger(Parent, BaseTrigger):
     When triggered will notify given *events* plus the *protocol trigger events*.
     """
 
-    @staticmethod
     @property
     def type(self):
         return "PROTOCOL EVENT"
@@ -26,15 +32,15 @@ class Trigger(Parent, BaseTrigger):
     def __init__(
         self,
         name: str,
-        events: Iterable["home.Events"],
-        protocol_trigger: "home.protocol.Trigger",
+        events: Iterable[home.Event],
+        protocol_trigger: home.protocol.Trigger,
         *args,
-        **kwargs
+        **kwargs,
     ):
         super(Trigger, self).__init__(name, events, *args, **kwargs)
         self._protocol_trigger = protocol_trigger
 
-    def is_triggered(self, description: "home.protocol.Description") -> bool:
+    def is_triggered(self, description: home.protocol.Description) -> bool:
         """
         Check if the given protocol message description triggers
         the inner *Protocol Trigger*

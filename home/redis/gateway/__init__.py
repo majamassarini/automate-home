@@ -88,19 +88,26 @@ class Gateway(object):
         history = await client.get_history(num_of_events)
         return history
 
-    async def on_appliance_updated_by_process(self, appliance, old_state, new_state):
+    async def on_appliance_updated_by_process(
+        self, appliance, old_state, new_state
+    ):
         if old_state != new_state:
             await self.save(appliance)
             await self.notify(appliance)
 
-    async def on_performer_updated_by_process(self, performer, old_state, new_state):
+    async def on_performer_updated_by_process(
+        self, performer, old_state, new_state
+    ):
         if old_state != new_state:
             await self.save(performer.appliance)
             await self.notify(performer.appliance)
             # await self.notify(performer, old_state, new_state)
 
     def create_tasks(
-        self, loop, on_appliance_updated_by_redis, on_performer_updated_by_redis
+        self,
+        loop,
+        on_appliance_updated_by_redis,
+        on_performer_updated_by_redis,
     ):
         for appliance, client in self._appliances.items():
             loop.create_task(

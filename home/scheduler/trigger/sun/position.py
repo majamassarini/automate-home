@@ -4,6 +4,10 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
+from __future__ import annotations
+
+from typing import Any
+
 
 class Position(object):
     """
@@ -30,16 +34,18 @@ class Position(object):
             self.max_azimuth,
         )
 
-    def is_sun_over(self, sun_position: "home.scheduler.trigger.sun.Position") -> bool:
+    def is_sun_over(self, sun_position: Any) -> bool:
         """
         Given the sun position, say if the object is hit by the sun
 
         :param sun_position: the sun *Position*
         :return: is the object hit by the sun?
         """
-        if (self.bottom_altitude <= sun_position.altitude <= self.upper_altitude) and (
-            self.min_azimuth <= sun_position.azimuth <= self.max_azimuth
-        ):
+        if (
+            self.bottom_altitude
+            <= sun_position.altitude
+            <= self.upper_altitude
+        ) and (self.min_azimuth <= sun_position.azimuth <= self.max_azimuth):
             return True
         else:
             return False

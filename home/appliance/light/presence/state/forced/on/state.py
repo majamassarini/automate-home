@@ -6,7 +6,9 @@
 
 import home
 from home.appliance.attribute import mixin
-from home.appliance.light.presence.state.forced.on import callable as forced_on_callable
+from home.appliance.light.presence.state.forced.on import (
+    callable as forced_on_callable,
+)
 from home.appliance.light.presence.state import State as Parent
 
 

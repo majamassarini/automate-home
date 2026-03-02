@@ -16,12 +16,16 @@ from home.appliance.curtain.indoor.blackout.state.forced.closed import (
 class Mixin(object):
     def init_callables(self):
         callables = {
-            type(home.event.sleepiness.Event.Awake): forced_closed_callable.Sleepiness(
+            type(
+                home.event.sleepiness.Event.Awake
+            ): forced_closed_callable.Sleepiness(
                 base=self.base, reset=self.reset
             ),
             type(
                 home.event.sun.twilight.civil.Event.Sunrise
-            ): forced_closed_callable.SunTwilight(base=self.base, reset=self.reset),
+            ): forced_closed_callable.SunTwilight(
+                base=self.base, reset=self.reset
+            ),
             self.forced_enum: forced_closed_callable.Forced(
                 base=self.base, reset=self.reset
             ),

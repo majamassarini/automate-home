@@ -6,9 +6,10 @@
 
 import configparser
 from collections import namedtuple
+from typing import Any
 
 
-def parse(old_options: dict, file_name: str) -> namedtuple:
+def parse(old_options: dict, file_name: str) -> Any:
     """
     >>> import io
     >>> import tempfile
@@ -101,11 +102,13 @@ def parse(old_options: dict, file_name: str) -> namedtuple:
         options[section] = True
         for entry in config[section]:
             if entry == OTHER_NODES_NAMES:
-                options["{}_{}".format(section, entry)] = config[section][entry].split(
-                    ","
-                )
+                options["{}_{}".format(section, entry)] = config[section][
+                    entry
+                ].split(",")
             else:
-                options["{}_{}".format(section, entry)] = config[section][entry]
+                options["{}_{}".format(section, entry)] = config[section][
+                    entry
+                ]
 
-    Options = namedtuple("Options", options)
+    Options = namedtuple("Options", list(options.keys()))  # type: ignore[misc]
     return Options(**options)

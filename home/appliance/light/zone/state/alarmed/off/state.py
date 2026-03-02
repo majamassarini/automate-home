@@ -7,7 +7,9 @@
 import home
 from home.appliance.attribute import mixin
 from home.appliance.light.zone.state import State as Parent
-from home.appliance.light.zone.state.alarmed.off import callable as alarmed_callable
+from home.appliance.light.zone.state.alarmed.off import (
+    callable as alarmed_callable,
+)
 
 
 class Mixin(object):
@@ -23,7 +25,9 @@ class Mixin(object):
             type(home.event.alarm.armed.Event.Off): alarmed_callable.Armed(
                 off=self.off, on=self.on, alarmed_on=self.alarmed_on
             ),
-            type(home.event.sun.brightness.Event.Bright): alarmed_callable.Brightness(
+            type(
+                home.event.sun.brightness.Event.Bright
+            ): alarmed_callable.Brightness(
                 off=self.off, on=self.on, alarmed_on=self.alarmed_on
             ),
             type(home.event.toggle.Event.On): alarmed_callable.Toggle(

@@ -4,6 +4,13 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import home
+
 from home.scheduler.trigger.state import Trigger as Parent
 
 
@@ -14,7 +21,7 @@ class Trigger(Parent):
     """
 
     def is_triggered(
-        self, old_state: "home.appliance.State", new_state: "home.appliance.State"
+        self, old_state: home.appliance.State, new_state: home.appliance.State
     ) -> bool:
         """
         When state is changed and its value is like those the trigger wants return True

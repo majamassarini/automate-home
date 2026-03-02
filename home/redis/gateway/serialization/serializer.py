@@ -12,5 +12,4 @@ class Serializer:
         pass
 
     @abc.abstractmethod
-    def run(self, obj):
-        ...
+    def run(self, obj): ...

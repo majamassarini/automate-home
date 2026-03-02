@@ -4,4 +4,9 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
-from home.builder.listener.resources import MyHome, Builder, Resources, OnRedisMsg
+from home.builder.listener.resources import (
+    MyHome,
+    Builder,
+    Resources,
+    OnRedisMsg,
+)

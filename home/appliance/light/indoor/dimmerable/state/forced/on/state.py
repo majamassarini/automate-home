@@ -18,9 +18,9 @@ class Mixin(object):
             type(home.event.presence.Event.On): forced_on_callable.Presence(
                 reset=self.reset, base=self.base
             ),
-            type(home.event.sun.brightness.Event.Bright): forced_on_callable.Brightness(
-                reset=self.reset, base=self.base
-            ),
+            type(
+                home.event.sun.brightness.Event.Bright
+            ): forced_on_callable.Brightness(reset=self.reset, base=self.base),
             self.forced_enum: forced_on_callable.Forced(
                 reset=self.reset,
                 base=self.base,

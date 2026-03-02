@@ -7,7 +7,9 @@
 import home
 from home.appliance.attribute import mixin
 from home.appliance.sensor.alarm.state import State as Parent
-from home.appliance.sensor.alarm.state.unarmed import callable as alarm_callable
+from home.appliance.sensor.alarm.state.unarmed import (
+    callable as alarm_callable,
+)
 
 
 class Mixin(object):
@@ -16,9 +18,9 @@ class Mixin(object):
             type(home.event.alarm.armed.Event.Off): alarm_callable.Armed(
                 armed=self.armed, triggered=self.triggered
             ),
-            type(home.event.alarm.triggered.Event.Off): alarm_callable.Triggered(
-                triggered=self.triggered
-            ),
+            type(
+                home.event.alarm.triggered.Event.Off
+            ): alarm_callable.Triggered(triggered=self.triggered),
         }
 
         self._callables.update(callables)

@@ -19,10 +19,14 @@ class Builder(builder.performers.Builder):
 
     def run(self):
         yaml.add_constructor(
-            "!Performer", lambda loader, node: self.performer_constructor(loader, node)
+            "!Performer",
+            lambda loader, node: self.performer_constructor(loader, node),
         )
         performers = yaml.load(
-            open(os.path.join(self._yaml_dir, self.PERFORMERS_FILENAME), mode="r"),
+            open(
+                os.path.join(self._yaml_dir, self.PERFORMERS_FILENAME),
+                mode="r",
+            ),
             Loader=yaml.Loader,
         )
         if performers:
@@ -104,8 +108,6 @@ class OnRedisMsg(abc.ABC):
         self._home_resources = home_resources
         self._websocket_handler = websocket_handler
 
-    async def on_appliance_updated(self, new_appliance):
-        ...
+    async def on_appliance_updated(self, new_appliance): ...
 
-    def on_performer_updated(self, performer, old_state, new_state):
-        ...
+    def on_performer_updated(self, performer, old_state, new_state): ...

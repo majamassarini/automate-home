@@ -25,7 +25,9 @@ class MyHome(ABC):
         for key, value in group_of_performers.items():
             self._group_of_performers[key] = home.Performers(value)
         for performer in self.performers:
-            self._group_of_performers[performer.name] = home.Performers([performer])
+            self._group_of_performers[performer.name] = home.Performers(
+                [performer]
+            )
         for collection in self.appliances.values():
             for appliance in collection:
                 self._performers_by_appliance[appliance] = [
@@ -74,24 +76,19 @@ class MyHome(ABC):
         return self._schedule_infos
 
     @abstractmethod
-    def _build_appliances(self):
-        ...
+    def _build_appliances(self): ...
 
     @abstractmethod
-    def _build_performers(self):
-        ...
+    def _build_performers(self): ...
 
     @abstractmethod
-    def _build_group_of_performers(self):
-        ...
+    def _build_group_of_performers(self): ...
 
     @abstractmethod
-    def _build_scheduler_triggers(self):
-        ...
+    def _build_scheduler_triggers(self): ...
 
     @abstractmethod
-    def _build_schedule_infos(self):
-        ...
+    def _build_schedule_infos(self): ...
 
     def schedule_performer(self, scheduler, callable, performer, trigger):
         scheduler.add_job(
@@ -109,7 +106,9 @@ class MyHome(ABC):
             for performer in performers:
                 for trigger in triggers:
                     if not isinstance(trigger, Unknown):
-                        self.schedule_performer(scheduler, callable, performer, trigger)
+                        self.schedule_performer(
+                            scheduler, callable, performer, trigger
+                        )
 
         for trigger in self._triggers:
             for performers in self._group_of_performers.values():

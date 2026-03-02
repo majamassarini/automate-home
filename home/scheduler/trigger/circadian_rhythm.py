@@ -4,9 +4,16 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import home
+
 import datetime
 
-from typing import Iterable, List
+from typing import Iterable, List, Optional
 from home.scheduler.trigger import Trigger as Parent
 from apscheduler.triggers.base import BaseTrigger
 
@@ -24,8 +31,8 @@ class Trigger(Parent, BaseTrigger):
     def __init__(
         self,
         name: str,
-        events: Iterable["home.Event"],
-        events_in_a_day: List["home.Event"],
+        events: Iterable[home.Event],
+        events_in_a_day: List[home.Event],
     ):
         """
         >>> import datetime
@@ -63,17 +70,19 @@ class Trigger(Parent, BaseTrigger):
         """
         super(Trigger, self).__init__(name, events)
 
-        self._events_in_a_day = events_in_a_day
+        self._events_in_a_day: List[home.Event] = events_in_a_day  # type: ignore[assignment]
         self._interval = (24 * 60) / len(events_in_a_day)
-        self._timedelta = datetime.timedelta(minutes=((24 * 60) / len(events_in_a_day)))
-        self._iterator = None
+        self._timedelta = datetime.timedelta(
+            minutes=((24 * 60) / len(events_in_a_day))
+        )
+        self._iterator: Optional[int] = None
 
         self._next_fire_time = self._get_next_fire_time(
             None, self._localize(datetime.datetime.now())
         )
 
     @property
-    def events(self) -> Iterable["home.Event"]:
+    def events(self) -> Iterable[home.Event]:  # type: ignore[override]
         """
         :return: *Events* to be notified
         """
@@ -82,7 +91,9 @@ class Trigger(Parent, BaseTrigger):
         a_list.append(self._events_in_a_day[self._iterator])
         return a_list
 
-    def _get_next_fire_time(self, _, now: datetime.datetime) -> datetime.datetime:
+    def _get_next_fire_time(
+        self, _, now: datetime.datetime
+    ) -> datetime.datetime:
         """
         Next *datetime* when new event taken from list *events in a day* will be notified
         together with all the events in *events*.
@@ -105,5 +116,7 @@ class Trigger(Parent, BaseTrigger):
         return next_fire_time
 
     def get_next_fire_time(self, previous_fire_time, now):
-        self._next_fire_time = self._get_next_fire_time(previous_fire_time, now)
+        self._next_fire_time = self._get_next_fire_time(
+            previous_fire_time, now
+        )
         return self._next_fire_time

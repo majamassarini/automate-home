@@ -5,4 +5,7 @@
 # Copyright (C) 2021  Maja Massarini
 
 from home.appliance.light.indoor.dimmerable.state.forced.show import callable
-from home.appliance.light.indoor.dimmerable.state.forced.show.state import State, Mixin
+from home.appliance.light.indoor.dimmerable.state.forced.show.state import (
+    State,
+    Mixin,
+)

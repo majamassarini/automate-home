@@ -42,7 +42,9 @@ class Stub(home.MyHome):
         appliance = self.appliances.find("sprinkler")
         trigger = Trigger()
         command = Command()
-        performer = home.Performer(appliance.name, appliance, [command], [trigger])
+        performer = home.Performer(
+            appliance.name, appliance, [command], [trigger]
+        )
         performers.append(performer)
         return performers
 

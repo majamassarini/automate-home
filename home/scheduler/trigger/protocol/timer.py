@@ -40,9 +40,11 @@ class Trigger(Parent, BaseTrigger):
         stop_timer_events,
         stop_timer_performers,
         *args,
-        **kwargs
+        **kwargs,
     ):
-        super(Trigger, self).__init__(name, events, protocol_trigger, *args, **kwargs)
+        super(Trigger, self).__init__(
+            name, events, protocol_trigger, *args, **kwargs
+        )
         self._timeout = timeout_seconds
         self._stop_timer_events = stop_timer_events
         self._stop_timer_performers = stop_timer_performers

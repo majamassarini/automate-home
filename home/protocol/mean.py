@@ -4,10 +4,16 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import home
+
 from abc import abstractmethod
 
 
 class Mixin:
     @abstractmethod
-    def get_value(self, description: "home.protocol.Description") -> float:
-        ...
+    def get_value(self, description: home.protocol.Description) -> float: ...

@@ -50,7 +50,9 @@ class Connection(object):
         self._channels[channel] = list()
         for other_node_name, connection in self._subscriptions.items():
             pubsub = connection.pubsub()
-            await pubsub.subscribe("{} from {}".format(channel, other_node_name))
+            await pubsub.subscribe(
+                "{} from {}".format(channel, other_node_name)
+            )
             self._logger.debug(
                 "subscribed channel {} for subscription {}".format(
                     channel, other_node_name

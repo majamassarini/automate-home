@@ -13,7 +13,9 @@ class Builder(Parent):
         events = mapping["notify more events"]
         url = mapping["url"] if "url" in mapping else None
         zone = mapping["zone"] if "zone" in mapping else None
-        probability = mapping["probability"] if "probability" in mapping else None
+        probability = (
+            mapping["probability"] if "probability" in mapping else None
+        )
         return {
             "name": name,
             "events": events,

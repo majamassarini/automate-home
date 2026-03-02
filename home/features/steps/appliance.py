@@ -63,7 +63,8 @@ def appliance_initial_state(context, state):
     initial_state_class = type(context.appliance.state)
     if not (initial_state_class == klass):
         raise Exception(
-            "The initial state is %s instead of %s" % (initial_state_class, klass)
+            "The initial state is %s instead of %s"
+            % (initial_state_class, klass)
         )
 
 

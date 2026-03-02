@@ -7,7 +7,9 @@
 from home import event as home_event
 from home.appliance.state import State as Parent
 from home.appliance.thermostat.presence import event as thermostat_event
-from home.appliance.thermostat.presence.event.forced.event import Event as Forced
+from home.appliance.thermostat.presence.event.forced.event import (
+    Event as Forced,
+)
 
 
 class State(Parent):

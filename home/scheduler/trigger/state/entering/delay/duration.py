@@ -4,6 +4,13 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import home
+
 from home.scheduler.trigger.state.entering import delay
 from typing import Iterable
 
@@ -15,14 +22,14 @@ class Trigger(delay.Trigger):
     If an *Appliance state* has been triggered twice, the old scheduler trigger is disabled and a new one is started.
     """
 
-    def __init__(self, name: str, events: Iterable["home.Event"], state: str):
+    def __init__(self, name: str, events: Iterable[home.Event], state: str):
         # timeout seconds is controlled by duration attribute in new state, read when triggered
         super(Trigger, self).__init__(name, events, state, 0)
 
     def is_triggered(
         self,
-        old_state: "home.appliance.State",
-        new_state: "home.appliance.attribute.mixin.Duration",
+        old_state: home.appliance.State,
+        new_state: home.appliance.State,
     ) -> bool:
         """
         When state is changed and its value is like those the trigger wants return True
@@ -32,7 +39,7 @@ class Trigger(delay.Trigger):
         """
         triggered = super(Trigger, self).is_triggered(old_state, new_state)
         try:
-            self._delay.timeout = new_state.duration
+            self._delay.timeout = new_state.duration  # type: ignore[attr-defined]
         except AttributeError as e:
             self._logger.debug("{} for {}".format(e, new_state))
         return triggered

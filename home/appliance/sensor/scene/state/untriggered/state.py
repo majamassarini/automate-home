@@ -17,7 +17,9 @@ class State(Parent):
 
     def init_callables(self):
         callables = {
-            type(home.event.scene.Event.Untriggered): untriggered_callable.Scene(
+            type(
+                home.event.scene.Event.Untriggered
+            ): untriggered_callable.Scene(
                 triggered=home.appliance.sensor.scene.state.triggered.State
             )
         }

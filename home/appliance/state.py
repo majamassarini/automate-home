@@ -4,11 +4,27 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import home
+
 import collections
 import logging
 import copy
 from abc import ABCMeta, abstractmethod
-from typing import Iterable, Type
+from typing import (
+    Any,
+    ClassVar,
+    Dict,
+    Iterable,
+    OrderedDict,
+    Sequence,
+    Set,
+    Type,
+)
 
 registry_for_redis = list()
 
@@ -31,22 +47,22 @@ class State(metaclass=Registry):
     An abstract Appliance State object.
     """
 
-    VALUE = "None"
-    DEFAULTS = ()
+    VALUE: ClassVar[str] = "None"
+    DEFAULTS: ClassVar[Sequence[Any]] = ()
 
     def __init__(
         self,
-        events: Iterable["home.Event"] = None,
-        events_disabled: Iterable["home.Event"] = None,
+        events: Iterable[home.Event] = None,
+        events_disabled: Iterable[home.Event] = None,
     ):
         """
         :param events: list of events values which will initialize internal state
         :param events_disabled: list of events values, *used to initialize internal state*, which will never updated
         again
         """
-        self._events = collections.OrderedDict()
-        self._disabled = set()
-        self._callables = {}
+        self._events: OrderedDict[type, Any] = collections.OrderedDict()
+        self._disabled: Set[Any] = set()
+        self._callables: Dict[Any, Any] = {}
         self.init_callables()
         for event in self.DEFAULTS:
             self.update_by(event)
@@ -59,8 +75,7 @@ class State(metaclass=Registry):
             self._disabled = set(events_disabled)
 
     @abstractmethod
-    def init_callables(self) -> None:
-        ...
+    def init_callables(self) -> None: ...
 
     def _get_str_value(self):
         return self.VALUE.format()
@@ -85,7 +100,9 @@ class State(metaclass=Registry):
                     break
             except KeyError as e:
                 logging.getLogger(__name__).error(
-                    "self is {}, event is {} other is {}".format(self, event, other)
+                    "self is {}, event is {} other is {}".format(
+                        self, event, other
+                    )
                 )
                 raise e
             except AttributeError as e:
@@ -93,7 +110,9 @@ class State(metaclass=Registry):
                     "self is {}, event is {} other is none".format(self, event)
                 )
                 raise e
-        events_disabled_are_equals = self.events_disabled == other.events_disabled
+        events_disabled_are_equals = (
+            self.events_disabled == other.events_disabled
+        )
         return (
             self.__class__ == other.__class__
             and events_are_equals
@@ -107,20 +126,20 @@ class State(metaclass=Registry):
         return set(self._events.values()) - set(other._events.values())
 
     @property
-    def events(self) -> Iterable["home.Event"]:
+    def events(self) -> Iterable[home.Event]:
         """
         All Events already notified to the Appliance
         """
         return [v for v in self._events.values()]
 
     @property
-    def events_disabled(self) -> Iterable["home.Event"]:
+    def events_disabled(self) -> Iterable[home.Event]:
         """
         All Events disabled in this state machine
         """
         return self._disabled
 
-    def is_enabled(self, event: "home.Event") -> bool:
+    def is_enabled(self, event: home.Event) -> bool:
         """
         Are event of given event type enabled?
 
@@ -129,7 +148,7 @@ class State(metaclass=Registry):
         """
         return type(event) not in [type(e) for e in self._disabled]
 
-    def disable(self, event: "home.Event"):
+    def disable(self, event: home.Event):
         """
         Disable processing for events of the same type in the state machine.
 
@@ -138,7 +157,7 @@ class State(metaclass=Registry):
         if self.is_enabled(event):
             self._disabled.add(event)
 
-    def enable(self, event: "home.Event"):
+    def enable(self, event: home.Event):
         """
         Enable processing for events of the same type in the state machine.
 
@@ -146,7 +165,7 @@ class State(metaclass=Registry):
         """
         saved = None
         for e in self._disabled:
-            if type(e) == type(event):
+            if type(e) is type(event):
                 saved = e
         if saved:
             self._disabled.remove(saved)
@@ -154,9 +173,9 @@ class State(metaclass=Registry):
     @classmethod
     def make(
         cls,
-        events: Iterable["home.Event"],
-        events_disabled: Iterable["home.Event"] = None,
-    ) -> "home.appliance.State":
+        events: Iterable[home.Event],
+        events_disabled: Iterable[home.Event] = None,
+    ) -> home.appliance.State:
         """
         :param events: to be processed by a new State
         :param events_disabled: list of events which will not be updated!
@@ -167,7 +186,7 @@ class State(metaclass=Registry):
             state = state.next(event)
         return state
 
-    def next(self, event: "home.Event") -> "home.appliance.State":
+    def next(self, event: home.Event) -> home.appliance.State:
         """
         :param event: to be processed by this State
         :return: a brand new State (if necessary)
@@ -205,10 +224,9 @@ class State(metaclass=Registry):
 
     @property
     @abstractmethod
-    def forced_enum(self) -> Type["home.Event"]:
-        ...
+    def forced_enum(self) -> Type[home.Event]: ...
 
-    def force(self, value: str) -> "home.appliance.State":
+    def force(self, value: str) -> home.appliance.State:
         """
         :param value: a value in forced Event Enum values
         :return: the related forced State
@@ -216,7 +234,7 @@ class State(metaclass=Registry):
         event = getattr(self.forced_enum, value)
         return self.next(event)
 
-    def unforce(self) -> "home.appliance.State":
+    def unforce(self) -> home.appliance.State:
         """
         :return: a non forced State
         """
