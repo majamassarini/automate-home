@@ -20,8 +20,19 @@ from home.scheduler.trigger.protocol.delay import Delay
 
 class Trigger(Parent):
     """
-    A **Scheduler Trigger** triggered *timeout_seconds* after a given **Appliance state** has been triggered.
-    If an *Appliance state* has been triggered twice, the old scheduler trigger is disabled and a new one is started.
+    A scheduler trigger that fires *timeout_seconds* after the appliance
+    is in the specified state.
+
+    This trigger itself carries no events (``events`` is always ``[]``);
+    when the appliance state matches, :py:meth:`fork` is called to create
+    a one-shot :py:class:`date.resettable.Trigger` that fires after the
+    configured delay and delivers the actual events.  If the state is
+    matched again before the timer expires, the old pending trigger is
+    disabled and a fresh timer is started.
+
+    Subclasses (:py:class:`entering.delay.Trigger`,
+    :py:class:`exiting.delay.Trigger`) further restrict the match to
+    state *entry* or *exit* transitions respectively.
     """
 
     def __init__(
@@ -52,10 +63,10 @@ class Trigger(Parent):
         >>> new_resettable_trigger.is_enabled
         True
 
-        :param name: the scheduler trigger name
-        :param events: events to be notified
-        :param state: a str representing a state
-        :param timeout_seconds: starts a new scheduler trigger that will be triggered in timeout seconds
+        :param name: human-readable trigger name used in log messages
+        :param events: events to deliver when the forked date trigger fires
+        :param state: the :py:attr:`State.VALUE` string that must match
+        :param timeout_seconds: delay in seconds before the forked trigger fires
         """
         super(Trigger, self).__init__(name, events, state)
         self._delay = Delay(
@@ -77,4 +88,14 @@ class Trigger(Parent):
     def fork(
         self, performer: home.Performer
     ) -> List[Tuple[home.Performer, "home.scheduler.Trigger"]]:
+        """
+        Create a one-shot :py:class:`date.resettable.Trigger` that will
+        fire after the configured delay and deliver events to *performer*.
+
+        If a previous forked trigger for the same performer is still
+        pending, it is disabled before the new one is created.
+
+        :param performer: the performer to notify when the timer expires
+        :return: list containing one ``(performer, resettable_trigger)`` pair
+        """
         return self._delay.fork(performer)

@@ -15,14 +15,23 @@ from home.scheduler.trigger.state import delay
 
 
 class Trigger(delay.Trigger):
+    """
+    A delayed scheduler trigger that fires *timeout_seconds* after the
+    appliance *exits* the specified state.
+
+    If the appliance exits the same state again before the timer expires,
+    the previous pending trigger is disabled and a new timer is started.
+    """
+
     def is_triggered(
         self, old_state: home.appliance.State, new_state: home.appliance.State
     ) -> bool:
         """
-        When state is changed and its value is no more like those the trigger wants return True
+        Return ``True`` when the state changes and the old state matched
+        the configured state value.
 
-        :param old_state: the old appliance state
-        :param new_state: the new appliance state
+        :param old_state: the appliance state before the last event
+        :param new_state: the appliance state after the last event
         """
         triggered = False
         if (old_state and new_state) and (old_state.VALUE != new_state.VALUE):

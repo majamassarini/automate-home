@@ -5,10 +5,10 @@ Scheduler and Triggers
 
 The system has a **scheduler**.
 
-The system scheduler has just one job: it notifies *Events* gathered from
-a triggered *Scheduler Trigger* to the specified *Performers*.
-The *Protocol Commands* inside the specified *Performers* will be executed
-just after the *Events* are being notified to their *Appliances*.
+The system scheduler has just one job: it delivers *Events* gathered from
+a fired *Scheduler Trigger* to the specified *Performers*.
+The *Protocol Commands* inside those *Performers* are executed
+immediately after the *Events* are delivered to their *Appliances*.
 
 .. hint::
   **Scheduler Triggers are not Protocol Triggers**.
@@ -31,9 +31,9 @@ You need to use a *Scheduler Trigger* instead of a *Protocol Trigger* when the t
 
 Suppose you need a mean for a lux value and suppose your device is sending lux data every time the lux is changing.
 
-You can calculate a mean using a protocol trigger: this trigger will be highly sensible to lux changes.
+You can calculate a mean using a protocol trigger: this trigger will be highly sensitive to lux changes.
 
-Or you can calculate a **time based** mean using a scheduler trigger: this trigger will be less sensible to lux changes.
+Or you can calculate a **time-based** mean using a scheduler trigger: this trigger will be less sensitive to lux changes.
 
 Reusable triggers
 ^^^^^^^^^^^^^^^^^
@@ -52,7 +52,7 @@ State triggers
 If you need a trigger for the *Appliance* state you need a *Scheduler Trigger*.
 
 If you need to know if the *Appliance* has entered a new state
-or exited an old state then you need a schedule trigger.
+or exited an old state, then you need a *scheduler* trigger.
 
 
 Scheduler (Class Diagram)
@@ -585,7 +585,7 @@ circadian_rhythm.Trigger
 Example
 ^^^^^^^^^^^^
 
-An example showing how the temperature's Light could be adjusted during the day::
+An example showing how the *temperature* of a Light can be adjusted during the day::
 
   !circadian_rhythm.Trigger
   name: "adjust light temperature during the day"

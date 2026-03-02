@@ -17,13 +17,19 @@ from typing import Iterable
 
 class Trigger(delay.Trigger):
     """
-    A **Scheduler Trigger** triggered *timeout_seconds* (a value changing with the duration attribute of the new state)
-    after a given **Appliance state** has been triggered.
-    If an *Appliance state* has been triggered twice, the old scheduler trigger is disabled and a new one is started.
+    A delayed entering trigger whose timeout is read from the new state's
+    ``duration`` attribute at the moment the transition is detected.
+
+    This is useful for appliances (e.g. sprinklers) whose active-state
+    duration is part of their configuration rather than a fixed constant.
+    If the appliance enters the same state again before the timer expires,
+    the previous pending trigger is disabled and a new timer is started
+    with the duration of the new state.
     """
 
     def __init__(self, name: str, events: Iterable[home.Event], state: str):
-        # timeout seconds is controlled by duration attribute in new state, read when triggered
+        # timeout_seconds is 0 here; the real value is read from
+        # new_state.duration each time is_triggered() fires.
         super(Trigger, self).__init__(name, events, state, 0)
 
     def is_triggered(
@@ -32,10 +38,12 @@ class Trigger(delay.Trigger):
         new_state: home.appliance.State,
     ) -> bool:
         """
-        When state is changed and its value is like those the trigger wants return True
+        Return ``True`` when the state changes and the new state matches
+        the configured state value, and update the delay timeout from
+        ``new_state.duration``.
 
-        :param old_state: the old appliance state
-        :param new_state: the new appliance state
+        :param old_state: the appliance state before the last event
+        :param new_state: the appliance state after the last event
         """
         triggered = super(Trigger, self).is_triggered(old_state, new_state)
         try:

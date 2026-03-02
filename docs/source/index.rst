@@ -24,7 +24,7 @@ But building a system that acts on behalf of you brings some **problems** that
 this project strives to solve:
 
   - :ref:`user should win over the system <win-over-the-system>`
-  - :ref:`user should not experience feel of losing control <feel-of-losing-control>`
+  - :ref:`user should not feel a sense of losing control <feel-of-losing-control>`
   - :ref:`debug and reuse of logics should be simple <debug-and-reuse>`
 
 .. _win-over-the-system:
@@ -121,14 +121,14 @@ your curtain should not be closed again at least until sun goes down.
 
 .. _feel-of-losing-control:
 
-User should not experience feel of losing control
-=================================================
+User should not feel a sense of losing control
+===============================================
 
-When the system acts on behalf of you but you don't understand why, you could experience a *feeling of losing control*.
+When the system acts on your behalf but you don't understand why, you may experience a *feeling of losing control*.
 
-For these reasons a good system should let you know, in every moment, **what** action it has done and **why**.
+For these reasons a good system should let you know, at every moment, **what** action it has taken and **why**.
 
-More logics you have, the more complex they are, more probably it will happen that you think the system went crazy unless you know exactly what happened.
+The more automations you have, and the more complex they are, the more likely it is that the system will seem to have gone haywire — unless you know exactly what happened.
 
 Examples
 --------
@@ -145,11 +145,11 @@ A light model should let *User Bob* know that *User John* **forced the light on*
 Curtain
 ^^^^^^^
 
-When the curtain is up even if the sun is shining, someone other than you can think the system is broken
-unless he knows that the curtain is up because you forced open it
+When the curtain is up even though the sun is shining, someone else might think the system is broken
+unless they know the curtain is up because you forced it open
 (:ref:`an automated curtain <curtain-in-this-project>`).
 
-A curtain model should let *another user* know that you **forced opened the curtain**.
+A curtain model should let *other users* know that you **forced the curtain open**.
 
 
 

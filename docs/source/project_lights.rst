@@ -12,7 +12,7 @@ The automated devices are 2 knx switches, 1 knx dimmer and 1 lifx bulb (switched
   is turned on by the system when, as an example, a sensor not far from the light has been triggered.
 
   3. **an indoor dimmerable light** is a :ref:`light.indoor.dimmerable.Appliance Appliance <light.indoor.dimmerable.Appliance>`.
-  It can work in 4 differents modes:
+  It can work in 4 different modes:
 
   - it can work with a **circadian rhythm**: during the day it will adjust its brightness accordingly to received,
     through a *circadian rhythm scheduler trigger*, brightness events
@@ -26,7 +26,7 @@ The automated devices are 2 knx switches, 1 knx dimmer and 1 lifx bulb (switched
   When the user forces the brightness, the mode is always switched to the fixed one (*forced on*).
 
   4. **a indoor hue light** is an :ref:`light.indoor.hue.Appliance Appliance <light.indoor.hue.Appliance>`. An *indoor* hue light.
-  It can work in 4 differents modes:
+  It can work in 4 different modes:
 
   - it can work with a **circadian rhythm**: during the day it will adjust its hue, saturation, lightness and
     temperature accordingly to received, through a *circadian rhythm scheduler trigger*, events
@@ -47,8 +47,8 @@ To automate the lights two sensors, other than the buttons, are used and modeled
 
   3. **alarm** is a :ref:`sensor.alarm.Appliance Appliance <sensor.alarm.Appliance>`. It is used to guess presence state.
 
-The lifx bulb, an *indoor hue Light Appliance*, is controlled using scheduler triggers with some delay seconds;
-it is turned on/off through a knx switch and it takes 7/8 seconds to be ready to listen and execute new commands.
+The Lifx bulb, an *indoor hue Light Appliance*, is controlled using scheduler triggers with a short delay;
+it is switched on and off via a KNX switch and takes 7–8 seconds to be ready to receive and execute new commands.
 
 .. raw:: latex
 

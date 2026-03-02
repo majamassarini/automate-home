@@ -1,8 +1,8 @@
 Sound Player Project Example
 ============================
 
-This example project automates one kind of *Appliance* an **sound player**.
-The automated device is one sonos device.
+This example project automates one kind of *Appliance*: a **sound player**.
+The automated device is a single Sonos device.
 
 The **sound player** is a :ref:`sound.player.Appliance Appliance <sound.player.Appliance>`.
 
