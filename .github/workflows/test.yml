@@ -9,15 +9,18 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.12", "3.13", "3.14"]
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Set up Python 3.14
+    - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
-        python-version: "3.14"
+        python-version: ${{ matrix.python-version }}
 
     - name: Install dependencies
       run: |
@@ -40,7 +43,7 @@ jobs:
     - name: Upload coverage report
       uses: actions/upload-artifact@v4
       with:
-        name: coverage-report
+        name: coverage-report-${{ matrix.python-version }}
         path: htmlcov/
 
   docs:
