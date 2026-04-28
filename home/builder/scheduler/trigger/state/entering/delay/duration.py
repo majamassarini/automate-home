@@ -29,9 +29,7 @@ class Builder(Parent):
     def _build_args(self, mapping):
         name = mapping["name"]
         events = mapping["notify events"]
-        state = (
-            mapping[
-                "when appliance state became (and appliance state duration elapsed)"
-            ],
-        )
+        state = mapping[
+            "when appliance state became (and appliance state duration elapsed)"
+        ]
         return [name, events, state]
