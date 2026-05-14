@@ -19,6 +19,7 @@ def register_class(target_class):
         ),
         target_class.__name__,
     )
+    registry[klass] = target_class
     for value in dir(target_class):
         if "__" not in value:
             registry["{}.{}".format(klass, value)] = target_class
