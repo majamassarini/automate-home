@@ -56,6 +56,11 @@ class Client(object):
         )
         return history
 
+    async def get_history_range(self, start_ts: float, end_ts: float):
+        return await self._storage_connection.get_history_range(
+            self._id, start_ts, end_ts
+        )
+
     async def run(self, on_appliance_updated):
         appliance = await self._storage_connection.get(self._id)
         self._update(appliance)

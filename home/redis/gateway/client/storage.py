@@ -64,6 +64,28 @@ class Connection(object):
         else:
             self._logger.warning("Redis connection not ready yet")
 
+    async def get_history_range(self, key, start_ts: float, end_ts: float):
+        if self._connection:
+            serializations = await self._connection.zrange(key, 0, -1)
+            history = []
+            for entry in serializations:
+                colon = entry.find(":")
+                try:
+                    t = float(entry[0:colon])
+                except ValueError:
+                    continue
+                if start_ts <= t <= end_ts:
+                    serialization = entry[colon + 1 :]
+                    deserialization = json.loads(
+                        serialization, object_hook=self._decoder
+                    )
+                    history.append((entry[0:colon], deserialization))
+            history.reverse()
+            return history
+        else:
+            self._logger.warning("Redis connection not ready yet")
+            return []
+
     async def set(self, key, obj):
         if self._connection:
             if obj:
