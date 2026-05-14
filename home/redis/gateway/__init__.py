@@ -88,6 +88,10 @@ class Gateway(object):
         history = await client.get_history(num_of_events)
         return history
 
+    async def get_history_range(self, obj, start_ts: float, end_ts: float):
+        client = self._get_client(obj)
+        return await client.get_history_range(start_ts, end_ts)
+
     async def on_appliance_updated_by_process(
         self, appliance, old_state, new_state
     ):
