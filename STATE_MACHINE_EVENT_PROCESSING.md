@@ -74,6 +74,46 @@ When a sound player transitions to Fade In, we need to reset `elapsed.Off` so th
 
 This guarantees `elapsed.Off` is sent **after** the state transition completes.
 
+## Events Always Come From Outside
+
+All state machine transitions happen through events that arrive from **outside
+the dispatch loop**: the protocol bus, APScheduler, or Redis.  State-based
+scheduler triggers (e.g. `state.entering.disable_events.Trigger`) are always
+**queued** for `_run` to process after the current dispatch completes.
+
+This design preserves two properties that the system depends on:
+
+1. **`_schedule_by_appliance_state` sees every transition.**  If a trigger were
+   applied synchronously inside a callback, the resulting sub-transition would
+   be invisible to `_schedule_by_appliance_state`.
+
+2. **Redis reflects every transition.**  Every state change is saved to Redis.
+   The `_on_appliance_updated_by_redis` path — which runs trigger-less
+   performers such as the Sonos play/pause/volume commands — relies on
+   comparing `old_state` and `new_state`.  It detects an off→on transition
+   only when the local appliance was genuinely off before the Redis update
+   arrived.
+
+### Protocol echoes and how to suppress them
+
+When a play command is sent to Sonos, the device echoes back a stop/pause
+event.  That echo arrives as `forced.Event.Off`, which the Fade In state
+machine processes as a transition to Forced Off.  `_on_appliance_updated_by_redis`
+then fires with `(Fade In, Forced Off)` and sends a **pause** command — silencing
+Sonos just after it started playing.
+
+The play command itself is sent directly by the performer in `_run` (or
+`_update_performers_by_protocol_trigger`) when the off→on state transition
+happens, not via the echo path.  The echo is purely a side-effect to suppress.
+
+To suppress the echo, configure a `state.entering.disable_events.Trigger` for
+`forced.Event.Off` in the YAML.  This trigger is queued and fires very quickly
+(the event loop processes the next queue item almost immediately after the state
+transition), well before the echo travels over the network and arrives at the
+gateway.  Any further echoes are silently ignored until the paired
+`state.entering.delay.enable_events.Trigger` re-enables `forced.Event.Off` after
+a few seconds.
+
 ## Guidelines
 
 1. **Be selective about events** - Not every appliance needs every event
@@ -81,6 +121,7 @@ This guarantees `elapsed.Off` is sent **after** the state transition completes.
 3. **Watch for conflicts** - One event enables a state, another disables it
 4. **Use state-based triggers when order matters** - Don't send multiple events simultaneously if processing order is critical
 5. **Test realistically** - Include all relevant events when testing transitions
+6. **All events come from outside** - See the section above
 
 ## Debugging Checklist
 

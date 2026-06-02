@@ -12,7 +12,6 @@ class Elapsed(Callable):
     def run(self, event, state):
         if event == home.event.elapsed.Event.On:
             state = self.get_new_state(state, "off")
-            state = state.next(home.event.elapsed.Event.Off)
         return state
 
 

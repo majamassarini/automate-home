@@ -75,6 +75,8 @@ For a minute guide to this project see the [landing page](https://majamassarini.
 
 For understanding how state machines process events and why some transitions may not work as expected, see [State Machine Event Processing](STATE_MACHINE_EVENT_PROCESSING.md).
 
+For a detailed description of the runtime event loop and how protocol events, scheduler timers, and Redis broadcasts are routed through the appliance state machines, see [The Process Module](PROCESS.md).
+
 For suggestions, questions or anything else, please, write here: [discussions](https://github.com/majamassarini/automate-home/discussions).
 
 ## Contributing
