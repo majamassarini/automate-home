@@ -113,6 +113,10 @@ class Gateway(object):
         on_appliance_updated_by_redis,
         on_performer_updated_by_redis,
     ):
+        loop.create_task(
+            self._pubsub_connection.dispatch(),
+            name="Redis pubsub dispatch",
+        )
         for appliance, client in self._appliances.items():
             loop.create_task(
                 client.run(on_appliance_updated_by_redis),
