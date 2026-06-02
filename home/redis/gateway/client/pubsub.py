@@ -24,7 +24,10 @@ class Connection(object):
 
         self._publisher = None
         self._subscriptions = dict()
-        self._channels = dict()
+        self._pubsubs = (
+            dict()
+        )  # one PubSub per other-node, shared across all channels
+        self._queues = dict()  # one asyncio.Queue per subscribed channel
 
         self._logger = logging.getLogger(__name__)
 
@@ -33,23 +36,23 @@ class Connection(object):
             host=self._host, port=self._port, decode_responses=True
         )
         for other_node_name in self._other_nodes_names:
-            self._subscriptions[other_node_name] = aioredis.Redis(
+            connection = aioredis.Redis(
                 host=self._host, port=self._port, decode_responses=True
             )
+            self._subscriptions[other_node_name] = connection
+            self._pubsubs[other_node_name] = connection.pubsub()
 
     async def disconnect(self):
-        for pubsubs in self._channels.values():
-            for pubsub in pubsubs:
-                await pubsub.aclose()
+        for pubsub in self._pubsubs.values():
+            await pubsub.aclose()
         for connection in self._subscriptions.values():
             await connection.aclose()
         if self._publisher:
             await self._publisher.aclose()
 
     async def subscribe(self, channel):
-        self._channels[channel] = list()
-        for other_node_name, connection in self._subscriptions.items():
-            pubsub = connection.pubsub()
+        self._queues[channel] = asyncio.Queue()
+        for other_node_name, pubsub in self._pubsubs.items():
             await pubsub.subscribe(
                 "{} from {}".format(channel, other_node_name)
             )
@@ -58,21 +61,30 @@ class Connection(object):
                     channel, other_node_name
                 )
             )
-            self._channels[channel].append(pubsub)
 
-    async def read(self, channel):
+    async def dispatch(self):
         while True:
-            for pubsub in self._channels[channel]:
+            for other_node_name, pubsub in self._pubsubs.items():
                 msg = await pubsub.get_message(
                     ignore_subscribe_messages=True, timeout=0.1
                 )
                 if msg:
-                    data = msg["data"]
-                    obj = json.loads(data, object_hook=self._decoder)
-                    self._logger.debug(
-                        "read {} from channel {}".format(data, channel)
-                    )
-                    return obj
+                    raw_channel = msg["channel"]
+                    suffix = " from {}".format(other_node_name)
+                    if raw_channel.endswith(suffix):
+                        channel = raw_channel[: -len(suffix)]
+                        if channel in self._queues:
+                            data = msg["data"]
+                            obj = json.loads(data, object_hook=self._decoder)
+                            self._logger.debug(
+                                "read {} from channel {}".format(
+                                    data, raw_channel
+                                )
+                            )
+                            await self._queues[channel].put(obj)
+
+    async def read(self, channel):
+        return await self._queues[channel].get()
 
     async def write(self, channel, data):
         if data:
@@ -89,6 +101,9 @@ class Connection(object):
 
 
 class Stub(Connection):
+    async def dispatch(self):
+        await asyncio.sleep(86400)
+
     async def read(self, channel):
         self._logger.debug("read nothing on redis stub")
         await asyncio.sleep(86400)  # one day
