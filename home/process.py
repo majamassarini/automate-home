@@ -176,7 +176,16 @@ class Process(object):
                     )
                     if msgs:
                         for writer in self._protocols_writers:
-                            await writer(msgs, performer)
+                            try:
+                                await asyncio.wait_for(
+                                    writer(msgs, performer), timeout=1.0
+                                )
+                            except Exception as e:
+                                self._logger.error(
+                                    "Writer failed for performer %s: %s",
+                                    performer.name,
+                                    e,
+                                )
             except Exception as e:
                 self._logger.error(e)
 
@@ -221,7 +230,16 @@ class Process(object):
                             )
                         )
                     for writer in self._protocols_writers:
-                        await writer(msgs, performer)
+                        try:
+                            await asyncio.wait_for(
+                                writer(msgs, performer), timeout=1.0
+                            )
+                        except Exception as e:
+                            self._logger.error(
+                                "Writer failed for performer %s: %s",
+                                performer.name,
+                                e,
+                            )
                 except Exception as e:
                     self._logger.error(e)
 
@@ -252,7 +270,16 @@ class Process(object):
                     )
                 )
             for writer in self._protocols_writers:
-                await writer(msgs, performer)
+                try:
+                    await asyncio.wait_for(
+                        writer(msgs, performer), timeout=1.0
+                    )
+                except Exception as e:
+                    self._logger.error(
+                        "Writer failed for performer %s: %s",
+                        performer.name,
+                        e,
+                    )
         except Exception as e:
             self._logger.error(e)
 
@@ -283,8 +310,12 @@ class Process(object):
           state-based scheduler triggers.
 
         Items with a disabled trigger or an empty event list are silently
-        skipped.  After processing, :py:meth:`_schedule_by_trigger_fork`
-        is called so that recurring triggers can re-arm themselves.
+        skipped.  Note: all ``state.delay``-family triggers (entering.delay,
+        exiting.delay, entering.delay.enable_events, …) return an empty
+        event list by design, so they are always skipped here and handled
+        only through :py:meth:`_schedule_by_trigger_fork`.  After
+        processing, :py:meth:`_schedule_by_trigger_fork` is called so that
+        recurring triggers can re-arm themselves.
 
         :param scheduler: the APScheduler instance (forwarded to
             :py:meth:`_schedule_by_appliance_state`)
@@ -333,7 +364,16 @@ class Process(object):
                                 )
                             )
                         for writer in self._protocols_writers:
-                            await writer(msgs, performer)
+                            try:
+                                await asyncio.wait_for(
+                                    writer(msgs, performer), timeout=1.0
+                                )
+                            except Exception as e:
+                                self._logger.error(
+                                    "Writer failed for performer %s: %s",
+                                    performer.name,
+                                    e,
+                                )
 
                         await self._schedule_by_appliance_state(
                             scheduler,
