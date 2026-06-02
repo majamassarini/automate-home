@@ -91,7 +91,16 @@ class Process(object):
         """
         Examine every state-type scheduler trigger registered for the
         performers of *appliance* and, for each one that matches the
-        state transition, enqueue its events and fork any delayed triggers.
+        state transition, apply or enqueue its events and fork any delayed
+        triggers.
+
+        ``disable_events`` triggers are applied **synchronously** (without
+        going through the async queue) so they take effect before the first
+        ``await`` yields control to the event loop.  This prevents protocol
+        echoes (e.g. a Sonos stop-echo arriving 55 ms after a play command)
+        from sneaking past the disable during the writer timeout window.
+
+        All other state triggers are enqueued for ``_run`` to process.
 
         :param scheduler: the APScheduler instance used to register forked jobs
         :param appliance: the appliance whose state just changed
@@ -107,10 +116,24 @@ class Process(object):
                     == home.scheduler.trigger.state.Trigger.type
                 ):
                     if scheduler_trigger.is_triggered(old_state, new_state):
-                        await self.schedule(performer, scheduler_trigger)
-                        self._schedule_by_trigger_fork(
-                            scheduler, scheduler_trigger, performer
-                        )
+                        if isinstance(
+                            scheduler_trigger,
+                            home.scheduler.trigger.state.entering.disable_events.Trigger,
+                        ):
+                            for event in scheduler_trigger.events:
+                                performer.appliance.disable(event)
+                            self._logger.debug(
+                                "Performer {} disabled events {} by Trigger {}".format(
+                                    performer.name,
+                                    scheduler_trigger.events,
+                                    scheduler_trigger.name,
+                                )
+                            )
+                        else:
+                            await self.schedule(performer, scheduler_trigger)
+                            self._schedule_by_trigger_fork(
+                                scheduler, scheduler_trigger, performer
+                            )
 
     def _schedule_by_trigger_fork(self, scheduler, trigger, performer):
         """
@@ -353,6 +376,12 @@ class Process(object):
                                 performer.name, trigger.name
                             )
                         )
+                        await self._schedule_by_appliance_state(
+                            scheduler,
+                            performer.appliance,
+                            old_state,
+                            new_state,
+                        )
                         await self._redis_gateway.on_performer_updated_by_process(
                             performer, old_state, new_state
                         )
@@ -374,13 +403,6 @@ class Process(object):
                                     performer.name,
                                     e,
                                 )
-
-                        await self._schedule_by_appliance_state(
-                            scheduler,
-                            performer.appliance,
-                            old_state,
-                            new_state,
-                        )
                 except Exception as e:
                     self._logger.error(e)
             if trigger.is_enabled:
