@@ -24,7 +24,10 @@ class Connection(object):
 
     async def connect(self):
         self._connection = aioredis.Redis(
-            host=self._host, port=self._port, decode_responses=True
+            host=self._host,
+            port=self._port,
+            decode_responses=True,
+            max_connections=200,
         )
 
     async def disconnect(self):
