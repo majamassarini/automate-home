@@ -201,7 +201,7 @@ class Process(object):
                         for writer in self._protocols_writers:
                             try:
                                 await asyncio.wait_for(
-                                    writer(msgs, performer), timeout=1.0
+                                    writer(msgs, performer), timeout=5.0
                                 )
                             except Exception as e:
                                 self._logger.error(
@@ -255,7 +255,7 @@ class Process(object):
                     for writer in self._protocols_writers:
                         try:
                             await asyncio.wait_for(
-                                writer(msgs, performer), timeout=1.0
+                                writer(msgs, performer), timeout=5.0
                             )
                         except Exception as e:
                             self._logger.error(
@@ -295,7 +295,7 @@ class Process(object):
             for writer in self._protocols_writers:
                 try:
                     await asyncio.wait_for(
-                        writer(msgs, performer), timeout=1.0
+                        writer(msgs, performer), timeout=5.0
                     )
                 except Exception as e:
                     self._logger.error(
@@ -395,7 +395,7 @@ class Process(object):
                         for writer in self._protocols_writers:
                             try:
                                 await asyncio.wait_for(
-                                    writer(msgs, performer), timeout=1.0
+                                    writer(msgs, performer), timeout=5.0
                                 )
                             except Exception as e:
                                 self._logger.error(
