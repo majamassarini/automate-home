@@ -123,8 +123,8 @@ class Stub(home.MyHome):
 class TestScheduledTriggerFiresWithHangingWriter(TestCase):
     """A hanging writer must not prevent scheduled triggers from firing.
 
-    The 1-second timeout on each writer call in _run means the hanging
-    writer is cancelled after 1 s and _run resumes.  The scheduled
+    The 5-second timeout on each writer call in _run means the hanging
+    writer is cancelled after 5 s and _run resumes.  The scheduled
     "turn off after 1s" trigger must still fire and change the light
     state to Off.
     """
@@ -139,9 +139,9 @@ class TestScheduledTriggerFiresWithHangingWriter(TestCase):
         class Test(unittest.IsolatedAsyncioTestCase):
 
             STATE_OFF = "light_off"
-            # Budget: 1 s writer timeout + 1 s APScheduler delay
-            # + 1 s writer timeout in _run + margin = 6 s
-            MAX_LOOP = 20  # 20 × 0.3 s = 6 s
+            # Budget: 5 s writer timeout + 1 s APScheduler delay
+            # + 5 s writer timeout in _run + margin = 15 s
+            MAX_LOOP = 50  # 50 × 0.3 s = 15 s
 
             async def asyncSetUp(self):
                 loop = asyncio.get_event_loop()
@@ -191,10 +191,10 @@ class TestScheduledTriggerFiresWithHangingWriter(TestCase):
 class TestHangingWriterDoesNotBlockIndefinitely(TestCase):
     """_run must complete within a bounded time even with a hanging writer.
 
-    With a 1-second timeout per writer and two writer calls (one in
+    With a 5-second timeout per writer and two writer calls (one in
     _update_performers_by_protocol_trigger, one in _run for the
     scheduled trigger), plus ~1 second for the APScheduler delay, the
-    total should be well under 6 seconds.  Before the fix the process
+    total should be well under 15 seconds.  Before the fix the process
     would hang indefinitely.
     """
 
@@ -224,7 +224,7 @@ class TestHangingWriterDoesNotBlockIndefinitely(TestCase):
 
                 # Wait for light to reach Off (scheduled trigger + _run)
                 light = tc.myhome.appliances.find("light")
-                for _ in range(70):
+                for _ in range(150):
                     if "Off" in light.state.compute():
                         break
                     await asyncio.sleep(0.1)
@@ -235,10 +235,10 @@ class TestHangingWriterDoesNotBlockIndefinitely(TestCase):
         test.run()
 
         tc.assertIn("elapsed", timing)
-        # Must finish well under 6 seconds even with two 1-second timeouts
+        # Must finish well under 15 seconds even with two 5-second timeouts
         tc.assertLess(
             timing["elapsed"],
-            6.0,
+            15.0,
             f"Took {timing['elapsed']:.1f} s — hanging writer may still be "
             "blocking _run",
         )
