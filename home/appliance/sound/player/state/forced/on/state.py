@@ -5,7 +5,6 @@
 # Copyright (C) 2021  Maja Massarini
 
 import home
-from home import event as home_event
 from home.appliance import attribute
 from home.appliance.sound.player import event
 from home.appliance.sound.player.state import State as Parent
@@ -16,7 +15,8 @@ class Mixin(object):
     def init_callables(self):
         callables = {
             type(home.event.sleepiness.Event.Awake): _callable.Sleepiness(
-                fade_out=self.fade_out
+                fade_out=self.fade_out,
+                sleepy_on=self.sleepy_on,
             ),
             type(home.event.presence.Event.Off): _callable.Presence(
                 reset=self.reset, base=self.base
@@ -54,16 +54,9 @@ class State(
         self.forced_circadian_rhythm = (
             home.appliance.sound.player.state.forced.circadian_rhythm.State
         )
+        self.sleepy_on = (
+            home.appliance.sound.player.state.forced.sleepy_on.State
+        )
         self.fade_out = home.appliance.sound.player.state.fade_out.State
 
         super(State, self).__init__(events, events_disabled)
-
-    @attribute.mixin.Volume.volume.getter  # type: ignore[attr-defined]
-    def volume(self) -> int:
-        if home_event.sleepiness.Event.Sleepy in self.events:  # type: ignore[operator]
-            for klass, obj in self._events.items():
-                if klass == event.sleepy_volume.Event:
-                    return obj.value
-            return super(State, self).volume
-        else:
-            return super(State, self).volume

@@ -15,6 +15,8 @@ class Sleepiness(Callable):
                 state = self.compute_new_state(
                     state, "fade_out", [state.forced_enum.On]
                 )
+            elif event == home.event.sleepiness.Event.Sleepy:
+                state = self.get_new_state(state, "sleepy_on")
         return state
 
 
@@ -46,5 +48,5 @@ class Forced(Callable):
 
     def run(self, event, state):
         if event in (state.forced_enum.Not, state.forced_enum.Off):
-            state = self.compute_new_state(state, "base", [event])
+            state = self.get_new_state(state, "base")
         return state
