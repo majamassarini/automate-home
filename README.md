@@ -94,6 +94,26 @@ states. Two things make that tractable here:
   event in every state, the kind of timing- and ordering-sensitive coverage that's nearly
   impossible to get from poking a real device and watching what happens.
 
+- **A richer vocabulary for reacting to raw bus data.** *Protocol Triggers* are a
+  first-class, YAML-wireable concept here: you react not just to a single message on the
+  bus, but to *patterns* in a stream of them. For example:
+
+    - `protocol.mean.GreaterThan` / `LesserThan` / `InBetween` — average a sensor's
+      readings over a rolling window and fire only once the *mean* crosses a threshold
+      (e.g. wind speed or outdoor light level as "strong"/"weak"/"in between"), so a
+      single noisy reading doesn't flip an appliance back and forth;
+    - `protocol.multi.Trigger` — combine several independent triggers with
+      positive/negative logic, e.g. turning separate zone sensors into a single "this
+      zone just became occupied/empty" event;
+    - `protocol.enum.Trigger` — step through a small enum of events each time a message
+      arrives, e.g. a wall button cycling through "next/previous user";
+    - `protocol.timer.Trigger` — fire a follow-up event some seconds after the original
+      one, e.g. a scene that, once triggered, schedules itself to be undone later.
+
+  In a pure Home Assistant setup this kind of stream-level reasoning is
+  integration-internal Python that users don't get to wire themselves; here it's an open,
+  composable layer you can build new appliance behaviour on without writing a plugin.
+
 In short: reach for Home Assistant (or its plugin here) for **connectivity**. Reach for
 an *Appliance* when the **behaviour** itself is the hard part.
 
