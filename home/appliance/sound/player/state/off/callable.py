@@ -19,7 +19,10 @@ class Sleepiness(Callable):
 class Forced(Callable):
     def run(self, event, state):
         if event == state.forced_enum.On:
-            state = self.get_new_state(state, "forced_on")
+            if home.event.sleepiness.Event.Sleepy in state:
+                state = self.get_new_state(state, "sleepy_on")
+            else:
+                state = self.get_new_state(state, "forced_on")
         elif event == state.forced_enum.CircadianRhythm:
             state = self.get_new_state(state, "forced_circadian_rhythm")
         elif event != state.forced_enum.Not:

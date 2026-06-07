@@ -120,10 +120,10 @@ Feature: A sound player appliance
       | On       | Asleep     | Off     | sound.player.state.off     | appliance.sound.player.event.forced.Event.On              | sound.player.state.forced.on               |
       | On       | Asleep     | Off     | sound.player.state.off     | appliance.sound.player.event.forced.Event.Off             | sound.player.state.off                     |
       | On       | Asleep     | Off     | sound.player.state.off     | appliance.sound.player.event.forced.Event.CircadianRhythm | sound.player.state.forced.circadian_rhythm |
-      | On       | Sleepy     | On      | sound.player.state.off     | appliance.sound.player.event.forced.Event.On              | sound.player.state.forced.on               |
+      | On       | Sleepy     | On      | sound.player.state.off     | appliance.sound.player.event.forced.Event.On              | sound.player.state.forced.sleepy_on        |
       | On       | Sleepy     | On      | sound.player.state.off     | appliance.sound.player.event.forced.Event.Off             | sound.player.state.off                     |
       | On       | Sleepy     | On      | sound.player.state.off     | appliance.sound.player.event.forced.Event.CircadianRhythm | sound.player.state.forced.circadian_rhythm |
-      | On       | Sleepy     | Off     | sound.player.state.off     | appliance.sound.player.event.forced.Event.On              | sound.player.state.forced.on               |
+      | On       | Sleepy     | Off     | sound.player.state.off     | appliance.sound.player.event.forced.Event.On              | sound.player.state.forced.sleepy_on        |
       | On       | Sleepy     | Off     | sound.player.state.off     | appliance.sound.player.event.forced.Event.Off             | sound.player.state.off                     |
       | On       | Sleepy     | Off     | sound.player.state.off     | appliance.sound.player.event.forced.Event.CircadianRhythm | sound.player.state.forced.circadian_rhythm |
       | Off      | Awake      | On      | sound.player.state.off     | appliance.sound.player.event.forced.Event.On              | sound.player.state.forced.on               |
@@ -138,10 +138,10 @@ Feature: A sound player appliance
       | Off      | Asleep     | Off     | sound.player.state.off     | appliance.sound.player.event.forced.Event.On              | sound.player.state.forced.on               |
       | Off      | Asleep     | Off     | sound.player.state.off     | appliance.sound.player.event.forced.Event.Off             | sound.player.state.off                     |
       | Off      | Asleep     | Off     | sound.player.state.off     | appliance.sound.player.event.forced.Event.CircadianRhythm | sound.player.state.forced.circadian_rhythm |
-      | Off      | Sleepy     | On      | sound.player.state.off     | appliance.sound.player.event.forced.Event.On              | sound.player.state.forced.on               |
+      | Off      | Sleepy     | On      | sound.player.state.off     | appliance.sound.player.event.forced.Event.On              | sound.player.state.forced.sleepy_on        |
       | Off      | Sleepy     | On      | sound.player.state.off     | appliance.sound.player.event.forced.Event.Off             | sound.player.state.off                     |
       | Off      | Sleepy     | On      | sound.player.state.off     | appliance.sound.player.event.forced.Event.CircadianRhythm | sound.player.state.forced.circadian_rhythm |
-      | Off      | Sleepy     | Off     | sound.player.state.off     | appliance.sound.player.event.forced.Event.On              | sound.player.state.forced.on               |
+      | Off      | Sleepy     | Off     | sound.player.state.off     | appliance.sound.player.event.forced.Event.On              | sound.player.state.forced.sleepy_on        |
       | Off      | Sleepy     | Off     | sound.player.state.off     | appliance.sound.player.event.forced.Event.Off             | sound.player.state.off                     |
       | Off      | Sleepy     | Off     | sound.player.state.off     | appliance.sound.player.event.forced.Event.CircadianRhythm | sound.player.state.forced.circadian_rhythm |
 
@@ -150,6 +150,7 @@ Feature: A sound player appliance
     Given A sound.player.Appliance appliance
     And   the appliance has an internal event.presence state at <presence>
     And   the appliance has an internal appliance.sound.player.event.forced state at On
+    And   the appliance has an internal event.sleepiness state at Awake
     And   it's calculated state is <from_state>
     When  it receives a new event <event>
     Then  the appliance new state is <to_state>
@@ -159,8 +160,8 @@ Feature: A sound player appliance
       | On       | sound.player.state.forced.on | event.presence.Event.On       | sound.player.state.forced.on |
       | On       | sound.player.state.forced.on | event.presence.Event.Off      | sound.player.state.off       |
       | On       | sound.player.state.forced.on | event.sleepiness.Event.Awake  | sound.player.state.forced.on |
-      | On       | sound.player.state.forced.on | event.sleepiness.Event.Sleepy | sound.player.state.forced.on |
-      | On       | sound.player.state.forced.on | event.sleepiness.Event.Asleep | sound.player.state.fade_out  |
+      | On       | sound.player.state.forced.on | event.sleepiness.Event.Sleepy | sound.player.state.forced.sleepy_on |
+      | On       | sound.player.state.forced.on | event.sleepiness.Event.Asleep | sound.player.state.fade_out         |
       | On       | sound.player.state.forced.on | event.elapsed.Event.On        | sound.player.state.forced.on |
       | On       | sound.player.state.forced.on | event.elapsed.Event.Off       | sound.player.state.forced.on |
       | Off      | sound.player.state.forced.on | event.presence.Event.On       | sound.player.state.forced.on |
@@ -175,6 +176,7 @@ Feature: A sound player appliance
     Given A sound.player.Appliance appliance
     And   the appliance has an internal event.presence state at On
     And   the appliance has an internal appliance.sound.player.event.forced state at On
+    And   the appliance has an internal event.sleepiness state at Awake
     And   it's calculated state is <from_state>
     When  it receives a new event <event>
     Then  the appliance new state is <to_state>
@@ -183,6 +185,29 @@ Feature: A sound player appliance
       | from_state                   | event                                                     | to_state                     |
       | sound.player.state.forced.on | appliance.sound.player.event.forced.Event.Off             | sound.player.state.off       |
       | sound.player.state.forced.on | appliance.sound.player.event.forced.Event.CircadianRhythm | sound.player.state.forced.on |
+
+
+  Scenario Outline: The Sound Player react to events from a Sleepy Forced On state
+    Given A sound.player.Appliance appliance
+    And   the appliance has an internal event.presence state at <presence>
+    And   the appliance has an internal event.sleepiness state at Sleepy
+    And   the appliance has an internal appliance.sound.player.event.forced state at On
+    And   it's calculated state is <from_state>
+    When  it receives a new event <event>
+    Then  the appliance new state is <to_state>
+
+    Examples:
+      | presence | from_state                          | event                                                     | to_state                                   |
+      | On       | sound.player.state.forced.sleepy_on | event.sleepiness.Event.Awake                              | sound.player.state.forced.on               |
+      | On       | sound.player.state.forced.sleepy_on | event.sleepiness.Event.Asleep                             | sound.player.state.fade_out                |
+      | On       | sound.player.state.forced.sleepy_on | event.sleepiness.Event.Sleepy                             | sound.player.state.forced.sleepy_on        |
+      | On       | sound.player.state.forced.sleepy_on | event.presence.Event.On                                   | sound.player.state.forced.sleepy_on        |
+      | On       | sound.player.state.forced.sleepy_on | event.presence.Event.Off                                  | sound.player.state.off                     |
+      | On       | sound.player.state.forced.sleepy_on | appliance.sound.player.event.forced.Event.Not             | sound.player.state.off                     |
+      | On       | sound.player.state.forced.sleepy_on | appliance.sound.player.event.forced.Event.Off             | sound.player.state.off                     |
+      | On       | sound.player.state.forced.sleepy_on | appliance.sound.player.event.forced.Event.CircadianRhythm | sound.player.state.forced.circadian_rhythm |
+      | Off      | sound.player.state.forced.sleepy_on | event.sleepiness.Event.Awake                              | sound.player.state.forced.on               |
+      | Off      | sound.player.state.forced.sleepy_on | event.sleepiness.Event.Asleep                             | sound.player.state.forced.sleepy_on        |
 
 
   Scenario Outline: The Sound Player react to not forced events from a circadian rhythm forced state, and will be reset by a
@@ -276,7 +301,7 @@ Feature: A sound player appliance
       | Sleepy      | Not             | Asleep      | sound.player.state.off                     | False    |
       | Sleepy      | Not             | Awake       | sound.player.state.fade_in                 | True     |
       | Sleepy      | On              | Asleep      | sound.player.state.fade_out                | True     |
-      | Sleepy      | On              | Sleepy      | sound.player.state.forced.on               | True     |
+      | Sleepy      | On              | Sleepy      | sound.player.state.forced.sleepy_on        | True     |
       | Sleepy      | CircadianRhythm | Sleepy      | sound.player.state.forced.circadian_rhythm | True     |
       | Awake       | Off             | Sleepy      | sound.player.state.forced.off              | False    |
 
@@ -295,7 +320,7 @@ Feature: A sound player appliance
       | Sleepy      | Not             | Asleep      | sound.player.state.off                     | False    |
       | Sleepy      | Not             | Awake       | sound.player.state.fade_in                 | False    |
       | Sleepy      | On              | Asleep      | sound.player.state.fade_out                | False    |
-      | Sleepy      | On              | Sleepy      | sound.player.state.forced.on               | False    |
+      | Sleepy      | On              | Sleepy      | sound.player.state.forced.sleepy_on        | False    |
       | Sleepy      | CircadianRhythm | Sleepy      | sound.player.state.forced.circadian_rhythm | True     |
       | Awake       | Off             | Sleepy      | sound.player.state.forced.off              | False    |
 
@@ -314,7 +339,7 @@ Feature: A sound player appliance
       | Sleepy      | Not             | Asleep      | sound.player.state.off                     | False    |
       | Sleepy      | Not             | Awake       | sound.player.state.fade_in                 | True     |
       | Sleepy      | On              | Asleep      | sound.player.state.fade_out                | True     |
-      | Sleepy      | On              | Sleepy      | sound.player.state.forced.on               | False    |
+      | Sleepy      | On              | Sleepy      | sound.player.state.forced.sleepy_on        | False    |
       | Sleepy      | CircadianRhythm | Sleepy      | sound.player.state.forced.circadian_rhythm | False    |
       | Awake       | Off             | Sleepy      | sound.player.state.forced.off              | False    |
 
@@ -338,7 +363,7 @@ Feature: A sound player appliance
       | Asleep      | Not             | Asleep      | sound.player.state.off                     | 70       |
       | Sleepy      | Not             | Awake       | sound.player.state.fade_in                 | 50       |
       | Sleepy      | On              | Asleep      | sound.player.state.fade_out                | 80       |
-      | Sleepy      | On              | Sleepy      | sound.player.state.forced.on               | 60       |
+      | Sleepy      | On              | Sleepy      | sound.player.state.forced.sleepy_on        | 60       |
       | Asleep      | CircadianRhythm | Sleepy      | sound.player.state.forced.circadian_rhythm | 70       |
       | Awake       | Off             | Sleepy      | sound.player.state.forced.off              | 70       |
 
@@ -364,6 +389,6 @@ Feature: A sound player appliance
       | Asleep      | Not             | Asleep      | sound.player.state.off                     | Playlist        |
       | Sleepy      | Not             | Awake       | sound.player.state.fade_in                 | PlaylistFadeIn  |
       | Sleepy      | On              | Asleep      | sound.player.state.fade_out                | PlaylistFadeOut |
-      | Sleepy      | On              | Sleepy      | sound.player.state.forced.on               | Playlist        |
+      | Sleepy      | On              | Sleepy      | sound.player.state.forced.sleepy_on        | Playlist        |
       | Asleep      | CircadianRhythm | Sleepy      | sound.player.state.forced.circadian_rhythm | PlaylistB       |
       | Awake       | Off             | Sleepy      | sound.player.state.forced.off              | Playlist        |

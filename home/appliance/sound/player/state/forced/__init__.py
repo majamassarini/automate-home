@@ -4,4 +4,9 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
-from home.appliance.sound.player.state.forced import on, off, circadian_rhythm
+from home.appliance.sound.player.state.forced import (
+    on,
+    off,
+    circadian_rhythm,
+    sleepy_on,
+)
