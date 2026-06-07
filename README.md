@@ -114,6 +114,19 @@ states. Two things make that tractable here:
   integration-internal Python that users don't get to wire themselves; here it's an open,
   composable layer you can build new appliance behaviour on without writing a plugin.
 
+- **One Appliance, several cooperating protocols, one coherent state.** An *Appliance*
+  only knows *what* it should be (e.g. "the light should be on"); the *Performer* layer
+  maps that to actual protocol commands and reads protocol feedback back. So a single
+  *Appliance* can be wired to devices speaking entirely different protocols — say a bulb
+  on one wireless protocol switched by a wall unit on a wired bus — and the end user still
+  sees and interacts with **one** light, with one well-defined state. In a pure Home
+  Assistant setup the unit of modelling is the *entity*, normally one per
+  device/integration; presenting such a pair as a single coherent thing means
+  hand-building a group or templated entity (with its own scripts to reconcile both
+  devices' states) plus an automation to keep them in sync — the same
+  assemble-it-yourself-and-hope-it-stays-in-sync pattern, now applied to *cross-protocol*
+  composition, and just as exercised by the BDD suite as everything else.
+
 In short: reach for Home Assistant (or its plugin here) for **connectivity**. Reach for
 an *Appliance* when the **behaviour** itself is the hard part.
 
