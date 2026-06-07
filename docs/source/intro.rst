@@ -126,6 +126,49 @@ to switch on the Lifx Bulb via KNX protocol commands and setting its color via L
 
     \clearpage
 
+automate-home vs Home Assistant
+===============================
+
+A natural question is: *why not just do all of this in Home Assistant?*
+
+Home Assistant is unmatched as a **device gateway**: it discovers and talks to an enormous
+range of hardware, ships a polished UI, mobile app, dashboards and voice-assistant
+integration — things this project would have to reinvent and would never do as well.
+This is exactly why an :doc:`automate-home-assistant-plugin <plugins>` exists: let Home
+Assistant be the gateway to the device world, and let *Appliances* be the **behaviour**
+on top of it.
+
+Where this project shines, by contrast, is in modelling **genuinely stateful appliance
+behaviour** — the kind that reacts to several independent event sources (presence,
+sleepiness, elapsed timers, user-forced commands, device echoes) and needs to combine
+them into a small number of *explicit, named states*. Two things make this tractable
+here in a way that plain Home Assistant automations make hard:
+
+- **Reuse through real class hierarchies.** An *Appliance* type — say
+  ``sound.player.Appliance`` — is written **once**: its states, its transitions, its
+  guards. Every physical instance reuses that exact same, already-debugged logic; only
+  the *wiring* to the physical device (performers, protocol commands/triggers) is
+  per-instance. In a pure Home Assistant setup that same behaviour would have to be
+  either copy-pasted per device in YAML, or hand-rolled into a templated *blueprint* —
+  a far weaker reuse mechanism than class inheritance, and one that mixes behaviour and
+  wiring back together.
+
+- **Behaviour-driven tests as a regression net.** Every *Appliance* state and transition
+  is covered by :ref:`BDD style tests <Features>` — hundreds of scenarios that run in
+  seconds and pin down exactly how the appliance reacts to every event in every state.
+  This is what let real, subtle bugs surface and get fixed with confidence while
+  developing the sound player's *Sleepy Forced On* state: a stale-event replay that
+  spuriously re-triggered a fade-in on unforce, and a device-echo race where the
+  appliance bounced itself back to *Off* milliseconds after entering the new state.
+  Both are the kind of timing- and ordering-sensitive bugs that are painful to even
+  *notice*, let alone fix and keep fixed, when the only way to test an automation is to
+  poke a real device and watch what happens.
+
+In short: reach for Home Assistant (or its plugin here) for **connectivity** — discovering
+and commanding devices, dashboards, notifications, voice. Reach for an *Appliance* when
+the **behaviour** itself is the hard part: when you have several states, several event
+sources, and edge cases worth getting right and keeping right over time.
+
 ############
 Requirements
 ############

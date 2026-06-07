@@ -67,6 +67,36 @@ I integrated really few protocols, the ones I am using the most at my home: [KNX
 
 For all the other protocol integrations I needed I have used [Home Assistant](https://github.com/majamassarini/automate-home-assistant-plugin).
 
+### automate-home vs Home Assistant
+
+A natural question is: *why not just do all of this in Home Assistant?*
+
+Home Assistant is unmatched as a **device gateway** — discovering and talking to an
+enormous range of hardware, with a polished UI, mobile app, dashboards and voice
+integration that this project would never match. That's exactly why an
+[automate-home-assistant-plugin](https://github.com/majamassarini/automate-home-assistant-plugin)
+exists: let Home Assistant be the gateway to the device world, and let *Appliances* be
+the **behaviour** on top of it.
+
+Where automate-home shines is modelling **genuinely stateful appliance behaviour** —
+reacting to several independent event sources (presence, sleepiness, timers, user-forced
+commands, device echoes) and combining them into a small number of explicit, named
+states. Two things make that tractable here:
+
+- **Reuse through real class hierarchies.** An *Appliance* type is written **once** —
+  its states, transitions and guards — and every physical instance reuses that same,
+  already-debugged logic; only the wiring to the physical device changes. In plain Home
+  Assistant that behaviour ends up copy-pasted per device in YAML, or hand-rolled into a
+  templated blueprint, mixing behaviour and wiring back together.
+
+- **BDD tests as a regression net.** Every *Appliance* state and transition is covered
+  by BDD style tests — hundreds of scenarios that pin down exactly how it reacts to every
+  event in every state, the kind of timing- and ordering-sensitive coverage that's nearly
+  impossible to get from poking a real device and watching what happens.
+
+In short: reach for Home Assistant (or its plugin here) for **connectivity**. Reach for
+an *Appliance* when the **behaviour** itself is the hard part.
+
 ## Documentation
 
 For a deep dive into this project see the [documentation](https://automate-home.readthedocs.io/en/latest/?badge=latest).
