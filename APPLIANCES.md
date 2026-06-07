@@ -856,7 +856,7 @@ stateDiagram-v2
 
 **Module:** `home.appliance.sound.player`
 
-A multi-mode audio system with sleep-cycle awareness. When the occupant wakes up (`sleepiness=Awake`) it starts a **Fade In** (gradual volume ramp-up), timed by an elapsed event. When the occupant falls asleep from a forced-on state it starts a **Fade Out**. The user can force a fixed playlist/volume (**Forced On**) or an adaptive circadian-rhythm playlist (**Forced Circadian Rhythm**) at any time. A separate **Forced Off** state lets the user suppress the automatic wake-up fade-in.
+A multi-mode audio system with sleep-cycle awareness. When the occupant wakes up (`sleepiness=Awake`) it starts a **Fade In** (gradual volume ramp-up), timed by an elapsed event. When the occupant falls asleep from a forced-on state it starts a **Fade Out**. The user can force a fixed playlist/volume (**Forced On**) or an adaptive circadian-rhythm playlist (**Forced Circadian Rhythm**) at any time. A separate **Forced Off** state lets the user suppress the automatic wake-up fade-in. While forced on, if the occupant becomes sleepy (`sleepiness=Sleepy`) the player moves to a **Sleepy Forced On** state, keeping the same fixed playlist but switching to the sleepy volume; from there an `Awake` event returns it to **Forced On** and an `Asleep` event starts a **Fade Out**.
 
 ### Monitored events
 
@@ -881,13 +881,20 @@ stateDiagram-v2
     FadeIn --> Off         : presence=Off
     FadeIn --> ForcedOff   : forced=Off
 
+    ForcedOn --> SleepyForcedOn : sleepiness=Sleepy ∧ presence=On
     ForcedOn --> FadeOut   : sleepiness=Asleep ∧ presence=On
     ForcedOn --> Off       : presence=Off
-    ForcedOn --> Off       : forced=Not ∨ forced=Off [compute natural]
+    ForcedOn --> Off       : forced=Not ∨ forced=Off [instant jump]
+
+    SleepyForcedOn --> ForcedOn : sleepiness=Awake
+    SleepyForcedOn --> FadeOut  : sleepiness=Asleep ∧ presence=On
+    SleepyForcedOn --> Off      : presence=Off
+    SleepyForcedOn --> Off      : forced=Not ∨ forced=Off [instant jump]
+    SleepyForcedOn --> ForcedCR : forced=CircadianRhythm
 
     ForcedCR --> FadeOut   : sleepiness=Asleep ∧ presence=On
     ForcedCR --> Off       : presence=Off
-    ForcedCR --> Off       : forced=Not ∨ forced=Off [compute natural]
+    ForcedCR --> Off       : forced=Not ∨ forced=Off [instant jump]
 
     FadeOut --> Off        : elapsed=On [timer complete → inject elapsed=Off]
     FadeOut --> Off        : presence=Off
@@ -899,6 +906,7 @@ stateDiagram-v2
     state "Fade In"               as FadeIn
     state "Fade Out"              as FadeOut
     state "Forced On"             as ForcedOn
+    state "Sleepy Forced On"      as SleepyForcedOn
     state "Forced Circadian Rhythm" as ForcedCR
     state "Forced Off"            as ForcedOff
 ```
@@ -913,12 +921,18 @@ stateDiagram-v2
 | Fade In | elapsed=On | — | Off (elapsed=Off injected) |
 | Fade In | presence=Off | — | Off |
 | Fade In | forced=Off | — | Forced Off |
+| Forced On | sleepiness=Sleepy | presence=On | Sleepy Forced On |
 | Forced On | sleepiness=Asleep | presence=On | Fade Out |
 | Forced On | presence=Off | — | Off |
-| Forced On | forced=Not \| Off | — | natural state (Off) |
+| Forced On | forced=Not \| Off | — | Off (instant jump) |
+| Sleepy Forced On | sleepiness=Awake | — | Forced On |
+| Sleepy Forced On | sleepiness=Asleep | presence=On | Fade Out |
+| Sleepy Forced On | presence=Off | — | Off |
+| Sleepy Forced On | forced=Not \| Off | — | Off (instant jump) |
+| Sleepy Forced On | forced=CircadianRhythm | — | Forced Circadian Rhythm |
 | Forced CR | sleepiness=Asleep | presence=On | Fade Out |
 | Forced CR | presence=Off | — | Off |
-| Forced CR | forced=Not \| Off | — | natural state (Off) |
+| Forced CR | forced=Not \| Off | — | Off (instant jump) |
 | Fade Out | elapsed=On | — | Off (elapsed=Off injected) |
 | Fade Out | presence=Off | — | Off |
 | Fade Out | forced=Not \| Off | — | natural state (Off) |

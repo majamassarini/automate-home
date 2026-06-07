@@ -21,6 +21,9 @@ class Appliance(Parent):
         A user will choose which are the associated playlist he wants to listen to.
       - It can have an almost *fixed* playlist and volume when in a **forced on** state.
         The playlist and volume will be adjusted only by the user.
+        If the user is supposed to be sleepy while forced on, the sound player moves to a
+        **sleepy forced on** state instead, keeping the same fixed playlist but using the
+        *sleepy volume* in place of the regular one.
 
     The system puts the sound player in a **fade in** state when its time to wake up the user.
 
@@ -50,8 +53,9 @@ class Appliance(Parent):
       - *home.event.sleepiness.Event.Asleep* -> the system will put the sound player in a *fade out* state if already
         forced on or forced circadian rhythm.
       - *home.event.sleepiness.Event.Awake* -> the system will put the sound player in a *fade in* state.
-      - *home.event.sleepiness.Event.Sleepy* -> the system will use the sleepy volume if forced on or forced in a
-        circadian rhythm.
+      - *home.event.sleepiness.Event.Sleepy* -> the system will put a forced on sound player in a *sleepy forced on*
+        state, where the *sleepy volume* is used in place of the regular one. From there, an *Awake* event moves it
+        back to the regular *forced on* state and an *Asleep* event moves it to a *fade out* state.
 
     - **home.event.user.Event.(A|B|C)**: tells the system which *user profile use*, when in a
       *forced circadian rhythm* state
@@ -91,6 +95,7 @@ class Appliance(Parent):
     Final states:
 
     - **Forced on**
+    - **Sleepy forced on**
     - **Forced circadian rhythm**
     - **Fade in**
     - **Fade out**
