@@ -367,3 +367,29 @@ class Duration:
     def duration(self, value: int):
         event = lookup(self.DURATION_EVENT, self._events.items())  # type: ignore[attr-defined]
         self.update_by(event(value))  # type: ignore[attr-defined]
+
+
+class Position:
+    @property
+    def position(self) -> int:
+        return lookup_value(self.POSITION_EVENT, self._events.items())  # type: ignore[attr-defined]
+
+    @position.setter
+    def position(self, value: int):
+        event = lookup(self.POSITION_EVENT, self._events.items())  # type: ignore[attr-defined]
+        self.update_by(event(value))  # type: ignore[attr-defined]
+
+
+class IsStopped:
+
+    VALUE: ClassVar[str] = "Stopped"
+
+    @property
+    def is_stopped(self) -> bool:
+        return True
+
+
+class IsNotStopped:
+    @property
+    def is_stopped(self) -> bool:
+        return False
