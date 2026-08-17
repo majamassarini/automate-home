@@ -109,7 +109,7 @@ class Appliance(Parent):
     >>> old.compute()
     'Off'
     >>> new.compute()
-    'Forced On'
+    'Sleepy Forced On'
     >>> old, new = p.notify(home.appliance.sound.player.event.forced.Event.Not)
     >>> new.compute()
     'Off'

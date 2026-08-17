@@ -103,7 +103,7 @@ class State(Parent, Mixin, attribute.mixin.Volume, attribute.mixin.Playlist):
     >>> state = home.appliance.sound.player.state.off.State()
     >>> state = state.force("On")
     >>> state.compute()
-    'Forced On'
+    'Sleepy Forced On'
     >>> state = state.force("Off")
     >>> state.compute()
     'Off'
