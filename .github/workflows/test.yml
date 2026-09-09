@@ -6,10 +6,6 @@ on:
   pull_request:
     branches: [ main, dev ]
 
-permissions:
-  contents: read
-  code-quality: write
-
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -51,13 +47,12 @@ jobs:
         name: coverage-report-${{ matrix.python-version }}
         path: htmlcov/
 
-    - name: Report coverage to GitHub Code Quality
-      if: matrix.python-version == '3.14' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
-      uses: actions/upload-code-coverage@v1
+    - name: Upload coverage to Codecov
+      if: matrix.python-version == '3.14'
+      uses: codecov/codecov-action@v5
       with:
-        file: coverage.xml
-        language: Python
-        label: code-coverage/unittest-behave
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: coverage.xml
 
   docs:
     runs-on: ubuntu-latest
