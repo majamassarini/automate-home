@@ -9,12 +9,27 @@ roles:
     - triage
     - coder
     - review
+agents:
+    - name: triage
+      model: google-vertex/gemini-3.7-flash
+    - name: code
+      model: google-vertex/gemini-3.7-flash
+    - name: review
+      model: google-vertex/gemini-3.7-flash
 allowed_remote_resources:
     - https://raw.githubusercontent.com/fullsend-ai/fullsend/
     - https://raw.githubusercontent.com/fullsend-ai/agents/
 create_issues:
     allow_targets:
         repos:
+            - majamassarini/automate-ws
+            - majamassarini/knx-stack
+            - majamassarini/lifx-lib
+            - majamassarini/automate-knx-plugin
+            - majamassarini/automate-home-assistant-plugin
+            - majamassarini/automate-sonos-plugin
+            - majamassarini/automate-lifx-plugin
+            - majamassarini/homino
             - majamassarini/automate-home
             - fullsend-ai/fullsend
 mint_url: https://fullsend-mint-nbfspp6jda-uc.a.run.app
