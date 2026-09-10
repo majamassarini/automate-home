@@ -1,7 +1,7 @@
 # Automate home
 
 [![Tests](https://github.com/majamassarini/automate-home/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/majamassarini/automate-home/actions/workflows/test.yml)
-[![codecov](https://codecov.io/gh/majamassarini/automate-home/branch/main/graph/badge.svg?token=mjBUwkmcML)](https://codecov.io/gh/majamassarini/automate-home)
+[![codecov](https://codecov.io/gh/majamassarini/automate-home/branch/main/graph/badge.svg)](https://codecov.io/gh/majamassarini/automate-home)
 [![Documentation Status](https://readthedocs.org/projects/automate-home/badge/?version=latest)](https://automate-home.readthedocs.io/en/latest/?badge=latest)
 
 ![](icon_128x128.png)
