@@ -47,3 +47,15 @@ jobs:
 
     - name: Publish to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
+
+  notify-homino:
+    needs: publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify homino of new release
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.HOMINO_DISPATCH_TOKEN }}
+          repository: majamassarini/homino
+          event-type: release-published
+          client-payload: '{"repo": "${{ github.repository }}", "sha": "${{ github.sha }}"}'

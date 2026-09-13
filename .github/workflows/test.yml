@@ -79,3 +79,16 @@ jobs:
       with:
         name: documentation
         path: docs/build/html/
+
+  notify-homino:
+    needs: [test, docs]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify homino of main push
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.HOMINO_DISPATCH_TOKEN }}
+          repository: majamassarini/homino
+          event-type: main-pushed
+          client-payload: '{"repo": "${{ github.repository }}", "sha": "${{ github.sha }}"}'
