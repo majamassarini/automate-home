@@ -4,11 +4,29 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
+import os
 import socket
 
 from optparse import OptionParser, OptionGroup
 
 GOOGLE_DNS_SERVER = "8.8.8.8"
+
+
+def _env_default(name: str, default):
+    """
+    Read a default option value from the environment, so sensitive values
+    (e.g. tokens) don't have to be passed as a CLI argument, where they'd
+    be visible to other processes on the host (e.g. via ``ps``).
+
+    >>> import os
+    >>> os.environ['HOME_ASSISTANT_TOKEN'] = 'from-env'
+    >>> _env_default('HOME_ASSISTANT_TOKEN', '')
+    'from-env'
+    >>> del os.environ['HOME_ASSISTANT_TOKEN']
+    >>> _env_default('HOME_ASSISTANT_TOKEN', 'fallback')
+    'fallback'
+    """
+    return os.environ.get(name, default)
 
 
 def get_local_ip():
@@ -149,9 +167,10 @@ def parser() -> OptionParser:
     )
     ha_group.add_option(
         "--home-assistant-token",
-        default="",
+        default=_env_default("HOME_ASSISTANT_TOKEN", ""),
         dest="home_assistant_token",
-        help="Home Assistant Long Live Token",
+        help="Home Assistant Long Live Token "
+        "(falls back to the HOME_ASSISTANT_TOKEN env var)",
         metavar="HOME ASSISTANT LONG LIVE TOKEN",
     )
     ha_group.add_option(
