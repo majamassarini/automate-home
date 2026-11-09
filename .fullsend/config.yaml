@@ -11,8 +11,10 @@ roles:
     - review
 agents:
     - name: triage
-      model: google-vertex/gemini-3.7-flash
+      model: google-vertex/gemini-3.5-flash-lite
     - name: code
+      model: google-vertex/gemini-3.7-flash
+    - name: fix
       model: google-vertex/gemini-3.7-flash
     - name: review
       model: google-vertex/gemini-3.7-flash
