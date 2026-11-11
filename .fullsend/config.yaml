@@ -8,16 +8,16 @@ roles:
     - fix
 agents:
     - name: triage
-      source: https://raw.githubusercontent.com/majamassarini/fullsend-config/d688afb7013fc08bca9ec296e4e986677ad5cd08/harness/triage.yaml#sha256=828e5efe6c92931b4c3b3808d4dd513108f4de9d621d0a10567ef515ef65931d
-      model: google-vertex/gemini-3.5-flash-lite
+      source: https://raw.githubusercontent.com/majamassarini/fullsend-config/b6ccddb3ba63eb8c80ea23eae0f0bcebc5bf590d/harness/triage.yaml#sha256=cc4bf8f08f0b3bdf6b296123b53b7e1f5cf7babd85f9a5a13c33642ea326fb5f
+      model: google-vertex/gemini-3.8-flash
     - name: code
-      source: https://raw.githubusercontent.com/majamassarini/fullsend-config/d688afb7013fc08bca9ec296e4e986677ad5cd08/harness/code.yaml#sha256=2248f18c97a8a85c1cb2d756569014c9214aa6629224d6d2a6fcd606b61ae7e2
+      source: https://raw.githubusercontent.com/majamassarini/fullsend-config/b6ccddb3ba63eb8c80ea23eae0f0bcebc5bf590d/harness/code.yaml#sha256=2248f18c97a8a85c1cb2d756569014c9214aa6629224d6d2a6fcd606b61ae7e2
       model: google-vertex/gemini-3.8-flash
     - name: fix
-      source: https://raw.githubusercontent.com/majamassarini/fullsend-config/d688afb7013fc08bca9ec296e4e986677ad5cd08/harness/fix.yaml#sha256=d6890a592c11981b7d561912c6a112c5507f1875e7f26f4a21eaf888b48d0ffb
+      source: https://raw.githubusercontent.com/majamassarini/fullsend-config/b6ccddb3ba63eb8c80ea23eae0f0bcebc5bf590d/harness/fix.yaml#sha256=d6890a592c11981b7d561912c6a112c5507f1875e7f26f4a21eaf888b48d0ffb
       model: google-vertex/gemini-3.8-flash
     - name: review
-      source: https://raw.githubusercontent.com/majamassarini/fullsend-config/d688afb7013fc08bca9ec296e4e986677ad5cd08/harness/review.yaml#sha256=758b4d7876de0707fd8dd90d5c1e159939dcdd823248484d548e2b6d0c477187
+      source: https://raw.githubusercontent.com/majamassarini/fullsend-config/b6ccddb3ba63eb8c80ea23eae0f0bcebc5bf590d/harness/review.yaml#sha256=758b4d7876de0707fd8dd90d5c1e159939dcdd823248484d548e2b6d0c477187
       model: google-vertex/gemini-3.8-flash
       subagents:
         challenger: google-vertex/gemini-3.8-flash
