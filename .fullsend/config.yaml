@@ -19,6 +19,17 @@ agents:
     - name: review
       source: https://raw.githubusercontent.com/majamassarini/fullsend-config/d688afb7013fc08bca9ec296e4e986677ad5cd08/harness/review.yaml#sha256=758b4d7876de0707fd8dd90d5c1e159939dcdd823248484d548e2b6d0c477187
       model: google-vertex/gemini-3.8-flash
+      subagents:
+        challenger: google-vertex/gemini-3.8-flash
+        correctness: google-vertex/gemini-3.8-flash
+        cross-repo-contracts: google-vertex/gemini-3.8-flash
+        docs-currency: google-vertex/gemini-3.8-flash
+        intent-coherence: google-vertex/gemini-3.8-flash
+        risk-assessment: google-vertex/gemini-3.8-flash
+        security: google-vertex/gemini-3.8-flash
+        security-triage: google-vertex/gemini-3.5-flash-lite
+        style-conventions: google-vertex/gemini-3.8-flash
+        user-experience: google-vertex/gemini-3.8-flash
     - name: retro
       enabled: false
     - name: prioritize
