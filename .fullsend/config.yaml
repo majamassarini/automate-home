@@ -8,12 +8,16 @@ roles:
     - fix
 agents:
     - name: triage
+      source: https://raw.githubusercontent.com/majamassarini/fullsend-config/d688afb7013fc08bca9ec296e4e986677ad5cd08/harness/triage.yaml#sha256=828e5efe6c92931b4c3b3808d4dd513108f4de9d621d0a10567ef515ef65931d
       model: google-vertex/gemini-3.5-flash-lite
     - name: code
+      source: https://raw.githubusercontent.com/majamassarini/fullsend-config/d688afb7013fc08bca9ec296e4e986677ad5cd08/harness/code.yaml#sha256=2248f18c97a8a85c1cb2d756569014c9214aa6629224d6d2a6fcd606b61ae7e2
       model: google-vertex/gemini-3.8-flash
     - name: fix
+      source: https://raw.githubusercontent.com/majamassarini/fullsend-config/d688afb7013fc08bca9ec296e4e986677ad5cd08/harness/fix.yaml#sha256=d6890a592c11981b7d561912c6a112c5507f1875e7f26f4a21eaf888b48d0ffb
       model: google-vertex/gemini-3.8-flash
     - name: review
+      source: https://raw.githubusercontent.com/majamassarini/fullsend-config/d688afb7013fc08bca9ec296e4e986677ad5cd08/harness/review.yaml#sha256=758b4d7876de0707fd8dd90d5c1e159939dcdd823248484d548e2b6d0c477187
       model: google-vertex/gemini-3.8-flash
     - name: retro
       enabled: false
@@ -22,6 +26,8 @@ agents:
 allowed_remote_resources:
     - https://raw.githubusercontent.com/fullsend-ai/fullsend/
     - https://raw.githubusercontent.com/fullsend-ai/agents/
+    - https://raw.githubusercontent.com/majamassarini/fullsend-config/
+    - https://github.com/majamassarini/fullsend-config/
 create_issues:
     allow_targets:
         repos:
@@ -34,6 +40,7 @@ create_issues:
             - majamassarini/automate-home-assistant-plugin
             - majamassarini/automate-sonos-plugin
             - majamassarini/automate-lifx-plugin
+            - majamassarini/automate-prometheus-exporter
             - fullsend-ai/fullsend
 mint_url: https://fullsend-mint-nbfspp6jda-uc.a.run.app
 inference:
