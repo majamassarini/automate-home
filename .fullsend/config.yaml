@@ -10,6 +10,15 @@ agents:
     - name: triage
       source: https://raw.githubusercontent.com/majamassarini/fullsend-config/b6ccddb3ba63eb8c80ea23eae0f0bcebc5bf590d/harness/triage.yaml#sha256=cc4bf8f08f0b3bdf6b296123b53b7e1f5cf7babd85f9a5a13c33642ea326fb5f
       model: google-vertex/gemini-3.8-flash
+      trigger: |-
+        event.entity.kind == "work_item" && ((event.transition.kind == "comment_added"
+
+             && has(event.transition.comment.command)
+             && event.transition.comment.command == "/fs-triage"
+             && event.actor.kind == "human")
+            || (event.transition.kind == "label_changed"
+                && event.transition.label.name == "ready-for-triage"
+                && event.transition.label.action == "added"))
     - name: code
       source: https://raw.githubusercontent.com/majamassarini/fullsend-config/b6ccddb3ba63eb8c80ea23eae0f0bcebc5bf590d/harness/code.yaml#sha256=2248f18c97a8a85c1cb2d756569014c9214aa6629224d6d2a6fcd606b61ae7e2
       model: google-vertex/gemini-3.8-flash
@@ -30,6 +39,18 @@ agents:
         security-triage: google-vertex/gemini-3.5-flash-lite
         style-conventions: google-vertex/gemini-3.8-flash
         user-experience: google-vertex/gemini-3.8-flash
+      trigger: |-
+        (event.transition.kind == "comment_added"
+
+         && has(event.entity.linked_change_proposal)
+         && has(event.transition.comment.command)
+         && event.transition.comment.command == "/fs-review"
+         && event.actor.kind == "human")
+        || (event.entity.kind == "change_proposal"
+
+            && event.transition.kind == "label_changed"
+            && event.transition.label.name == "ready-for-review"
+            && event.transition.label.action == "added")
     - name: retro
       enabled: false
     - name: prioritize
