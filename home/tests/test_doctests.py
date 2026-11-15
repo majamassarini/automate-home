@@ -86,6 +86,32 @@ def load_tests(loader, tests, ignore):
         doctest.DocTestSuite(home.appliance.sound.player.event.volume_scale)
     )
     tests.addTests(
+        doctest.DocTestSuite(home.appliance.sound.player.event.play_mode)
+    )
+    tests.addTests(
+        doctest.DocTestSuite(
+            home.appliance.sound.player.event.sleepy_play_mode
+        )
+    )
+    tests.addTests(
+        doctest.DocTestSuite(
+            home.appliance.sound.player.event.fade_in.play_mode
+        )
+    )
+    tests.addTests(
+        doctest.DocTestSuite(
+            home.appliance.sound.player.event.fade_out.play_mode
+        )
+    )
+    tests.addTests(
+        doctest.DocTestSuite(
+            home.appliance.sound.player.event.forced.circadian_rhythm.play_mode
+        )
+    )
+    tests.addTests(
+        doctest.DocTestSuite(home.appliance.sound.player.event.group)
+    )
+    tests.addTests(
         doctest.DocTestSuite(
             home.appliance.sound.player.event.fade_in.volume_scale
         )

@@ -46,6 +46,7 @@ class State(
     VOLUME_EVENT = event.fade_out.volume.Event
     VOLUME_SCALE_EVENT = event.fade_out.volume_scale.Event
     PLAYLIST_EVENT = event.fade_out.playlist.Event
+    PLAY_MODE_EVENT = event.fade_out.play_mode.Event
 
     def __init__(self, events=None, events_disabled=None):
         self.off = home.appliance.sound.player.state.off.State

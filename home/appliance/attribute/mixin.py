@@ -418,6 +418,28 @@ class Playlist:
         self.update_by(event(value))  # type: ignore[attr-defined]
 
 
+class PlayMode:
+    """
+    The play mode (repeat, shuffle) of the current state, read from the
+    state's own ``PLAY_MODE_EVENT``.
+    """
+
+    @property
+    def play_mode(self) -> str:
+        return lookup_value(self.PLAY_MODE_EVENT, self._events.items())  # type: ignore[attr-defined]
+
+
+class Group:
+    """
+    The name of the player this one is grouped with (the coordinator), or
+    an empty string when it plays on its own.
+    """
+
+    @property
+    def group(self) -> str:
+        return lookup_value(self.GROUP_EVENT, self._events.items())  # type: ignore[attr-defined]
+
+
 class Duration:
     @property
     def duration(self) -> int:

@@ -398,6 +398,69 @@ Feature: A sound player appliance
       | 75    | 20            | 40             | Asleep      | CircadianRhythm | Sleepy      | sound.player.state.forced.circadian_rhythm | 70       |
       | 75    | 20            | 40             | Awake       | Off             | Sleepy      | sound.player.state.forced.off              | 70       |
 
+  Scenario Outline: The Sound Player shows its property: play_mode, from the event of its own state
+    Given A sound.player.Appliance appliance
+    And   the appliance has an internal appliance.sound.player.event.play_mode state at Normal
+    And   the appliance has an internal appliance.sound.player.event.sleepy_play_mode state at RepeatOne
+    And   the appliance has an internal appliance.sound.player.event.forced.circadian_rhythm.play_mode state at ShuffleNoRepeat
+    And   the appliance has an internal appliance.sound.player.event.fade_in.play_mode state at Shuffle
+    And   the appliance has an internal appliance.sound.player.event.fade_out.play_mode state at ShuffleRepeatOne
+    And   the appliance has an internal event.presence state at On
+    And   the appliance has an internal event.sleepiness state at <sleepiness1>
+    And   the appliance has an internal appliance.sound.player.event.forced state at <forced>
+    And   the appliance has an internal event.sleepiness state at <sleepiness2>
+    And   it's calculated state is <state>
+    When  it's asked for its state property play_mode
+    Then  the response is <response>
+
+    Examples:
+      | sleepiness1 | forced          | sleepiness2 | state                                      | response         |
+      | Asleep      | Not             | Asleep      | sound.player.state.off                     | Normal           |
+      | Sleepy      | Not             | Awake       | sound.player.state.fade_in                 | Shuffle          |
+      | Sleepy      | On              | Asleep      | sound.player.state.fade_out                | ShuffleRepeatOne |
+      | Sleepy      | On              | Sleepy      | sound.player.state.forced.sleepy_on        | RepeatOne        |
+      | Sleepy      | On              | Awake       | sound.player.state.forced.on               | Normal           |
+      | Asleep      | CircadianRhythm | Sleepy      | sound.player.state.forced.circadian_rhythm | ShuffleNoRepeat  |
+      | Awake       | Off             | Sleepy      | sound.player.state.forced.off              | Normal           |
+
+  Scenario Outline: The Sound Player shows its property: play_mode, with the default of each state
+    Given A sound.player.Appliance appliance
+    And   the appliance has an internal event.presence state at On
+    And   the appliance has an internal event.sleepiness state at <sleepiness1>
+    And   the appliance has an internal appliance.sound.player.event.forced state at <forced>
+    And   the appliance has an internal event.sleepiness state at <sleepiness2>
+    And   it's calculated state is <state>
+    When  it's asked for its state property play_mode
+    Then  the response is <response>
+
+    Examples:
+      | sleepiness1 | forced          | sleepiness2 | state                                      | response  |
+      | Sleepy      | Not             | Awake       | sound.player.state.fade_in                 | RepeatAll |
+      | Sleepy      | On              | Asleep      | sound.player.state.fade_out                | RepeatAll |
+      | Sleepy      | On              | Sleepy      | sound.player.state.forced.sleepy_on        | RepeatAll |
+      | Sleepy      | On              | Awake       | sound.player.state.forced.on               | RepeatAll |
+      | Asleep      | CircadianRhythm | Sleepy      | sound.player.state.forced.circadian_rhythm | Shuffle   |
+
+  Scenario Outline: The Sound Player shows its property: group, the same in every state
+    Given A sound.player.Appliance appliance
+    And   the appliance has an internal appliance.sound.player.event.group state at Kitchen
+    And   the appliance has an internal event.presence state at On
+    And   the appliance has an internal event.sleepiness state at <sleepiness1>
+    And   the appliance has an internal appliance.sound.player.event.forced state at <forced>
+    And   the appliance has an internal event.sleepiness state at <sleepiness2>
+    And   it's calculated state is <state>
+    When  it's asked for its state property group
+    Then  the response is Kitchen
+
+    Examples:
+      | sleepiness1 | forced          | sleepiness2 | state                                      |
+      | Asleep      | Not             | Asleep      | sound.player.state.off                     |
+      | Sleepy      | Not             | Awake       | sound.player.state.fade_in                 |
+      | Sleepy      | On              | Asleep      | sound.player.state.fade_out                |
+      | Sleepy      | On              | Sleepy      | sound.player.state.forced.sleepy_on        |
+      | Asleep      | CircadianRhythm | Sleepy      | sound.player.state.forced.circadian_rhythm |
+      | Awake       | Off             | Sleepy      | sound.player.state.forced.off              |
+
   Scenario Outline: The Sound Player shows its property: playlist
     Given A sound.player.Appliance appliance
     And   the appliance has an internal appliance.sound.player.event.playlist state at Playlist

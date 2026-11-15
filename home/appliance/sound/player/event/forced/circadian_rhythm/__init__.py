@@ -8,4 +8,5 @@ from home.appliance.sound.player.event.forced.circadian_rhythm import (
     playlist_a,
     playlist_b,
     playlist_c,
+    play_mode,
 )

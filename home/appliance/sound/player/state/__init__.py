@@ -51,6 +51,30 @@ class Playlist(DoNothing):
     pass
 
 
+class PlayMode(DoNothing):
+    pass
+
+
+class SleepyPlayMode(DoNothing):
+    pass
+
+
+class FadeInPlayMode(DoNothing):
+    pass
+
+
+class FadeOutPlayMode(DoNothing):
+    pass
+
+
+class CircadianPlayMode(DoNothing):
+    pass
+
+
+class Group(DoNothing):
+    pass
+
+
 class User(DoNothing):
     pass
 
@@ -98,6 +122,12 @@ class Mixin(object):
                 event.forced.circadian_rhythm.playlist_a.Event("unknown")
             ): CircadianPlaylistA(),
             type(event.playlist.Event("unknown")): Playlist(),
+            event.play_mode.Event: PlayMode(),
+            event.sleepy_play_mode.Event: SleepyPlayMode(),
+            event.fade_in.play_mode.Event: FadeInPlayMode(),
+            event.fade_out.play_mode.Event: FadeOutPlayMode(),
+            event.forced.circadian_rhythm.play_mode.Event: CircadianPlayMode(),
+            event.group.Event: Group(),
             type(event.volume.Event(30)): Volume(),
             type(event.sleepy_volume.Event(10)): SleepyVolume(),
             type(event.volume_scale.Event(100)): VolumeScale(),
@@ -112,7 +142,14 @@ class Mixin(object):
         super(Mixin, self).init_callables()
 
 
-class State(Parent, Mixin, attribute.mixin.Volume, attribute.mixin.Playlist):
+class State(
+    Parent,
+    Mixin,
+    attribute.mixin.Volume,
+    attribute.mixin.Playlist,
+    attribute.mixin.PlayMode,
+    attribute.mixin.Group,
+):
     """
     >>> import home
     >>> state = home.appliance.sound.player.state.off.State()
@@ -138,12 +175,20 @@ class State(Parent, Mixin, attribute.mixin.Volume, attribute.mixin.Playlist):
         event.volume.Event(20),
         event.sleepy_volume.Event(10),
         event.volume_scale.Event(100),
+        event.play_mode.Event.RepeatAll,
+        event.sleepy_play_mode.Event.RepeatAll,
+        event.fade_in.play_mode.Event.RepeatAll,
+        event.fade_out.play_mode.Event.RepeatAll,
+        event.forced.circadian_rhythm.play_mode.Event.Shuffle,
+        event.group.Event(""),
         home_event.user.Event.A,
         home_event.sleepiness.Event.Sleepy,
         home_event.presence.Event.Off,
         home_event.elapsed.Event.Off,
         event.forced.Event.Not,
     ]
+
+    GROUP_EVENT = event.group.Event
 
     @property
     def forced_enum(self):

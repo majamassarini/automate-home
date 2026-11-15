@@ -41,6 +41,7 @@ class State(
 
     VOLUME_EVENT = event.volume.Event
     PLAYLIST_EVENT = event.playlist.Event
+    PLAY_MODE_EVENT = event.play_mode.Event
 
     def __init__(self, events=None, events_disabled=None):
         self.reset = home.appliance.sound.player.state.off.State
