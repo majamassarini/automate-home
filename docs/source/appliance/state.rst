@@ -91,6 +91,12 @@ One of:
   - :code:`home.appliance.sound.player.event.sleepy_volume.Event`
   - :code:`home.appliance.sound.player.event.volume_scale.Event`
   - :code:`home.appliance.sound.player.event.playlist.Event`
+  - :code:`home.appliance.sound.player.event.play_mode.Event`
+  - :code:`home.appliance.sound.player.event.sleepy_play_mode.Event`
+  - :code:`home.appliance.sound.player.event.forced.circadian_rhythm.play_mode.Event`
+  - :code:`home.appliance.sound.player.event.fade_in.play_mode.Event`
+  - :code:`home.appliance.sound.player.event.fade_out.play_mode.Event`
+  - :code:`home.appliance.sound.player.event.group.Event`
   - :code:`home.appliance.sound.player.event.forced.circadian_rhythm.playlist_a.Event`
   - :code:`home.appliance.sound.player.event.forced.circadian_rhythm.playlist_b.Event`
   - :code:`home.appliance.sound.player.event.forced.circadian_rhythm.playlist_c.Event`

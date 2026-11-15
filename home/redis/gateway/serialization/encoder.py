@@ -21,6 +21,7 @@ from home.redis.gateway.serialization import (
     sleepy_volume,
     volume_scale,
     playlist,
+    group,
     circadian_rhythm,
     lux_balancing,
     show,
@@ -135,6 +136,10 @@ class Encoder(json.JSONEncoder):
                 (
                     home.appliance.sound.player.event.playlist.Event,
                     playlist.Serializer(),
+                ),
+                (
+                    home.appliance.sound.player.event.group.Event,
+                    group.Serializer(),
                 ),
                 (
                     home.appliance.sound.player.event.forced.circadian_rhythm.playlist_a.Event,

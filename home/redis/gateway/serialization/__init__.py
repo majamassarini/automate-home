@@ -14,6 +14,7 @@ from home.redis.gateway.serialization import (
     volume_scale,
     volume,
     playlist,
+    group,
     circadian_rhythm,
     lux_balancing,
     show,

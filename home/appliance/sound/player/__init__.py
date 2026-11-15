@@ -75,6 +75,19 @@ class Appliance(Parent):
       Sending decreasing percentages fades the player out without losing its *sleepy volume*;
       sending 100 restores it. A volume change reported by the device is rescaled into the *sleepy volume*.
 
+    - **home.appliance.sound.player.event.play_mode.Event.(Normal|RepeatAll|RepeatOne|Shuffle|ShuffleNoRepeat|ShuffleRepeatOne)**:
+      tells the system the play mode (repeat, shuffle) to be used when the sound player is in a *forced on* state
+      (default *RepeatAll*). Each state that plays has its own play mode event:
+      *home.appliance.sound.player.event.sleepy_play_mode.Event* for the *sleepy forced on* state (default *RepeatAll*),
+      *home.appliance.sound.player.event.forced.circadian_rhythm.play_mode.Event* for the *forced circadian rhythm*
+      state (default *Shuffle*), *home.appliance.sound.player.event.fade_in.play_mode.Event* and
+      *home.appliance.sound.player.event.fade_out.play_mode.Event* for the *fade in* and *fade out* states
+      (default *RepeatAll*).
+
+    - **home.appliance.sound.player.event.group.Event**: tells the system the name of the player this one
+      plays together with (the group coordinator), in any state. An empty name (the default) means the
+      player plays on its own.
+
     - **home.appliance.sound.player.event.forced.circadian_rhythm.playlist_a.Event**: tells the system the playlist
       to be used for user A, when the sound player is in a *forced circadian rhythm* state
 

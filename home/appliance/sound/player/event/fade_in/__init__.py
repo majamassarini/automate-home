@@ -8,4 +8,5 @@ from home.appliance.sound.player.event.fade_in import (
     playlist,
     volume,
     volume_scale,
+    play_mode,
 )
