@@ -216,8 +216,9 @@ class Process(object):
         """
         React to an appliance state update broadcast by another node via Redis.
 
-        The local appliance is updated to match the received state, then
-        every trigger-less performer for that appliance is executed and its
+        The local appliance is updated to match the received state, the
+        state-based scheduler triggers are evaluated once, then every
+        trigger-less performer for that appliance is executed and its
         protocol messages are sent.
 
         :param scheduler: the APScheduler instance
@@ -230,6 +231,12 @@ class Process(object):
                 new_appliance.name, old_state.compute(), new_state.compute()
             )
         )
+        try:
+            await self._schedule_by_appliance_state(
+                scheduler, old_appliance, old_state, new_state
+            )
+        except Exception as e:
+            self._logger.error(e)
         for performer in [
             performer
             for performer in self._performers
@@ -239,9 +246,6 @@ class Process(object):
                 not performer.triggers
             ):  # otherwise it must be executed when a trigger is triggered...
                 try:
-                    await self._schedule_by_appliance_state(
-                        scheduler, performer.appliance, old_state, new_state
-                    )
                     msgs = performer.execute(old_state, new_state)
                     if msgs:
                         self._logger.debug(
