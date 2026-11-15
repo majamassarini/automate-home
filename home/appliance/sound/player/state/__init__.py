@@ -55,6 +55,10 @@ class SleepyVolume(DoNothing):
     pass
 
 
+class VolumeScale(DoNothing):
+    pass
+
+
 class Elapsed(DoNothing):
     pass
 
@@ -86,6 +90,7 @@ class Mixin(object):
             type(event.playlist.Event("unknown")): Playlist(),
             type(event.volume.Event(30)): Volume(),
             type(event.sleepy_volume.Event(10)): SleepyVolume(),
+            type(event.volume_scale.Event(100)): VolumeScale(),
             type(home_event.user.Event.A): User(),
             type(home_event.elapsed.Event.Off): Elapsed(),
             type(home_event.sleepiness.Event.Awake): Sleepiness(),
@@ -120,6 +125,7 @@ class State(Parent, Mixin, attribute.mixin.Volume, attribute.mixin.Playlist):
         event.playlist.Event("Common"),
         event.volume.Event(20),
         event.sleepy_volume.Event(10),
+        event.volume_scale.Event(100),
         home_event.user.Event.A,
         home_event.sleepiness.Event.Sleepy,
         home_event.presence.Event.Off,

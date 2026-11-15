@@ -11,6 +11,7 @@ from home.redis.gateway.serialization import (
     saturation,
     temperature,
     sleepy_volume,
+    volume_scale,
     volume,
     playlist,
     circadian_rhythm,

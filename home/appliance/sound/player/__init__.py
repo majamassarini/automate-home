@@ -70,6 +70,11 @@ class Appliance(Parent):
       when the sound player is in a *forced on/circadian rhythm* state and the user is supposed to be sleepy,
       like in the evening.
 
+    - **home.appliance.sound.player.event.volume_scale.Event**: tells the system the percentage of the
+      *sleepy volume* actually played when the sound player is in a *sleepy forced on* state (default 100).
+      Sending decreasing percentages fades the player out without losing its *sleepy volume*;
+      sending 100 restores it. A volume change reported by the device is rescaled into the *sleepy volume*.
+
     - **home.appliance.sound.player.event.forced.circadian_rhythm.playlist_a.Event**: tells the system the playlist
       to be used for user A, when the sound player is in a *forced circadian rhythm* state
 

@@ -82,6 +82,10 @@ def load_tests(loader, tests, ignore):
     )
     tests.addTests(doctest.DocTestSuite(home.appliance.sound.player))
     tests.addTests(doctest.DocTestSuite(home.appliance.sound.player.state))
+    tests.addTests(
+        doctest.DocTestSuite(home.appliance.sound.player.event.volume_scale)
+    )
+    tests.addTests(doctest.DocTestSuite(home.appliance.attribute.mixin))
     tests.addTests(doctest.DocTestSuite(home.appliance.thermostat.presence))
     tests.addTests(
         doctest.DocTestSuite(home.appliance.thermostat.presence.event.setpoint)
