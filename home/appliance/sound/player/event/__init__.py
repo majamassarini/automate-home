@@ -7,6 +7,7 @@
 from home.appliance.sound.player.event import (
     volume,
     sleepy_volume,
+    volume_scale,
     playlist,
     forced,
     fade_in,

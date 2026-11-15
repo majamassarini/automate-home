@@ -40,12 +40,14 @@ class State(
     attribute.mixin.IsOn,
     attribute.mixin.IsNotFading,
     attribute.mixin.IsNotCircadianRhythm,
+    attribute.mixin.ScaledVolume,
     Parent,
 ):
 
     VALUE = "Sleepy Forced On"
 
     VOLUME_EVENT = event.sleepy_volume.Event
+    VOLUME_SCALE_EVENT = event.volume_scale.Event
     PLAYLIST_EVENT = event.playlist.Event
 
     def __init__(self, events=None, events_disabled=None):

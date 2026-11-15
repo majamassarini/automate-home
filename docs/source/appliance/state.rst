@@ -89,6 +89,7 @@ One of:
   - :code:`home.appliance.light.event.circadian_rhythm.temperature.Event`
   - :code:`home.appliance.sound.player.event.volume.Event`
   - :code:`home.appliance.sound.player.event.sleepy_volume.Event`
+  - :code:`home.appliance.sound.player.event.volume_scale.Event`
   - :code:`home.appliance.sound.player.event.playlist.Event`
   - :code:`home.appliance.sound.player.event.forced.circadian_rhythm.playlist_a.Event`
   - :code:`home.appliance.sound.player.event.forced.circadian_rhythm.playlist_b.Event`

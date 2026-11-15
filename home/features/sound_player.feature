@@ -367,6 +367,34 @@ Feature: A sound player appliance
       | Asleep      | CircadianRhythm | Sleepy      | sound.player.state.forced.circadian_rhythm | 70       |
       | Awake       | Off             | Sleepy      | sound.player.state.forced.off              | 70       |
 
+  Scenario Outline: The Sound Player shows its property: volume, scaled only in a sleepy forced on state
+    Given A sound.player.Appliance appliance
+    And   the appliance has an internal appliance.sound.player.event.volume state at 70
+    And   the appliance has an internal appliance.sound.player.event.sleepy_volume state at 60
+    And   the appliance has an internal appliance.sound.player.event.volume_scale state at <scale>
+    And   the appliance has an internal appliance.sound.player.event.fade_in.volume state at 50
+    And   the appliance has an internal appliance.sound.player.event.fade_out.volume state at 80
+    And   the appliance has an internal event.presence state at On
+    And   the appliance has an internal event.sleepiness state at <sleepiness1>
+    And   the appliance has an internal appliance.sound.player.event.forced state at <forced>
+    And   the appliance has an internal event.sleepiness state at <sleepiness2>
+    And   it's calculated state is <state>
+    When  it's asked for its state property volume
+    Then  the response is <response>
+
+    Examples:
+      | scale | sleepiness1 | forced          | sleepiness2 | state                                      | response |
+      | 100   | Sleepy      | On              | Sleepy      | sound.player.state.forced.sleepy_on        | 60       |
+      | 75    | Sleepy      | On              | Sleepy      | sound.player.state.forced.sleepy_on        | 45       |
+      | 50    | Sleepy      | On              | Sleepy      | sound.player.state.forced.sleepy_on        | 30       |
+      | 25    | Sleepy      | On              | Sleepy      | sound.player.state.forced.sleepy_on        | 15       |
+      | 50    | Asleep      | Not             | Asleep      | sound.player.state.off                     | 70       |
+      | 50    | Sleepy      | Not             | Awake       | sound.player.state.fade_in                 | 50       |
+      | 50    | Sleepy      | On              | Asleep      | sound.player.state.fade_out                | 80       |
+      | 50    | Sleepy      | On              | Awake       | sound.player.state.forced.on               | 70       |
+      | 50    | Asleep      | CircadianRhythm | Sleepy      | sound.player.state.forced.circadian_rhythm | 70       |
+      | 50    | Awake       | Off             | Sleepy      | sound.player.state.forced.off              | 70       |
+
   Scenario Outline: The Sound Player shows its property: playlist
     Given A sound.player.Appliance appliance
     And   the appliance has an internal appliance.sound.player.event.playlist state at Playlist

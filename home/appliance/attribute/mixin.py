@@ -336,6 +336,66 @@ class Volume:
         self.update_by(event(value))  # type: ignore[attr-defined]
 
 
+class ScaledVolume:
+    """
+    The volume played is a percentage (VOLUME_SCALE_EVENT) of the stored
+    volume (VOLUME_EVENT), so the volume can be faded without losing the
+    stored value: setting the scale back to 100 restores it.
+
+    The setter receives the volume reported by the device. A report equal to
+    the played volume is the echo of our own command and changes nothing,
+    otherwise rounding would drift the stored volume (10 * 75% = 8 played,
+    8 / 75% = 11 stored). A different report is a user's change: the stored
+    volume is rescaled so that the played volume matches it.
+
+    >>> import home
+    >>> event = home.appliance.sound.player.event
+    >>> State = home.appliance.sound.player.state.off.State
+    >>> state = State()
+    >>> for e in State.DEFAULTS:
+    ...     state = state.next(e)
+    >>> state = state.next(event.forced.Event.On)
+    >>> state.compute()
+    'Sleepy Forced On'
+    >>> state.volume
+    10
+    >>> state = state.next(event.volume_scale.Event(75))
+    >>> state.volume
+    8
+    >>> state.volume = 8
+    >>> state.volume
+    8
+    >>> state = state.next(event.volume_scale.Event(100))
+    >>> state.volume
+    10
+    >>> state = state.next(event.volume_scale.Event(50))
+    >>> state.volume = 6
+    >>> state.volume
+    6
+    >>> state = state.next(event.volume_scale.Event(100))
+    >>> state.volume
+    12
+    """
+
+    @property
+    def volume(self) -> int:
+        volume = lookup_value(self.VOLUME_EVENT, self._events.items())  # type: ignore[attr-defined]
+        scale = lookup_value(self.VOLUME_SCALE_EVENT, self._events.items())  # type: ignore[attr-defined]
+        if scale is None:
+            return volume
+        return round(volume * scale / 100)
+
+    @volume.setter
+    def volume(self, value: int):
+        if value == self.volume:
+            return
+        scale = lookup_value(self.VOLUME_SCALE_EVENT, self._events.items())  # type: ignore[attr-defined]
+        if scale:
+            value = min(100, round(value * 100 / scale))
+        event = lookup(self.VOLUME_EVENT, self._events.items())  # type: ignore[attr-defined]
+        self.update_by(event(value))  # type: ignore[attr-defined]
+
+
 class Setpoint:
     @property
     def setpoint(self) -> float:
