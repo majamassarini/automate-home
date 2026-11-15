@@ -100,11 +100,17 @@ class Description(metaclass=Registry):
         >>> home.protocol.Description(None).reaches_a_device_of(Message(["a"]))
         False
 
+        Addresses don't need to be hashable (e.g. ``[ip, port]`` lists):
+
+        >>> Message([["10.0.0.1", 56700]]).reaches_a_device_of(Message([["10.0.0.1", 56700]]))
+        True
+
         :param another_description: a protocol message description
         :return: bool
         """
-        return self.PROTOCOL == another_description.PROTOCOL and bool(
-            set(self.addresses).intersection(another_description.addresses)
+        return self.PROTOCOL == another_description.PROTOCOL and any(
+            address in another_description.addresses
+            for address in self.addresses
         )
 
     @classmethod
