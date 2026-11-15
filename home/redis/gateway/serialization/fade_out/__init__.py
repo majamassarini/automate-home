@@ -4,4 +4,8 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
-from home.redis.gateway.serialization.fade_out import playlist, volume
+from home.redis.gateway.serialization.fade_out import (
+    playlist,
+    volume,
+    volume_scale,
+)

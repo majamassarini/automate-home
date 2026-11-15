@@ -90,11 +90,19 @@ class Appliance(Parent):
     - **home.appliance.sound.player.event.fade_in.volume.Event**: tells the system the volume to be used,
       when the sound player is in a *fade in* state
 
+    - **home.appliance.sound.player.event.fade_in.volume_scale.Event**: tells the system the percentage of the
+      *fade in volume* actually played when the sound player is in a *fade in* state (default 100).
+      Sending increasing percentages steps the fade in up to its *fade in volume*.
+
     - **home.appliance.sound.player.event.fade_out.playlist.Event**: tells the system the playlist to be used,
       when the sound player is in a *fade out* state
 
     - **home.appliance.sound.player.event.fade_out.volume.Event**: tells the system the volume to be used,
       when the sound player is in a *fade out* state
+
+    - **home.appliance.sound.player.event.fade_out.volume_scale.Event**: tells the system the percentage of the
+      *fade out volume* actually played when the sound player is in a *fade out* state (default 100).
+      Sending decreasing percentages steps the fade out down from its *fade out volume*.
 
 
     Final states:
