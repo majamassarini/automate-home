@@ -174,13 +174,105 @@ class Process(object):
                     ):
                         await self.schedule(performer, scheduler_trigger)
 
+    def _make_msgs(self, appliance, old_state, new_state):
+        """
+        Ask the commands of every performer of *appliance* which protocol
+        messages the state change needs.
+
+        Commands decide only from the old and new state, so every performer
+        runs, whatever caused the change.
+
+        :param appliance: the appliance whose state changed
+        :param old_state: the appliance state before the change
+        :param new_state: the appliance state after the change
+        :return: a list of ``(performer, msgs)``
+        """
+        return [
+            (performer, performer.execute(old_state, new_state))
+            for performer in self._my_home.find_performers_by_appliance(
+                appliance
+            )
+        ]
+
+    def _make_msgs_except_echo(
+        self, appliance, old_state, new_state, description
+    ):
+        """
+        Like :py:meth:`_make_msgs`, but leave out the commands for the device
+        that reported the change (*description*), so its own change isn't
+        echoed back to it.
+
+        :param appliance: the appliance whose state changed
+        :param old_state: the appliance state before the change
+        :param new_state: the appliance state after the change
+        :param description: the protocol message that changed the state
+        :return: a list of ``(performer, msgs)``
+        """
+        return [
+            (
+                performer,
+                performer.execute_except_to(old_state, new_state, description),
+            )
+            for performer in self._my_home.find_performers_by_appliance(
+                appliance
+            )
+        ]
+
+    def _notify(self, appliance, events):
+        """
+        Notify *events* to *appliance*, one at a time, and collect the
+        protocol messages each state change needs from every performer of
+        the appliance.
+
+        :param appliance: the appliance to notify
+        :param events: the events to notify, in order
+        :return: ``(msgs, old_state, new_state)``: a list of
+            ``(performer, msgs)``, the state before the first event and the
+            state after the last one
+        """
+        msgs = []
+        first_old_state = None
+        new_state = None
+        for event in events:
+            old_state, new_state = appliance.notify(event)
+            if first_old_state is None:
+                first_old_state = old_state
+            msgs.extend(self._make_msgs(appliance, old_state, new_state))
+        return msgs, first_old_state, new_state
+
+    async def _write(self, msgs_by_performer):
+        """
+        Send the protocol messages of each performer through every
+        protocol writer.
+
+        :param msgs_by_performer: a list of ``(performer, msgs)``
+        """
+        for performer, msgs in msgs_by_performer:
+            if msgs:
+                self._logger.info(
+                    "Performer {} will send {}".format(performer.name, msgs)
+                )
+                for writer in self._protocols_writers:
+                    try:
+                        await asyncio.wait_for(
+                            writer(msgs, performer), timeout=5.0
+                        )
+                    except Exception as e:
+                        self._logger.error(
+                            "Writer failed for performer %s: %s",
+                            performer.name,
+                            e,
+                        )
+
     async def _update_performers_by_protocol_trigger(self, scheduler, trigger):
         """
         Apply a protocol trigger to every performer that listens to it.
 
         For each matching performer the appliance state is updated, any
-        state-based scheduler triggers are evaluated, the resulting
-        protocol messages are sent, and the Redis gateway is notified.
+        state-based scheduler triggers are evaluated, the Redis gateway is
+        notified and the commands of every performer of the appliance send
+        their protocol messages, except those for the device the trigger
+        comes from.
 
         :param scheduler: the APScheduler instance (forwarded to
             :py:meth:`_schedule_by_appliance_state`)
@@ -193,22 +285,13 @@ class Process(object):
                     await self._schedule_by_appliance_state(
                         scheduler, performer.appliance, old_state, new_state
                     )
-                    msgs = performer.execute(old_state, new_state)
+                    msgs = self._make_msgs_except_echo(
+                        performer.appliance, old_state, new_state, trigger
+                    )
                     await self._redis_gateway.on_appliance_updated_by_process(
                         performer.appliance, old_state, new_state
                     )
-                    if msgs:
-                        for writer in self._protocols_writers:
-                            try:
-                                await asyncio.wait_for(
-                                    writer(msgs, performer), timeout=5.0
-                                )
-                            except Exception as e:
-                                self._logger.error(
-                                    "Writer failed for performer %s: %s",
-                                    performer.name,
-                                    e,
-                                )
+                    await self._write(msgs)
             except Exception as e:
                 self._logger.error(e)
 
@@ -217,9 +300,8 @@ class Process(object):
         React to an appliance state update broadcast by another node via Redis.
 
         The local appliance is updated to match the received state, the
-        state-based scheduler triggers are evaluated once, then every
-        trigger-less performer for that appliance is executed and its
-        protocol messages are sent.
+        state-based scheduler triggers are evaluated once, then the commands
+        of every performer of that appliance send their protocol messages.
 
         :param scheduler: the APScheduler instance
         :param new_appliance: the updated appliance received from Redis
@@ -237,38 +319,12 @@ class Process(object):
             )
         except Exception as e:
             self._logger.error(e)
-        for performer in [
-            performer
-            for performer in self._performers
-            if performer.is_for(old_appliance)
-        ]:
-            if (
-                not performer.triggers
-            ):  # otherwise it must be executed when a trigger is triggered...
-                try:
-                    msgs = performer.execute(old_state, new_state)
-                    if msgs:
-                        self._logger.debug(
-                            "Performer {} sending {} ({} -> {})".format(
-                                performer.name,
-                                msgs,
-                                old_state.compute(),
-                                new_state.compute(),
-                            )
-                        )
-                    for writer in self._protocols_writers:
-                        try:
-                            await asyncio.wait_for(
-                                writer(msgs, performer), timeout=5.0
-                            )
-                        except Exception as e:
-                            self._logger.error(
-                                "Writer failed for performer %s: %s",
-                                performer.name,
-                                e,
-                            )
-                except Exception as e:
-                    self._logger.error(e)
+        try:
+            await self._write(
+                self._make_msgs(old_appliance, old_state, new_state)
+            )
+        except Exception as e:
+            self._logger.error(e)
 
     async def _on_performer_updated_by_redis(
         self, performer, old_state, new_state
@@ -374,7 +430,9 @@ class Process(object):
                             )
                         )
                     else:
-                        msgs, old_state, new_state = performer.notify(events)
+                        msgs, old_state, new_state = self._notify(
+                            performer.appliance, events
+                        )
                         self._logger.debug(
                             "Performer {} notified by Scheduler Trigger {}".format(
                                 performer.name, trigger.name
@@ -389,24 +447,7 @@ class Process(object):
                         await self._redis_gateway.on_performer_updated_by_process(
                             performer, old_state, new_state
                         )
-                        if msgs:
-                            self._logger.info(
-                                "Performer {} called by Protocol Trigger {}"
-                                " will send {}".format(
-                                    performer.name, trigger.name, msgs
-                                )
-                            )
-                        for writer in self._protocols_writers:
-                            try:
-                                await asyncio.wait_for(
-                                    writer(msgs, performer), timeout=5.0
-                                )
-                            except Exception as e:
-                                self._logger.error(
-                                    "Writer failed for performer %s: %s",
-                                    performer.name,
-                                    e,
-                                )
+                        await self._write(msgs)
                 except Exception as e:
                     self._logger.error(e)
             if trigger.is_enabled:

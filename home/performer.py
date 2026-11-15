@@ -99,6 +99,35 @@ class Performer(object):
             result.extend(command.make_msgs_from(old_state, new_state))
         return result
 
+    def execute_except_to(
+        self,
+        old_state: home.appliance.State,
+        new_state: home.appliance.State,
+        description: home.protocol.Description,
+    ) -> Iterable[Any]:
+        """
+        Like :py:meth:`execute`, but leave out the commands for the device
+        the given protocol message description comes from: the change it
+        reported is already on that device, sending it back would be an echo.
+
+        :param old_state: the old Appliance State
+        :param new_state: the new Appliance State
+        :param description: the protocol message description that changed
+            the Appliance State
+        :return: a list of protocol messages to be send through the Gateway
+        """
+        result = []
+        for command in self._commands:
+            if command.reaches_a_device_of(description):
+                self._logger.debug(
+                    "Performer {} skips {}: echo of {}".format(
+                        self.name, command, description
+                    )
+                )
+            else:
+                result.extend(command.make_msgs_from(old_state, new_state))
+        return result
+
     def notify(
         self, events: Iterable[home.Event]
     ) -> Tuple[Iterable[Any], home.appliance.State, "home.appliance.State"]:

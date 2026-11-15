@@ -15,24 +15,52 @@ Protocol gateways ──► _on_protocol_event()
                                         │
                                         ├─ performer.update_by(trigger)   (state update)
                                         ├─ _schedule_by_appliance_state() (state triggers)
-                                        ├─ performer.execute()             (bus messages)
-                                        └─ redis_gateway.on_appliance_updated_by_process()
+                                        ├─ _make_msgs_except_echo()       (every performer's
+                                        │                                  commands, not to the
+                                        │                                  reporting device)
+                                        ├─ redis_gateway.on_appliance_updated_by_process()
+                                        └─ _write()                        (bus messages)
 
 APScheduler ────────► schedule()  ──► _queue.put()
                                             │
                                     _run() drains queue
                                             │
-                                    performer.notify(events)
-                                    redis_gateway.on_performer_updated_by_process()
-                                    performer.execute()   (bus messages)
+                                    _notify(appliance, events)  (state update +
+                                                                 every performer's commands)
                                     _schedule_by_appliance_state()
+                                    redis_gateway.on_performer_updated_by_process()
+                                    _write()   (bus messages)
 
 Redis (remote node) ─► _on_appliance_updated_by_redis()
                             │
                             ├─ old_appliance.update(new_appliance)
-                            ├─ _schedule_by_appliance_state()
-                            └─ performer.execute() for trigger-less performers
+                            ├─ _schedule_by_appliance_state()   (once per update)
+                            └─ _make_msgs() + _write()          (every performer's commands)
 ```
+
+## One pipeline for every state change
+
+Whatever causes a state change (a bus message, a scheduler trigger, a Redis
+update from the web UI), the brain does the same three things:
+
+1. evaluates the appliance's state-based scheduler triggers once;
+2. asks the commands of **every** performer of the appliance which messages
+   the change needs (`Performer.execute(old_state, new_state)`): a command
+   sends only when the property it controls changed, so running all of them is
+   safe, and it doesn't matter which performer handled the event;
+3. sends the messages, in performer order and then command order.
+
+When the change comes from a bus message, the commands for the device that
+sent it are left out (`Performer.execute_except_to`, through
+`Description.reaches_a_device_of`): a device reporting its own state already
+has it, and sending it back would be an echo. KNX compares the ASAPs of the
+group addresses, the other protocols their addresses.
+
+The commands also run when an event doesn't change the state: commands that
+compare the states send nothing, and idempotent commands that apply the
+current state (a LIFX color after the bulb has booted) send it again.
+
+See the performer design rules in `docs/source/performer.rst`.
 
 ## Event sources
 
@@ -52,8 +80,9 @@ into a protocol trigger and calls the callback, which invokes
 
 2. **`_update_performers_by_protocol_trigger`** — finds every performer whose
    own protocol trigger matches the bus message, calls `performer.update_by()`,
-   evaluates state-based scheduler triggers, sends bus messages, and tells Redis
-   about the state change.  This path is **synchronous** in the sense that the
+   evaluates state-based scheduler triggers, tells Redis about the state change
+   and sends the bus messages of every performer of the appliance, except
+   those for the device that sent the message.  This path is **synchronous** in the sense that the
    state update and Redis save happen before the coroutine returns.
 
 ### 2. Scheduler / timer events (APScheduler)
@@ -74,7 +103,7 @@ Dispatch rules inside `_run`:
 |---|---|
 | `state.entering.disable_events.Trigger` | Calls `appliance.disable(event)` for each event — prevents those events from being processed by the state machine |
 | `date.enable_events.Trigger` | Calls `appliance.enable(event)` for each event — reverses a previous disable |
-| Everything else | `performer.notify(events)` → state update → Redis save → bus messages → `_schedule_by_appliance_state` |
+| Everything else | `_notify(appliance, events)` → state update and the messages of every performer of the appliance → `_schedule_by_appliance_state` → Redis save → bus messages |
 
 After processing (whether successful or not), `_schedule_by_trigger_fork` is
 called if the trigger is still enabled.  This re-arms recurring triggers
@@ -88,9 +117,8 @@ When another node (e.g. the `ws` web server) publishes a state change via Redis,
 
 1. Updates the local appliance to match the received state.
 2. Calls `_schedule_by_appliance_state` so state-based scheduler triggers fire.
-3. Executes all **trigger-less** performers for that appliance and sends the
-   resulting bus messages.  Performers that have their own protocol triggers are
-   skipped here — they will react on their own when the bus confirms the change.
+3. Runs the commands of every performer of that appliance and sends the
+   resulting bus messages.
 
 Each protocol writer call is wrapped in `asyncio.wait_for(..., timeout=1.0)` so
 a slow or stalled gateway (e.g. Home Assistant websocket) cannot block the
@@ -140,8 +168,7 @@ closes the loop.
   `state.entering.disable_events.Trigger`) are always queued for `_run` to
   process after the current dispatch completes.  This ensures every transition
   is visible to `_schedule_by_appliance_state`, saved to Redis, and observable
-  by `_on_appliance_updated_by_redis` — which is the path that sends bus
-  commands for trigger-less performers.
+  by `_on_appliance_updated_by_redis`.
 
 * **1-second writer timeout on every bus send.** All three dispatch paths
   (`_run`, `_update_performers_by_protocol_trigger`, `_on_appliance_updated_by_redis`,

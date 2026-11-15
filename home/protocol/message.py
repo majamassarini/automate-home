@@ -70,6 +70,49 @@ class Description(metaclass=Registry):
         """
         self._label = value
 
+    @property
+    def addresses(self) -> List[Any]:
+        """
+        :return: the addresses of the devices this message is for, or comes
+            from; a protocol without addresses returns an empty list
+        """
+        return []
+
+    def reaches_a_device_of(self, another_description: Description) -> bool:
+        """
+        This message is for, or comes from, one of the devices of another one?
+
+        Used to recognize an echo: a command to the very device that has
+        just reported a change.
+
+        >>> import home
+        >>> class Message(home.protocol.Description):
+        ...     PROTOCOL = "a protocol"
+        ...     def __init__(self, addresses):
+        ...         self._addresses = addresses
+        ...     @property
+        ...     def addresses(self):
+        ...         return self._addresses
+        >>> Message(["a", "b"]).reaches_a_device_of(Message(["b"]))
+        True
+        >>> Message(["a"]).reaches_a_device_of(Message(["b"]))
+        False
+        >>> home.protocol.Description(None).reaches_a_device_of(Message(["a"]))
+        False
+
+        Addresses don't need to be hashable (e.g. ``[ip, port]`` lists):
+
+        >>> Message([["10.0.0.1", 56700]]).reaches_a_device_of(Message([["10.0.0.1", 56700]]))
+        True
+
+        :param another_description: a protocol message description
+        :return: bool
+        """
+        return self.PROTOCOL == another_description.PROTOCOL and any(
+            address in another_description.addresses
+            for address in self.addresses
+        )
+
     @classmethod
     def make(cls, *args, **kwargs) -> home.protocol.Description:
         """
