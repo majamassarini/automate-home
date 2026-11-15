@@ -37,12 +37,14 @@ class State(
     attribute.mixin.IsOn,
     attribute.mixin.IsFading,
     attribute.mixin.IsNotCircadianRhythm,
+    attribute.mixin.ScaledVolume,
     Parent,
 ):
 
     VALUE = "Fade Out"
 
     VOLUME_EVENT = event.fade_out.volume.Event
+    VOLUME_SCALE_EVENT = event.fade_out.volume_scale.Event
     PLAYLIST_EVENT = event.fade_out.playlist.Event
 
     def __init__(self, events=None, events_disabled=None):

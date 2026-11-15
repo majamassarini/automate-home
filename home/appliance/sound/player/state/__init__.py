@@ -27,6 +27,14 @@ class FadeOutVolume(DoNothing):
     pass
 
 
+class FadeInVolumeScale(DoNothing):
+    pass
+
+
+class FadeOutVolumeScale(DoNothing):
+    pass
+
+
 class CircadianPlaylistC(DoNothing):
     pass
 
@@ -78,6 +86,8 @@ class Mixin(object):
             type(event.fade_in.volume.Event(20)): FadeInVolume(),
             type(event.fade_out.playlist.Event("unknown")): FadeOutPlaylist(),
             type(event.fade_out.volume.Event(20)): FadeOutVolume(),
+            type(event.fade_in.volume_scale.Event(100)): FadeInVolumeScale(),
+            type(event.fade_out.volume_scale.Event(100)): FadeOutVolumeScale(),
             type(
                 event.forced.circadian_rhythm.playlist_c.Event("unknown")
             ): CircadianPlaylistC(),
@@ -119,6 +129,8 @@ class State(Parent, Mixin, attribute.mixin.Volume, attribute.mixin.Playlist):
         event.fade_in.volume.Event(30),
         event.fade_out.playlist.Event("Fade out"),
         event.fade_out.volume.Event(20),
+        event.fade_in.volume_scale.Event(100),
+        event.fade_out.volume_scale.Event(100),
         event.forced.circadian_rhythm.playlist_c.Event("User C"),
         event.forced.circadian_rhythm.playlist_b.Event("User B"),
         event.forced.circadian_rhythm.playlist_a.Event("User A"),

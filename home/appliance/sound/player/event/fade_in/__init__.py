@@ -4,4 +4,8 @@
 #
 # Copyright (C) 2021  Maja Massarini
 
-from home.appliance.sound.player.event.fade_in import playlist, volume
+from home.appliance.sound.player.event.fade_in import (
+    playlist,
+    volume,
+    volume_scale,
+)

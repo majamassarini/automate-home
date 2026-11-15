@@ -85,6 +85,16 @@ def load_tests(loader, tests, ignore):
     tests.addTests(
         doctest.DocTestSuite(home.appliance.sound.player.event.volume_scale)
     )
+    tests.addTests(
+        doctest.DocTestSuite(
+            home.appliance.sound.player.event.fade_in.volume_scale
+        )
+    )
+    tests.addTests(
+        doctest.DocTestSuite(
+            home.appliance.sound.player.event.fade_out.volume_scale
+        )
+    )
     tests.addTests(doctest.DocTestSuite(home.appliance.attribute.mixin))
     tests.addTests(doctest.DocTestSuite(home.appliance.thermostat.presence))
     tests.addTests(

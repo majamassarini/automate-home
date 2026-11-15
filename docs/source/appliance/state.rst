@@ -95,8 +95,10 @@ One of:
   - :code:`home.appliance.sound.player.event.forced.circadian_rhythm.playlist_b.Event`
   - :code:`home.appliance.sound.player.event.forced.circadian_rhythm.playlist_c.Event`
   - :code:`home.appliance.sound.player.event.fade_in.volume.Event`
+  - :code:`home.appliance.sound.player.event.fade_in.volume_scale.Event`
   - :code:`home.appliance.sound.player.event.fade_in.playlist.Event`
   - :code:`home.appliance.sound.player.event.fade_out.volume.Event`
+  - :code:`home.appliance.sound.player.event.fade_out.volume_scale.Event`
   - :code:`home.appliance.sound.player.event.fade_out.playlist.Event`
 
 .. raw:: latex

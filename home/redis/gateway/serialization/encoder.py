@@ -121,8 +121,16 @@ class Encoder(json.JSONEncoder):
                     fade_in.volume.Serializer(),
                 ),
                 (
+                    home.appliance.sound.player.event.fade_in.volume_scale.Event,
+                    fade_in.volume_scale.Serializer(),
+                ),
+                (
                     home.appliance.sound.player.event.fade_out.volume.Event,
                     fade_out.volume.Serializer(),
+                ),
+                (
+                    home.appliance.sound.player.event.fade_out.volume_scale.Event,
+                    fade_out.volume_scale.Serializer(),
                 ),
                 (
                     home.appliance.sound.player.event.playlist.Event,
