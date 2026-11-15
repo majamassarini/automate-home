@@ -80,6 +80,7 @@ def load_tests(loader, tests, ignore):
     tests.addTests(
         doctest.DocTestSuite(home.appliance.curtain.outdoor.bedroom.state)
     )
+    tests.addTests(doctest.DocTestSuite(home.protocol.message))
     tests.addTests(doctest.DocTestSuite(home.appliance.sound.player))
     tests.addTests(doctest.DocTestSuite(home.appliance.sound.player.state))
     tests.addTests(

@@ -10,42 +10,86 @@ A **Performer** is the entity that binds together an *Appliance*, its **protocol
 When an *Appliance* changes its *State*, *Performers* translate the **transition** from the
 *old Appliance State* to the *new Appliance State* into a list of protocol messages via *protocol commands*.
 
-.. tip::
-  Many commands and triggers can be grouped together inside the same *Performer*.
+How the commands run
+--------------------
 
-  When a trigger inside a *Performer* is triggered then the commands belonging to the same *Performer* are executed::
+**Triggers change the appliance state; the state change drives the commands.**
+
+Every state change of an *Appliance*, whatever caused it (a protocol trigger, a
+:ref:`scheduler trigger<scheduler-triggers>`, a change from the web UI received through Redis), runs the
+commands of **every** *Performer* of that *Appliance*. Each command decides what to send from the
+*old* and the *new* state alone: it sends only when the property it controls (``is_on``, ``volume``,
+``playlist``, ``play_mode``, ``group``, ``setpoint`` …) has changed, or, for an idempotent
+command that applies the current state (e.g. a color), whenever the appliance is in a state that needs it.
+
+When the change comes from a device reporting its own state (a Sonos play or volume echo, a KNX status on the
+address the commands write to), the commands for that same device are left out: the device already has the
+change, and sending it back would be an echo. See :py:meth:`home.protocol.Description.reaches_a_device_of`.
+
+Designing performers
+--------------------
+
+Keep the two roles in separate *Performers*:
+
+- a **trigger performer** has protocol triggers that send named events, and no commands;
+- a **command performer** has protocol commands, and no triggers. Usually there is one per *Appliance*,
+  listing its commands in the order the device needs them.
+
+::
 
     - !Performer
-      name: "sonos relative volume command up"
+      name: "sonos triggers"
       for appliance: "a sound player"
       triggers:
-      - !knx_plugin.trigger.dpt_control_dimming.step.up.Trigger {addresses: [0x0C09]}
-      commands:
-        - !soco_plugin.command.volume.relative.Command {addresses: ["Bath"], fields: {"delta": 10}}
+      - !knx_plugin.trigger.dpt_switch.On
+        addresses: [0x0C08]
+        events:
+        - !home.appliance.sound.player.event.forced.Event.On
+      - !knx_plugin.trigger.dpt_control_dimming.VolumeStep {addresses: [0x0C09]}
+      commands: []
 
     - !Performer
-      name: "sonos relative volume command down"
+      name: "sonos commands"
       for appliance: "a sound player"
-      triggers:
-      - !knx_plugin.trigger.dpt_control_dimming.step.down.Trigger {addresses: [0x0C09]}
+      triggers: []
       commands:
-        - !soco_plugin.command.volume.relative.Command {addresses: ["Bath"], fields: {"delta": -10}}
+      - !soco_plugin.command.mode.Command {addresses: ["Bath"]}
+      - !soco_plugin.command.playlist.Command {addresses: ["Bath"]}
+      - !soco_plugin.command.volume.absolute.Command {addresses: ["Bath"]}
+      - !soco_plugin.command.play.Command {addresses: ["Bath"]}
+      - !soco_plugin.command.pause.Command {addresses: ["Bath"]}
 
-The above yaml syntax groups together an appliance named *a sound player* with some *KNX* protocol triggers and some
-*Sonos* protocol commands (using the soco library).
+When a KNX push button with address 0x0C08 is pressed, the sound player is forced on and the
+*sonos commands* send its play mode, playlist, volume and play. When the dimming button 0x0C09 is
+pressed, the volume of the current state goes up or down and *volume.absolute* sends it.
 
-When a KNX push button, with address 0x0C09, is pressed to send a DPT_Control_Dimming step up then the *Performer* named
-*sonos relative volume command up* will create a message to increase volume by 10 for a Sonos device named *Bath*.
+To send something only in particular circumstances, make those circumstances part of the
+*Appliance* state: a trigger or a scheduler trigger sends an event that sets a property, and the
+command reacts to that property. If the *Appliance* has no property for it, add one to the
+*Appliance* type; don't add a "when" field to a protocol command and don't send an event that
+doesn't change the state only to make a *Performer* run.
 
-When a KNX push button, with address 0x0C09, is pressed to send a DPT_Control_Dimming step down message then the *Performer* named
-*sonos relative volume command down* will create a message to decrease volume by 10 for a Sonos device named *Bath*.
+What goes wrong otherwise
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. tip::
-  Yaml syntax uses *Performers* to define :ref:`Scheduler triggers<scheduler-triggers>`
-  it is easier to use and re-use a *Performer* when it has few triggers or commands.
-
-  Use multiple *Performers* instead of grouping together many commands and triggers when
-  the *Performers* are thought to be used by *Scheduler Triggers*.
++-----------------------------------------------+---------------------------------------------------------------+
+| Design mistake                                | What happens                                                  |
++===============================================+===============================================================+
+| A command that sends every time it runs       | It fires on every state change of the appliance: a volume     |
+|                                               | change regroups the speakers or restarts the playlist.        |
++-----------------------------------------------+---------------------------------------------------------------+
+| A relative command (e.g. a volume delta)      | The appliance never knows the device value: the next absolute |
+|                                               | command, or the web UI, jumps back to the old value.          |
++-----------------------------------------------+---------------------------------------------------------------+
+| An event sent only to make a performer run    | It doesn't change the state, so no command runs because of it,|
+|                                               | and nothing records it.                                       |
++-----------------------------------------------+---------------------------------------------------------------+
+| A "when" field in a protocol command          | The protocol plugin depends on one home's use cases and the   |
+| (e.g. the name of a state)                    | command breaks in any other situation.                        |
++-----------------------------------------------+---------------------------------------------------------------+
+| A property event of another state             | The value changes in a state that isn't in use: the device    |
+|                                               | never changes, and nothing logs an error.                     |
++-----------------------------------------------+---------------------------------------------------------------+
 
 .. note::
   The **home** package has only an **abstract definition for every entity in the home.protocol package**.
