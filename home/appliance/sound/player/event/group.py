@@ -14,8 +14,8 @@ class Event(Str):
 
     >>> Event("Kitchen")
     Group: Kitchen
-    >>> Event("")
-    Group:
+    >>> Event("").value
+    ''
     """
 
     def __init__(self, value: str):
